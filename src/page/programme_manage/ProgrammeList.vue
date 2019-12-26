@@ -262,6 +262,11 @@
                             <span>{{scope.row.price ? scope.row.price / 100 : '否'}}</span>
                         </template>
                     </el-table-column>
+                    <el-table-column width="120px" align="center" label="适用客户端">
+                        <template slot-scope="scope">
+                            <span>{{scope.row.applicableClientList ? scope.row.applicableClientList.join(', ') : ''}}</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="releaseAt" align="center" width="100px" label="上映时间">
                         <template slot-scope="scope">
                             {{ scope.row.releaseAt | formatDate('yyyy-MM-DD') | padEmpty}}
