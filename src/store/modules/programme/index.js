@@ -204,7 +204,9 @@ const defaultProgrammeSearchFields = {
     programmeTypeIdList: '',
     programmeCategoryIdList: '',
     refCount: '', //  关联
-    paymentType: '' // 支付情况
+    paymentType: '', // 支付情况
+    //  dev_v2.6 新增
+    applicableClientList: []
 };
 
 const defaultGlobal = {

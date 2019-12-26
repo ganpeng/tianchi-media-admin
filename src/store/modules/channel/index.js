@@ -27,7 +27,9 @@ let defaultSearchFields = {
     visible: '',
     protocolList: [],
     refCount: '', // 关联
-    paymentType: ''
+    paymentType: '',
+    // dev_v2.6 新增
+    applicableClientList: []
 };
 
 let defaultPagination = {

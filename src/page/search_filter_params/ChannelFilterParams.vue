@@ -85,6 +85,21 @@
                 </el-form-item>
             </el-form>
             <el-form :inline="true" class="more-filter-box filter-form" v-if="moreFilters">
+                <el-form-item id="multi-selecter" label="适用客户端">
+                    <el-select
+                        v-model="listQueryParams.applicableClientList"
+                        clearable
+                        multiple
+                        @change="getChannelList(true)"
+                        placeholder="全部">
+                        <el-option
+                            v-for="item in applicableClientListOption"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="区域码">
                     <el-select
                         v-model="listQueryParams.companyCode"
@@ -148,6 +163,7 @@
 </template>
 
 <script>
+    import role from '@/util/config/role';
 
     export default {
         name: 'ChannelFilterParams',
@@ -164,6 +180,7 @@
                     refCount: '',
                     paymentType: ''
                 },
+                applicableClientListOption: role.APPLICABLE_CLIENT_LIST_OPTION,
                 protocolOptions: ['UDP', 'HLS'],
                 refCountOptions: [
                     {name: '有', value: 1},

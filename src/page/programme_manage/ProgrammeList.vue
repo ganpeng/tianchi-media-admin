@@ -88,6 +88,22 @@
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </div>
+                    <div id="multi-selecter" class="search-field-item">
+                        <label class="search-field-item-label">适用客户端</label>
+                        <el-select
+                            :value="programmeSearchFields.applicableClientList"
+                            @change="inputHandler($event, 'applicableClientList')"
+                            clearable
+                            multiple
+                            placeholder="全部">
+                            <el-option
+                                v-for="item in applicableClientListOption"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
                     <div class="search-field-item">
                         <label class="search-field-item-label">地区</label>
                         <el-select
@@ -349,6 +365,7 @@
                 fileList: [],
                 selectedVideoList: [],
                 uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
+                applicableClientListOption: role.APPLICABLE_CLIENT_LIST_OPTION,
                 visibleOptions: [
                     {
                         value: true,

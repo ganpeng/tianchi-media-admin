@@ -73,11 +73,10 @@
                     <svg-icon icon-class="reset"></svg-icon>
                     重置
                 </el-button>
-                <span
-                    @click="toggleSearchField"
+                <span @click="toggleSearchField"
                     :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
-                    更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else
-                                                                                                                  class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                    更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i>
+                    <i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
                 </span>
             </div>
             <div v-show="searchFieldVisible" class="field-row">
@@ -93,6 +92,22 @@
                             v-for="(item, index) in [{name: '是', value: true}, {name: '否', value: false}]"
                             :key="index"
                             :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div id="multi-selecter" class="search-field-item">
+                    <label class="search-field-item-label">适用客户端</label>
+                    <el-select
+                        :value="searchFields.applicableClientList"
+                        @change="inputHandler($event, 'applicableClientList')"
+                        clearable
+                        multiple
+                        placeholder="全部">
+                        <el-option
+                            v-for="item in applicableClientListOption"
+                            :key="item.value"
+                            :label="item.label"
                             :value="item.value">
                         </el-option>
                     </el-select>
@@ -203,14 +218,6 @@
                         <svg-icon icon-class="import"></svg-icon>
                         导入
                     </el-button>
-                    <!--
-                    <el-button
-                        class="btn-style-two contain-svg-icon"
-                        @click="exportAllLiveChannelExcelHandler">
-                        <svg-icon icon-class="export"></svg-icon>
-                        全部导出
-                    </el-button>
-                    -->
                     <el-button
                         class="btn-style-two contain-svg-icon"
                         @click="editChannelByImportExcel">
@@ -355,6 +362,7 @@
     import _ from 'lodash';
     import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
+    import role from '@/util/config/role';
 
     const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
     const x2js = new X2JS();
@@ -375,6 +383,7 @@
                 title: '',
                 fileList: [],
                 uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
+                applicableClientListOption: role.APPLICABLE_CLIENT_LIST_OPTION,
                 recordOptinos: [
                     {
                         name: '是',
