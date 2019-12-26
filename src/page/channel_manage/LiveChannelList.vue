@@ -97,7 +97,7 @@
                     </el-select>
                 </div>
                 <div id="multi-selecter" class="search-field-item">
-                    <label class="search-field-item-label">适用客户端</label>
+                    <label class="search-field-item-label">适用</label>
                     <el-select
                         :value="searchFields.applicableClientList"
                         @change="inputHandler($event, 'applicableClientList')"
@@ -129,7 +129,7 @@
                     </el-select>
                 </div>
                 <div id="multi-selecter" class="search-field-item">
-                    <label class="search-field-item-label">推流方式</label>
+                    <label class="search-field-item-label">推流</label>
                     <el-select
                         :value="searchFields.protocolList"
                         @change="inputHandler($event, 'protocolList')"

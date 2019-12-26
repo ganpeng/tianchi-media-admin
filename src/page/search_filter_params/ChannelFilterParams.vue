@@ -85,7 +85,7 @@
                 </el-form-item>
             </el-form>
             <el-form :inline="true" class="more-filter-box filter-form" v-if="moreFilters">
-                <el-form-item id="multi-selecter" label="适用客户端">
+                <el-form-item id="multi-selecter" label="适用">
                     <el-select
                         v-model="listQueryParams.applicableClientList"
                         clearable
@@ -114,7 +114,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="推流方式">
+                <el-form-item label="推流">
                     <el-select
                         v-model="listQueryParams.protocolList"
                         @change="getChannelList(true)"

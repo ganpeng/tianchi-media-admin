@@ -89,7 +89,7 @@
                         </el-date-picker>
                     </div>
                     <div id="multi-selecter" class="search-field-item">
-                        <label class="search-field-item-label">适用客户端</label>
+                        <label class="search-field-item-label">适用</label>
                         <el-select
                             :value="programmeSearchFields.applicableClientList"
                             @change="inputHandler($event, 'applicableClientList')"
