@@ -672,6 +672,11 @@ const mutations = {
 
         let coverImage = coverImage1 || coverImage2;
         state.programme.coverImage = coverImage;
+
+        //  dev_v2.6新增
+        if (!_.get(state.programme.coverImageForApp, 'uri')) {
+            state.programme.coverImageForApp = coverImage;
+        }
     },
     addImageToPosterImageList(state, payload) {
         let {image} = payload;
