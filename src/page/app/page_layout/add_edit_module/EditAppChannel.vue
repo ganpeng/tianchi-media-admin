@@ -20,9 +20,7 @@
                                 {{channel.name}}
                             </el-tag>
                         </div>
-                        <channel-search
-                            :handleSelect="selectChannelHandler"
-                        ></channel-search>
+                        <app-channel-search :handleSelect="selectChannelHandler"></app-channel-search>
                     </el-form-item>
                     <el-form-item label="图片">
                         <single-poster :img="image"></single-poster>
@@ -40,7 +38,7 @@
 import {mapGetters} from 'vuex';
 import _ from 'lodash';
 import SinglePoster from 'sysComponents/custom_components/custom/SinglePoster';
-import ChannelSearch from '@/page/page_layout/add_edit_module/ChannelSearch';
+import AppChannelSearch from './AppChannelSearch';
 export default {
     name: 'EditAppChannel',
     props: {
@@ -51,7 +49,7 @@ export default {
     },
     components: {
         SinglePoster,
-        ChannelSearch
+        AppChannelSearch
     },
     data() {
         return {

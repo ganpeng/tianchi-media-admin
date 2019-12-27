@@ -19,10 +19,7 @@
                                 {{layoutBlockItemClone.name}}
                             </el-tag>
                         </div>
-                        <channel-search
-                            :isCarousel="true"
-                            :handleSelect="selectChannelHandler"
-                        ></channel-search>
+                        <channel-search :handleSelect="selectChannelHandler"></channel-search>
                     </el-form-item>
                     <el-form-item label="图片" required>
                         <single-image-uploader

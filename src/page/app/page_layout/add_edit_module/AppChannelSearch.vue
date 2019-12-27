@@ -9,7 +9,7 @@
 </template>
 <script>
 export default {
-    name: 'ChannelSearch',
+    name: 'AppChannelSearch',
     props: {
         handleSelect: {
             type: Function,
@@ -25,7 +25,7 @@ export default {
     methods: {
         async querySearchAsync(name, cb) {
             try {
-                let res = await this.$service.searchChannelList(name);
+                let res = await this.$service.searchAppChannelList(name);
                 if (res && res.code === 0) {
                     let {list} = res.data;
                     cb(list);

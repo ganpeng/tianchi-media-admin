@@ -141,18 +141,40 @@ export const postProgrammeTypeGroupListById = (categoryId, programmeTypeGroupLis
     return service.post(`/v1/content/programme-type-group?categoryId=${categoryId}`, programmeTypeGroupList);
 };
 
+
+/**
+ * 根据关键字搜索频道
+ */
+export const searchChannelList = (keyword) => {
+    return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&applicableClientList=TV&visible=true`);
+};
+
 /**
  * 根据关键字搜索直播频道
  */
 export const searchLiveChannelList = (keyword) => {
-    return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&category=LIVE&visible=true`);
+    return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&applicableClientList=TV&category=LIVE&visible=true`);
 };
 
 /**
  * 根据关键字搜索轮播频道
  */
 export const searchCarouselChannelList = (keyword) => {
-    return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&visible=true`);
+    return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&applicableClientList=TV&category=CAROUSEL&visible=true`);
+};
+
+/**
+ * 根据关键字搜索APP频道
+ */
+export const searchAppChannelList = (keyword) => {
+    return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&applicableClientList=APP&visible=true`);
+};
+
+/**
+ * 根据关键字搜索APP轮播频道
+ */
+export const searchAppLiveChannelList = (keyword) => {
+    return service.get(`/v1/live/channel/page?keyword=${keyword}&pageNum=0&pageSize=999&category=LIVE&applicableClientList=APP&visible=true`);
 };
 
 /**
