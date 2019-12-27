@@ -141,7 +141,6 @@ export const postProgrammeTypeGroupListById = (categoryId, programmeTypeGroupLis
     return service.post(`/v1/content/programme-type-group?categoryId=${categoryId}`, programmeTypeGroupList);
 };
 
-
 /**
  * 根据关键字搜索频道
  */

@@ -897,6 +897,10 @@ const APP_PROGRAMME_ALLOW_PICTURE_DIMENSIONS = [
     {
         width: 330,
         height: 186
+    },
+    {
+        width: 807,
+        height: 455
     }
 ];
 

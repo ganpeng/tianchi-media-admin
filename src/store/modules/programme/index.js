@@ -933,7 +933,8 @@ const mutations = {
             state.programme.coverImageForApp = image;
         }
 
-        if (parseInt(image.width) === 330 && parseInt(image.height) === 186) {
+        if ((parseInt(image.width) === 330 && parseInt(image.height) === 186) ||
+            (parseInt(image.width) === 807 && parseInt(image.height) === 455)) {
             state.programme.horizontalCoverImageForApp = image;
         }
     },
