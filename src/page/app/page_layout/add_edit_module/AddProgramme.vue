@@ -385,7 +385,7 @@ export default {
             }
         },
         matchedProgrammeList() {
-            let posterProgrammeList = _.get(this.programme, 'posterImageList') || [];
+            let posterProgrammeList = _.get(this.programme, 'posterImageListForApp') || [];
             let matchedProgrammeList = posterProgrammeList.filter((image) => {
                 let _index = this.allowResolutions.findIndex((innerImage) => {
                     let width = _.get(innerImage, 'width');
@@ -481,7 +481,7 @@ export default {
 
                 let markRes = await this.getCustomMarkList();
                 if (markRes && markRes.code === 0) {
-                    this.customMarkOptions = markRes.data;
+                    this.customMarkOptions = markRes.data.filter((item) => _.get(item, 'appImage.uri'));
                 }
 
                 this.updateProgrammePagination({key: 'pageSize', value: 5});
@@ -554,19 +554,19 @@ export default {
         //  图片上传成功之后的毁掉
         async uploadProgrammeCoverImageSuccessHandler(image) {
             try {
-                let {id, posterImageList} = this.programme;
-                let clonePosterImageList = this.$util.imageWidth240AndWidth260NoRepeat(image, _.cloneDeep(posterImageList));
-                clonePosterImageList.push(image);
-                clonePosterImageList = _.uniqBy(clonePosterImageList, 'id');
+                let {id, posterImageListForApp} = this.programme;
+                let clonePosterImageListForApp = this.$util.imageWidth384AndWidth561NoRepeat(image, _.cloneDeep(posterImageListForApp));
+                clonePosterImageListForApp.push(image);
+                clonePosterImageListForApp = _.uniqBy(clonePosterImageListForApp, 'id');
                 let programme = {
-                    posterImageList: clonePosterImageList
+                    posterImageListForApp: clonePosterImageListForApp
                 };
-                if (this.$util.checkSize(image)) {
-                    programme.coverImage = image;
+                if (this.$util.checkSizeForApp(image)) {
+                    programme.coverImageForApp = image;
                 }
                 let res = await this.$service.updatePartProgrammeInfo({ id, programme });
                 if (res && res.code === 0) {
-                    this.programme = Object.assign({}, this.programme, {posterImageList: clonePosterImageList});
+                    this.programme = Object.assign({}, this.programme, {posterImageListForApp: clonePosterImageListForApp});
                 }
             } catch (err) {
                 console.log(err);

@@ -421,6 +421,19 @@ let util = {
             return imageList;
         }
     },
+    checkSizeForApp(img) {
+        //  384*561  330*186
+        return (parseInt(img.width) === 384 && parseInt(img.height) === 561);
+    },
+    imageWidth384AndWidth561NoRepeat(image, imageList) {
+        if (util.checkSize(image)) {
+            return imageList.filter((img) => {
+                return !util.checkSize(img);
+            });
+        } else {
+            return imageList;
+        }
+    },
     downloadFile(url, name) {
         if (typeof url === 'object' && url instanceof Blob) {
             url = URL.createObjectURL(url); // 创建blob地址

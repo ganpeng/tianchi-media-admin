@@ -43,7 +43,7 @@ export default {
             return _.pick(this.layoutItem, ['name', 'desc']);
         },
         rightTopStyle() {
-            let image = _.get(this.cornerMark, 'rightTop.image');
+            let image = _.get(this.cornerMark, 'rightTop.appImage');
             if (_.isEmpty(image)) {
                 return '';
             } else {

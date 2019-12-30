@@ -1,11 +1,25 @@
 <template>
     <div class="app-navbar-form-container">
         <div class="form-container">
-            <el-form :model="navbar" :rules="inputRules" status-icon
+            <el-form :model="navbar" ref="navbarForm" :rules="inputRules" status-icon
                 label-width="120px" @submit.native.prevent class="form-block my-form">
                 <el-col :span="8">
                     <el-form-item label="栏目名称" prop="name">
                         <el-input v-model="navbar.name" placeholder="请输入栏目名称"></el-input>
+                    </el-form-item>
+                    <el-form-item label="栏目分类" prop="signCode">
+                        <el-select
+                            v-model="navbar.signCode"
+                            clearable
+                            size="medium"
+                            placeholder="请选择栏目分类">
+                            <el-option
+                                v-for="item in programmeCategoryListOptions"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.signCode">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="栏目板式" prop="layoutTemplate">
                         <el-radio v-model="navbar.layoutTemplate" label="M_FS_1">首页板式</el-radio><br>
@@ -30,13 +44,24 @@ export default {
                 name: '',
                 type: 'SYSTEM', //  SYSTEM, CUSTOM
                 layoutTemplate: 'M_FS_1',
+                signCode: '',
                 applicableClientList: ['APP']
             },
-            inputRules: {}
+            inputRules: {
+                name: [
+                    {required: true, message: '请输入栏目名称'},
+                    {min: 1, max: 10, message: '栏目名称应在10字以内'}
+                ]
+            },
+            programmeCategoryListOptions: []
         };
     },
     async created() {
         try {
+            let categoryRes = await this.$service.getProgrammeCategory();
+            if (categoryRes && categoryRes.code === 0) {
+                this.programmeCategoryListOptions = categoryRes.data;
+            }
             if (this.status === 'EDIT') {
                 let {id} = this.$route.params;
                 let res = await this.$service.getAppNavBarById(id);
@@ -51,19 +76,22 @@ export default {
     methods: {
         async createAppNavBar() {
             try {
-                if (this.status === 'CREATE') {
-                    let res = await this.$service.createAppNavBar(this.navbar);
-                    if (res && res.code === 0) {
-                        this.toAppNavBarSetting();
+                let valid = await this.$refs.navbarForm.validate();
+                if (valid) {
+                    if (this.status === 'CREATE') {
+                        let res = await this.$service.createAppNavBar(this.navbar);
+                        if (res && res.code === 0) {
+                            this.toAppNavBarSetting();
+                        } else {
+                            this.$message.error(`栏目保存失败`);
+                        }
                     } else {
-                        this.$message.error(`栏目保存失败`);
-                    }
-                } else {
-                    let res = await this.$service.patchAppNavBar(this.navbar);
-                    if (res && res.code === 0) {
-                        this.toAppNavBarSetting();
-                    } else {
-                        this.$message.error(`栏目保存失败`);
+                        let res = await this.$service.patchAppNavBar(this.navbar);
+                        if (res && res.code === 0) {
+                            this.toAppNavBarSetting();
+                        } else {
+                            this.$message.error(`栏目保存失败`);
+                        }
                     }
                 }
             } catch (err) {

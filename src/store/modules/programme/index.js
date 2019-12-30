@@ -930,11 +930,18 @@ const mutations = {
         let {image} = payload;
         if (parseInt(image.width) === 384 && parseInt(image.height) === 561) {
             state.programme.coverImageForApp = image;
+            state.programme.posterImageListForApp = state.programme.posterImageListForApp.filter((item) => parseInt(item.width) !== 384 && parseInt(item.height) !== 561);
+            state.programme.posterImageListForApp.push(image);
         }
 
         if ((parseInt(image.width) === 330 && parseInt(image.height) === 186) ||
             (parseInt(image.width) === 807 && parseInt(image.height) === 455)) {
             state.programme.horizontalCoverImageForApp = image;
+            state.programme.posterImageListForApp = state.programme.posterImageListForApp.filter((item) => {
+                return (parseInt(item.width) !== 330 && parseInt(item.height) !== 186) &&
+                       (parseInt(item.width) !== 807 && parseInt(item.height) !== 455);
+            });
+            state.programme.posterImageListForApp.push(image);
         }
     },
     clearImageForApp(state, payload) {
@@ -946,6 +953,7 @@ const mutations = {
         if (id === _.get(state.programme, 'horizontalCoverImageForApp.id')) {
             state.programme.horizontalCoverImageForApp = {};
         }
+        state.programme.posterImageListForApp = state.programme.posterImageListForApp.filter((item) => item.id !== id);
     }
 };
 
