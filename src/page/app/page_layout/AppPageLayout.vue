@@ -29,18 +29,16 @@
             <div id="bottom"></div>
         </div>
         <div class="fixed-btn-container">
-            <el-dropdown
-                class="btn-wrapper-dropdown"
-                @command="addLayout($event)" placement="bottom">
-                <el-button class="my-add-cycle">
-                    <svg-icon icon-class="add"></svg-icon>
+            <el-dropdown @command="addLayout($event)" placement="bottom">
+                <el-button class="btn-style-two contain-svg-icon">
+                    <svg-icon icon-class="add"></svg-icon>&nbsp;&nbsp;添加
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="SHUFFLE">混排模块</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <el-button @click="showSortViewHandler" :class="['my-add-cycle', layoutList.length <= 0 && 'disabled']">
-                <svg-icon icon-class="sort"></svg-icon>
+            <el-button @click="showSortViewHandler" :class="['layout-sort-btn', 'btn-style-three', layoutList.length <= 0 && 'disabled']">
+                <svg-icon icon-class="sort"></svg-icon>&nbsp;&nbsp;排序
             </el-button>
         </div>
         <div class="scroll-btn-container">
@@ -261,9 +259,17 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.btn-wrapper-dropdown {
-    width: 30px;
+.app-page-layout-container {
+    .fixed-btn-container {
+        display: flex;
+        justify-content: space-around;
+        width: 320px;
+        .el-button {
+            margin-right: 0px;
+        }
+    }
 }
+
 .my-add-cycle {
     &.el-button {
         width: 30px;
@@ -274,6 +280,15 @@ export default {
         border: none;
         &:hover {
             background-color: $mainBtnHover;
+        }
+    }
+}
+
+.layout-sort-btn {
+    &.el-button {
+        color: #1989FA;
+        .svg-icon {
+            fill: #1989FA;
         }
     }
 }
@@ -305,10 +320,6 @@ export default {
             }
         }
     }
-}
-.fixed-btn-container {
-    display: flex;
-    justify-content: space-around;
 }
 
 .app-page-layout-container {

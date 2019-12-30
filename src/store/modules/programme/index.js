@@ -922,7 +922,6 @@ const mutations = {
                 markType
             };
         } else {
-            // delete state.programme.cornerMark[key];
             state.programme.cornerMark[key] = null;
         }
     },

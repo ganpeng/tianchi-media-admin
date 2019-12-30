@@ -2,7 +2,7 @@
     <div class="mark-container">
         <div :style="rightTopStyle" class="right-top-field">
         </div>
-        <div v-if="rightBottomText" class="right-bottom-field">
+        <div v-if="rightBottomText" :class="['right-bottom-field', isLeftBottom && 'is-leftbottom']">
             {{rightBottomText}}
         </div>
         <div class="mask"></div>
@@ -58,6 +58,9 @@ export default {
         rightBottomText() {
             let text = (_.get(this.cornerMark, 'leftBottom.caption') || _.get(this.cornerMark, 'rightBottom.caption'));
             return text;
+        },
+        isLeftBottom() {
+            return _.get(this.cornerMark, 'leftBottom.caption');
         }
     },
     created() {
@@ -93,12 +96,12 @@ export default {
         padding: 2px 10px;
         border-radius: 4px;
         color: #fff;
-        font-size: 22px;
+        font-size: 20px;
         background: rgba(0, 0, 0, 0.8);
     }
     .right-top-field {
         position: absolute;
-        top: 10px;
+        top: 0px;
         right: 10px;
         @include common(yellow);
     }
@@ -108,9 +111,12 @@ export default {
         right: 10px;
         padding: 2px 10px;
         border-radius: 4px;
-        color: yellow;
-        font-size: 22px;
+        color: #FF3C2E;
+        font-size: 20px;
         background: rgba(0, 0, 0, 0.8);
+        &.is-leftbottom {
+            color: #fff;
+        }
     }
     .mask {
         display: none;

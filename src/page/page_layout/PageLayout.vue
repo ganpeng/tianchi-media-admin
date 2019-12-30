@@ -29,6 +29,23 @@
             <div id="bottom"></div>
         </div>
         <div class="fixed-btn-container">
+
+            <el-dropdown @command="addLayout($event)" placement="bottom">
+                <el-button class="btn-style-two contain-svg-icon">
+                    <svg-icon icon-class="add"></svg-icon>&nbsp;&nbsp;添加
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="PROGRAMME_SUBJECT">节目专题</el-dropdown-item>
+                    <el-dropdown-item command="FIGURE_SUBJECT">人物专题</el-dropdown-item>
+                    <el-dropdown-item command="FIGURE">人物模块</el-dropdown-item>
+                    <el-dropdown-item command="SPECIAL">特别模块</el-dropdown-item>
+                    <el-dropdown-item command="SHUFFLE">混排模块</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <el-button @click="showSortViewHandler" :class="['layout-sort-btn', 'btn-style-three', layoutList.length <= 0 && 'disabled']">
+                <svg-icon icon-class="sort"></svg-icon>&nbsp;&nbsp;排序
+            </el-button>
+            <!--
             <el-dropdown
                 class="btn-wrapper-dropdown"
                 @command="addLayout($event)" placement="bottom">
@@ -43,13 +60,10 @@
                     <el-dropdown-item command="SHUFFLE">混排模块</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="center-btn">
-                <!-- <el-button class="btn-style-two" @click="saveLayoutHandler">保存</el-button> -->
-                <!-- <el-button v-if="getLayoutChangedByNavbarId" class="btn-style-three" @click="clearLayoutHandler">清除修改</el-button> -->
-            </div>
             <el-button @click="showSortViewHandler" :class="['my-add-cycle', layoutList.length <= 0 && 'disabled']">
                 <svg-icon icon-class="sort"></svg-icon>
             </el-button>
+            -->
         </div>
         <div class="scroll-btn-container">
             <a class="top-btn" href="#" v-scroll-to="{el: '#top', offset: -50}">
@@ -336,13 +350,25 @@ export default {
         }
     }
 }
-.fixed-btn-container {
-    display: flex;
-    justify-content: space-around;
-}
 
 .page-layout-container {
     position: relative;
+    .fixed-btn-container {
+        display: flex;
+        justify-content: space-around;
+        width: 320px;
+        .el-button {
+            margin-right: 0px;
+        }
+        .layout-sort-btn {
+            &.el-button {
+                color: #1989FA;
+                .svg-icon {
+                    fill: #1989FA;
+                }
+            }
+        }
+    }
     .layout-sort {
         position: fixed;
         right: 0;
