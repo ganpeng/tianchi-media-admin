@@ -426,9 +426,9 @@ let util = {
         return (parseInt(img.width) === 384 && parseInt(img.height) === 561);
     },
     imageWidth384AndWidth561NoRepeat(image, imageList) {
-        if (util.checkSize(image)) {
+        if (util.checkSizeForApp(image)) {
             return imageList.filter((img) => {
-                return !util.checkSize(img);
+                return !util.checkSizeForApp(img);
             });
         } else {
             return imageList;
