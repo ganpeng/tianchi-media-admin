@@ -30,7 +30,7 @@
                             :uri="layoutBlock.iconImage ? layoutBlock.iconImage.uri : ''"
                             :showDelete="false"
                             :uploadSuccessHandler="iconImageuploadSuccessHandler"
-                            :allowResolutions="[{width: 82, height: 82}]"
+                            :allowResolutions="[{width: 72, height: 72}]"
                         ></single-image-uploader>
                     </el-form-item>
                 </el-col>
