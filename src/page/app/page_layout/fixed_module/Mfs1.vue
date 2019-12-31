@@ -22,8 +22,10 @@
                 <swiper-slide v-for="(banner, index) in bannerList" :key="index">
                     <span class="inner-bg" :style="styleBgImageStr(index)">
                         <span class="programme-name">
-                            {{banner.name}}: {{banner.desc}}
+                            {{banner.desc || banner.name}}
                         </span>
+                        <span class="linear-mask"></span>
+                        <corner-mark :squareIndex="index" :layoutItem="getLayoutItemDetail(navbarId, 0, index)" :cornerMark="getLayoutItemCornerMark(navbarId, 0, index)"></corner-mark>
                     </span>
                 </swiper-slide>
                 <div class="swiper-pagination swiper-pagination-bullets" slot="pagination"></div>
@@ -38,9 +40,11 @@ import _ from 'lodash';
 import { swiper, swiperSlide } from 'vue-awesome-swiper';
 import 'swiper/dist/css/swiper.css';
 
+import CornerMark from '@/page/app/page_layout/CornerMark';
+
 export default {
     name: 'Mfs1',
-    components: {swiper, swiperSlide},
+    components: {swiper, swiperSlide, CornerMark},
     props: {
         isEdit: {
             type: Boolean,
@@ -50,6 +54,7 @@ export default {
     data() {
         return {
             channel: {},
+            navbarId: '',
             swiperOption: {
                 slidesPerView: 1,
                 spaceBetween: 20,
@@ -71,10 +76,14 @@ export default {
     async created() {
         try {
             let {navbarId} = this.$route.params;
+            this.navbarId = navbarId;
             let res = await this.$service.getAppChannelLayout({navBarId: navbarId});
             if (res && res.code === 0) {
                 let obj = res.data.list[0];
                 this.channel = obj && obj.channel ? obj.channel : {};
+                if (this.delay) {
+                    this.autoplay.delay = 0;
+                }
             }
         } catch (err) {
             console.log(err);
@@ -82,8 +91,15 @@ export default {
     },
     computed: {
         ...mapGetters({
+            getLayoutItemCornerMark: 'appPageLayout/getLayoutItemCornerMark',
+            getLayoutItemDetail: 'appPageLayout/getLayoutItemDetail',
+
             activeLayout: 'appPageLayout/activeLayout'
         }),
+        delay() {
+            let delayFlag = _.every(this.bannerList, (item) => !item.id);
+            return delayFlag;
+        },
         styleBgImageStr() {
             return (squareIndex) => {
                 let url = _.get(this.activeLayout, `0.layoutItemMultiList.${squareIndex}.coverImage.uri`);
@@ -130,14 +146,30 @@ export default {
                 height: 510px;
                 background-repeat: no-repeat;
                 background-size: cover;
+                border-radius: 10px;
+                background-color: rgba(42,48,64,0.5);
                 .programme-name {
                     position: absolute;
-                    bottom: 30px;
-                    left: 20px;
+                    bottom: 10px;
+                    left: 0px;
                     font-size: 24px;
                     font-weight: 400;
                     color: rgba(255,255,255,1);
-                    line-height: 33px;
+                    width: 100%;
+                    height: 72px;
+                    line-height: 72px;
+                    text-align: left;
+                    text-indent: 20px;
+                    z-index: 5;
+                }
+                .linear-mask {
+                    position: absolute;
+                    bottom: 0px;
+                    left: 0px;
+                    width: 100%;
+                    height: 72px;
+                    background: linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,0.6) 100%);
+                    z-index: 10;
                 }
             }
         }

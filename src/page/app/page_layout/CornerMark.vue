@@ -44,6 +44,7 @@ export default {
         },
         rightTopStyle() {
             let image = _.get(this.cornerMark, 'rightTop.appImage');
+            console.log(image);
             if (_.isEmpty(image)) {
                 return '';
             } else {
@@ -57,6 +58,7 @@ export default {
         },
         rightBottomText() {
             let text = (_.get(this.cornerMark, 'leftBottom.caption') || _.get(this.cornerMark, 'rightBottom.caption'));
+            console.log(text);
             return text;
         },
         isLeftBottom() {

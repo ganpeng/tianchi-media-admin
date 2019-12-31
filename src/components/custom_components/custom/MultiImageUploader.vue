@@ -36,7 +36,6 @@ import {
     promiseImageSize,
     filterFile,
     filterSizeMatchFiles,
-    getImageDemensionByName,
     readBlobAsDataURLFromList
 } from '../../../util/upload';
 import PreviewMultipleImages from './PreviewMultipleImages';

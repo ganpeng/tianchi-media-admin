@@ -376,6 +376,7 @@ export default {
         top: 60px;
         width: 280px;
         background: linear-gradient(-90deg, rgba(51,68,99,0.90) 0%, rgba(22,28,40,0.90) 100%);
+        z-index: 10;
         .header {
             height: 102px;
             line-height: 102px;

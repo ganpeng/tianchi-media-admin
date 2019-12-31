@@ -259,17 +259,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.app-page-layout-container {
-    .fixed-btn-container {
-        display: flex;
-        justify-content: space-around;
-        width: 320px;
-        .el-button {
-            margin-right: 0px;
-        }
-    }
-}
-
 .my-add-cycle {
     &.el-button {
         width: 30px;
@@ -333,6 +322,7 @@ export default {
         top: 60px;
         width: 280px;
         background: linear-gradient(-90deg, rgba(51,68,99,0.90) 0%, rgba(22,28,40,0.90) 100%);
+        z-index: 10;
         .header {
             height: 102px;
             line-height: 102px;

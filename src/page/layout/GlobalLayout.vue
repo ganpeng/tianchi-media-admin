@@ -2,7 +2,6 @@
     <div class="app-container">
         <div v-show="showHeaderAndAside" class="header clearfix">
             <ul class="nav-list clearfix float-left" :class="{'is-center-site' :isCenterSite}">
-                <!-- <li v-if="index !== navList.length - 1" v-for="(item, index) in navList" :key="index" -->
                 <li v-for="(item, index) in activeNavList" :key="index"
                     :class="['nav-item', active === index ? 'active' : '']"
                     @click="changeActive(index)">
@@ -40,29 +39,6 @@
                     <svg-icon v-else icon-class="app_icon"></svg-icon>
                 </span>
             </div>
-            <!--
-            <ul class="aside-list">
-                <li v-if="index === active" v-for="(asides, index) in asideList" :key="index" class="aside-item">
-                    <el-menu
-                        :default-active="defaultActive"
-                        class="el-menu-vertical-demo"
-                        background-color="transparent"
-                        text-color="#6a707c"
-                        active-text-color="#fff">
-                        <el-menu-item
-                            v-for="(item, innerIndex) in asides"
-                            :key="innerIndex"
-                            :index="item.uri"
-                            @click="menuChangeHandler(item)">
-                            <svg-icon
-                                :icon-class="item.icon">
-                            </svg-icon>
-                            <span slot="title">{{item.text}}</span>
-                        </el-menu-item>
-                    </el-menu>
-                </li>
-            </ul>
-            -->
             <div class="aside-list">
                 <ul class="el-menu">
                     <li v-for="(item, index) in activeAsideList"
@@ -72,9 +48,12 @@
                         <svg-icon
                             :icon-class="item.icon">
                         </svg-icon>
-                        <span slot="title">{{item.text}}</span>
+                        <span class="title">{{item.text}}</span>
                     </li>
                 </ul>
+            </div>
+            <div class="left-bottom-logo">
+                <svg-icon icon-class="left_bottom_logo"></svg-icon>
             </div>
         </div>
         <div :style="contentStyleStr()" id="global-content" class="content">
@@ -295,7 +274,6 @@
 </script>
 
 <style lang="scss" scoped>
-
     .app-container {
         position: relative;
         width: 100%;
@@ -310,7 +288,7 @@
             color: $navText;
             .nav-list {
                 line-height: $headerHeight;
-                padding-left: 60px;
+                padding-left: 80px;
                 /*设置站点管理和配置中心的隐藏和展示*/
                 &.is-center-site {
                     li:last-child {
@@ -436,11 +414,15 @@
                 align-items: center;
                 width: 200px;
                 height: $headerHeight;
+                background-color: #0F1623;
                 span {
                     flex: 1;
                     height: $headerHeight;
                     line-height: $headerHeight;
                     cursor: pointer;
+                    &:hover {
+                        background-color: #000;
+                    }
                 }
                 .app-btn {
                     &.active {
@@ -459,6 +441,15 @@
                         width: 20px;
                         height: 16px;
                     }
+                }
+            }
+            .left-bottom-logo {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                .svg-icon {
+                    width: 200px;
+                    height: 140px;
                 }
             }
         }
@@ -508,6 +499,9 @@
                 border-left: 4px solid $mainColor;
                 .svg-icon {
                     fill: $headerNavActiveText;
+                }
+                .title {
+                    color: #fff;
                 }
             }
         }
