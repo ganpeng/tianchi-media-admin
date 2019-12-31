@@ -240,9 +240,15 @@
                 </div>
                 <div>
                     <label v-if="currentCarouselGroup.carouselVideoList.length === 0">暂无视频</label>
-                    <span v-if="currentCarouselGroup.carouselVideoList.length !== 0">播放时长</span><label
-                    v-if="currentCarouselGroup.carouselVideoList.length !== 0">{{currentCarouselGroup.duration |
-                    fromSecondsToTime}}</label>
+                    <span v-if="currentCarouselGroup.carouselVideoList.length !== 0">播放时长</span>
+                    <label
+                        v-if="currentCarouselGroup.carouselVideoList.length !== 0 && currentCarouselGroup.duration !== null && currentCarouselGroup.duration !== undefined">
+                        {{currentCarouselGroup.duration | fromSecondsToTime}}
+                    </label>
+                    <label
+                        v-if="currentCarouselGroup.carouselVideoList.length !== 0 && (currentCarouselGroup.duration === null || currentCarouselGroup.duration === undefined)">
+                        {{currentCarouselGroup.carouselVideoList | getCarouselVideoTime | fromSecondsToTime}}
+                    </label>
                 </div>
                 <div>
                     <label v-if="currentCarouselGroup.carouselVideoList.length === 0">暂无总时长</label>
@@ -763,10 +769,11 @@
                 }
             };
             let checkDurationFormat = (rule, value, callback) => {
-                if (this.$util.isEmpty(value)) {
+                if (this.$util.isEmpty(value) || isNaN(value)) {
+                    this.groupInfo.durationFormat = '';
                     callback();
                 } else if (!/^[0-9]{6}$/.test(value)) {
-                    return callback(new Error('请填写6位数字作为能播放时长'));
+                    return callback(new Error('请填写6位数字作为播放时长'));
                 } else {
                     callback();
                 }
@@ -908,7 +915,13 @@
             getGroupDuration(groupList) {
                 let duration = 0;
                 for (let i = 0; i < groupList.length; i++) {
-                    duration = duration + groupList[i].duration;
+                    if (isNaN(groupList[i].duration) || groupList[i].duration === null || groupList[i].duration === undefined) {
+                        for (let m = 0; m < groupList[i].carouselVideoList.length; m++) {
+                            duration = duration + groupList[i].carouselVideoList[m].takeTimeInSec;
+                        }
+                    } else {
+                        duration = duration + groupList[i].duration;
+                    }
                 }
                 return duration;
             },
@@ -952,9 +965,25 @@
             },
             editGroupInfo(index) {
                 this.groupInfo.name = this.carouselGroup[index].name;
-                this.groupInfo.durationFormat = this.carouselGroup[index].durationFormat;
+                this.groupInfo.durationFormat = this.transDuration(this.carouselGroup[index].duration);
                 this.groupInfo.index = index;
                 this.createGroupDialogVisible = true;
+            },
+            transDuration(duration) {
+                // 小时
+                let hour = parseInt(duration / 60 / 60);
+                if (hour.toString().length === 1) {
+                    hour = '0' + hour.toString();
+                }
+                let min = parseInt((duration - parseInt(duration / 60 / 60) * 60 * 60) / 60);
+                if (min.toString().length === 1) {
+                    min = '0' + min.toString();
+                }
+                let seconds = duration % 60;
+                if (seconds.toString().length === 1) {
+                    seconds = '0' + seconds.toString();
+                }
+                return hour + min + seconds;
             },
             init() {
                 this.$util.toggleFixedBtnContainer();
@@ -1035,11 +1064,15 @@
                         if (this.groupInfo.index !== '') {
                             this.carouselGroup[this.groupInfo.index].name = this.groupInfo.name;
                             this.carouselGroup[this.groupInfo.index].durationFormat = this.groupInfo.durationFormat;
-                            this.carouselGroup[this.groupInfo.index].duration = parseInt(this.groupInfo.durationFormat.substring(0, 2) * 60 * 60) + parseInt(this.groupInfo.durationFormat.substring(2, 4) * 60) + parseInt(this.groupInfo.durationFormat.substring(4, 6));
+                            if (!this.groupInfo.durationFormat) {
+                                this.carouselGroup[this.groupInfo.index].duration = undefined;
+                            } else {
+                                this.carouselGroup[this.groupInfo.index].duration = parseInt(this.groupInfo.durationFormat.substring(0, 2) * 60 * 60) + parseInt(this.groupInfo.durationFormat.substring(2, 4) * 60) + parseInt(this.groupInfo.durationFormat.substring(4, 6));
+                            }
                         } else {
                             this.carouselGroup.push({
                                 name: this.groupInfo.name,
-                                duration: parseInt(this.groupInfo.durationFormat.substring(0, 2) * 60 * 60) + parseInt(this.groupInfo.durationFormat.substring(2, 4) * 60) + parseInt(this.groupInfo.durationFormat.substring(4, 6)),
+                                duration: !this.groupInfo.durationFormat ? undefined : parseInt(this.groupInfo.durationFormat.substring(0, 2) * 60 * 60) + parseInt(this.groupInfo.durationFormat.substring(2, 4) * 60) + parseInt(this.groupInfo.durationFormat.substring(4, 6)),
                                 durationFormat: this.groupInfo.durationFormat,
                                 videoDuration: '',
                                 carouselVideoList: []
