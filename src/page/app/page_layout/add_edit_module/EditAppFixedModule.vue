@@ -168,7 +168,7 @@ export default {
                         if (layoutBlock) {
                             let res = await this.$service.putAppLayoutBlock(id, layoutBlock);
                             if (res && res.code === 0) {
-                                if (this.isRecommend) {
+                                if (this.isRecommend === 'yes') {
                                     let channelRes = await this.$service.postAppChannelLayout(this.reqBody);
                                     if (channelRes && channelRes.code === 0) {
                                         this.$message.success('保存成功');
