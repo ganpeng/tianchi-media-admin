@@ -354,9 +354,6 @@ export default {
 .page-layout-container {
     position: relative;
     .fixed-btn-container {
-        display: flex;
-        justify-content: space-around;
-        width: 320px;
         .el-button {
             margin-right: 0px;
         }

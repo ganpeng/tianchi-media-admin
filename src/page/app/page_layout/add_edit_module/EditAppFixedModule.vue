@@ -3,7 +3,7 @@
         <div class="content-title">编辑首页推荐固定模块</div>
         <div class="seperator-line"></div>
         <div class="content">
-            <ul v-if="isRecommend" class="block-cell-list">
+            <ul v-if="isRecommend === 'yes'" class="block-cell-list">
                 <li class="channel block-cell-item">
                     <el-button @click="selectLiveChannel" class="set-channel-btn btn-style-two">
                         设置直播频道
@@ -19,14 +19,12 @@
                 <li v-for="(layoutItem, index) in layoutItemMultiList" :style="styleBgImageStr(index)" :key="index" class="block-cell-item">
                     <div class="mask"></div>
                     <corner-mark :squareIndex="index" :layoutItem="getLayoutItemDetail(navbarId, 0, index)" :cornerMark="getLayoutItemCornerMark(navbarId, 0, index)"></corner-mark>
-                    <add-btn
-                        :addLayoutItem="addLayoutItem(index)"
-                    ></add-btn>
-                    <span v-if="layoutItemMultiList.length > 3" @click="deleteLayoutItemHandler(index)" class="delete-btn">
+                    <add-btn :addLayoutItem="addLayoutItem(index)"></add-btn>
+                    <span v-if="layoutItemMultiList && layoutItemMultiList.length > 3" @click="deleteLayoutItemHandler(index)" class="delete-btn">
                         <svg-icon icon-class="remove_image_default"></svg-icon>
                     </span>
                 </li>
-                <li v-if="layoutItemMultiList.length < 5" class="upload-box ignore-element block-cell-item" @click="createLayoutItem">
+                <li v-if="layoutItemMultiList && layoutItemMultiList.length < 5" class="upload-box ignore-element block-cell-item" @click="createLayoutItem">
                     <i class="el-icon-plus plus-icon"></i>
                 </li>
             </draggable>
@@ -57,27 +55,33 @@ export default {
             allowResolutions: [],
             // 直播频道相关
             reqBody: [],
-            channel: {}
+            channel: {},
+            isRecommend: false
         };
     },
     async created() {
         try {
             let {navbarId} = this.$route.params;
             this.navbarId = navbarId;
+            let {isRecommend} = this.$route.query;
+            this.isRecommend = isRecommend;
+
             await this.getAppNavbarList();
             await this.getAppLayoutByNavbarId(navbarId);
 
-            let res = await this.$service.getAppChannelLayout({navBarId: navbarId});
-            if (res && res.code === 0) {
-                let obj = res.data.list[0];
-                let reqBody = [{
-                    navBarId: obj.navBarId,
-                    navBarName: obj.navBarName,
-                    channel: obj.channel,
-                    channelCategory: obj.channelCategory
-                }];
-                this.channel = obj && obj.channel ? obj.channel : {};
-                this.reqBody = reqBody;
+            if (this.isRecommend === 'yes') {
+                let res = await this.$service.getAppChannelLayout({navBarId: navbarId});
+                if (res && res.code === 0) {
+                    let obj = res.data.list[0];
+                    let reqBody = [{
+                        navBarId: obj.navBarId,
+                        navBarName: obj.navBarName,
+                        channel: obj.channel,
+                        channelCategory: obj.channelCategory
+                    }];
+                    this.channel = obj && obj.channel ? obj.channel : {};
+                    this.reqBody = reqBody;
+                }
             }
         } catch (err) {
             console.log(err);
@@ -97,14 +101,6 @@ export default {
                 let bgStr = `background-image: url(${url})`;
                 return bgStr;
             };
-        },
-        isRecommend() {
-            let {isRecommend} = this.$route.query;
-            return isRecommend;
-        },
-        layoutItemBlockLength() {
-            let length = _.get(this.activeLayout, `0.layoutItemMultiList.length`);
-            return length || 0;
         },
         layoutItemMultiList: {
             get() {
@@ -156,6 +152,7 @@ export default {
                 case 1:
                 case 2:
                 case 3:
+                case 4:
                     this.allowResolutions = [{width: 1122, height: 636}];
                     break;
                 default:

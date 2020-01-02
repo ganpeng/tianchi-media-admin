@@ -602,14 +602,14 @@ export default {
         },
         //  角标的相关操作
         rightBottomMarkSelectHandler(value) {
-            let {score, featureVideoCount, totalSets, programmeTemplate} = this.programme;
+            let {score, featureVideoCount, totalSets, programmeTemplate, latestTermName} = this.programme;
             let leftBottomCaption = '';
             switch (programmeTemplate) {
                 case 'TV_DRAMA':
                     leftBottomCaption = featureVideoCount ? `更新至${featureVideoCount}集` : '';
                     break;
                 case 'TV_SHOW':
-                    leftBottomCaption = featureVideoCount ? `更新至${featureVideoCount}期` : '';
+                    leftBottomCaption = latestTermName ? `更新至${latestTermName}期` : '';
                     break;
                 default:
                     leftBottomCaption = '';

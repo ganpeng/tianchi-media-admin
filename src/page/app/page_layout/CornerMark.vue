@@ -44,7 +44,6 @@ export default {
         },
         rightTopStyle() {
             let image = _.get(this.cornerMark, 'rightTop.appImage');
-            console.log(image);
             if (_.isEmpty(image)) {
                 return '';
             } else {
@@ -58,7 +57,6 @@ export default {
         },
         rightBottomText() {
             let text = (_.get(this.cornerMark, 'leftBottom.caption') || _.get(this.cornerMark, 'rightBottom.caption'));
-            console.log(text);
             return text;
         },
         isLeftBottom() {
@@ -105,6 +103,7 @@ export default {
         position: absolute;
         top: 0px;
         right: 10px;
+        z-index: 8px;
         @include common(yellow);
     }
     .right-bottom-field {
@@ -116,6 +115,7 @@ export default {
         color: #FF3C2E;
         font-size: 20px;
         background: rgba(0, 0, 0, 0.8);
+        z-index: 8;
         &.is-leftbottom {
             color: #fff;
         }

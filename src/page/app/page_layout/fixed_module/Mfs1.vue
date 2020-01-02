@@ -81,9 +81,6 @@ export default {
             if (res && res.code === 0) {
                 let obj = res.data.list[0];
                 this.channel = obj && obj.channel ? obj.channel : {};
-                if (this.delay) {
-                    this.autoplay.delay = 0;
-                }
             }
         } catch (err) {
             console.log(err);
@@ -96,10 +93,6 @@ export default {
 
             activeLayout: 'appPageLayout/activeLayout'
         }),
-        delay() {
-            let delayFlag = _.every(this.bannerList, (item) => !item.id);
-            return delayFlag;
-        },
         styleBgImageStr() {
             return (squareIndex) => {
                 let url = _.get(this.activeLayout, `0.layoutItemMultiList.${squareIndex}.coverImage.uri`);
@@ -109,7 +102,7 @@ export default {
         },
         isRecommend() {
             let isRecommend = _.get(this.activeLayout, '0.navBarName') === '推荐';
-            return isRecommend;
+            return isRecommend ? 'yes' : 'no';
         },
         bannerList() {
             let bannerList = _.get(this.activeLayout, '0.layoutItemMultiList');
@@ -169,7 +162,8 @@ export default {
                     width: 100%;
                     height: 72px;
                     background: linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,0.6) 100%);
-                    z-index: 10;
+                    z-index: 6;
+                    border-radius: 10px;
                 }
             }
         }

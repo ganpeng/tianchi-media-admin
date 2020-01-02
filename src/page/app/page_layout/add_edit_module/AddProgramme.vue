@@ -586,14 +586,14 @@ export default {
         },
         //  角标的相关操作
         rightBottomMarkSelectHandler(value) {
-            let {score, featureVideoCount, totalSets, programmeTemplate} = this.programme;
+            let {score, featureVideoCount, totalSets, programmeTemplate, latestTermName} = this.programme;
             let leftBottomCaption = '';
             switch (programmeTemplate) {
                 case 'TV_DRAMA':
                     leftBottomCaption = featureVideoCount ? `更新至${featureVideoCount}集` : '';
                     break;
                 case 'TV_SHOW':
-                    leftBottomCaption = featureVideoCount ? `更新至${featureVideoCount}期` : '';
+                    leftBottomCaption = latestTermName ? `更新至${latestTermName}期` : '';
                     break;
                 default:
                     leftBottomCaption = '';
@@ -655,18 +655,11 @@ export default {
                     layoutBlockItem: this.layoutBlockItemClone
                 });
             } else {
-                if (this.index === 0 && this.squareIndex > 2) {
-                    this.addLayoutBlockByIndex({
-                        index: this.index,
-                        layoutBlockItem: this.layoutBlockItemClone
-                    });
-                } else {
-                    this.updateLayoutBlockByIndex({
-                        squareIndex: this.squareIndex,
-                        index: this.index,
-                        layoutBlockItem: this.layoutBlockItemClone
-                    });
-                }
+                this.updateLayoutBlockByIndex({
+                    squareIndex: this.squareIndex,
+                    index: this.index,
+                    layoutBlockItem: this.layoutBlockItemClone
+                });
             }
             this.closeDialog();
         },
