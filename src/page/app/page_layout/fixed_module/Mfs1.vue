@@ -7,7 +7,7 @@
         </div>
         <div class="swiper-wrapper">
             <swiper class="swiper-container" :options="swiperOption">
-                <swiper-slide class="swiper-slide-one" v-if="isRecommend" key="10000000">
+                <swiper-slide class="swiper-slide-one" v-if="isRecommend === 'yes'" key="10000000">
                     <div class="channel">
                         <img :src="channel.logoUri" alt="">
                         <div class="text-info">
