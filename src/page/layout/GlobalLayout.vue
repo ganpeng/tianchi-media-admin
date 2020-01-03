@@ -1,7 +1,7 @@
 <template>
     <div class="app-container">
         <div v-show="showHeaderAndAside" class="header clearfix">
-            <ul class="nav-list clearfix float-left" :class="{'is-center-site' :isCenterSite}">
+            <ul class="nav-list clearfix float-left" :class="{'is-center-site': (isCenterSite && !appActive)}">
                 <li v-for="(item, index) in activeNavList" :key="index"
                     :class="['nav-item', active === index ? 'active' : '']"
                     @click="changeActive(index)">
