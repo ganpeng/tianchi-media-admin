@@ -231,6 +231,7 @@ export default {
     .swiper-pagination-bullets {
         width: auto;
         margin-left: 20px;
+        text-align: left;
         .swiper-pagination-bullet-custom {
             width: 8px;
             height: 8px;
