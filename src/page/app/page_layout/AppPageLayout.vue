@@ -1,17 +1,19 @@
 <template>
     <div id="page-layout-container" class="app-page-layout-container">
         <div id="top"></div>
-        <div class="columns-container wrapper" ref="wrapperBox">
-            <ul class="columns-list clearfix content">
-                <li
-                    :style="navbarStyle(navbar)"
-                    v-for="(navbar) in navbarList"
-                    :key="navbar.id"
-                    @click="columnsTabChangeHandler(navbar)"
-                    :class="['columns-item', activeId === navbar.id ? 'active' : '']">
-                    {{navbar.name}}
-                </li>
-            </ul>
+        <div style="width: 1200px;overflow: hidden;" class="container-wrapper">
+            <div class="columns-container wrapper" ref="wrapperBox">
+                <ul class="columns-list clearfix content">
+                    <li
+                        :style="navbarStyle(navbar)"
+                        v-for="(navbar) in navbarList"
+                        :key="navbar.id"
+                        @click="columnsTabChangeHandler(navbar)"
+                        :class="['columns-item', activeId === navbar.id ? 'active' : '']">
+                        {{navbar.name}}
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="seperator-line"></div>
         <div class="page-layout-content">
@@ -282,37 +284,41 @@ export default {
     }
 }
 
-.columns-container {
-    overflow-x: scroll;
-    &::-webkit-scrollbar {
-        display: none;
-    }
-    .columns-list {
-        .columns-item {
-            float: left;
-            padding: 0 20px;
-            text-align: center;
-            margin-right: 10px;
-            height: 62px;
-            line-height: 62px;
-            font-size: 24px;
-            color: #6F7480;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            &.active {
-                color: #fff;
-                border-bottom-color: $mainColor;
-            }
-            &:hover {
-                color: #fff;
-                border-bottom-color: $mainColor;
+.container-wrapper {
+    width: 1200px;
+    margin: 0 auto;
+    .columns-container {
+        overflow-x: scroll;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        .columns-list {
+            .columns-item {
+                float: left;
+                padding: 0 20px;
+                text-align: center;
+                margin-right: 10px;
+                height: 62px;
+                line-height: 62px;
+                font-size: 24px;
+                color: #6F7480;
+                cursor: pointer;
+                border-bottom: 2px solid transparent;
+                &.active {
+                    color: #fff;
+                    border-bottom-color: $mainColor;
+                }
+                &:hover {
+                    color: #fff;
+                    border-bottom-color: $mainColor;
+                }
             }
         }
     }
 }
 
 .app-page-layout-container {
-    width: 1200px;
+    // width: 1200px;
     margin: 0 auto;
     position: relative;
     .layout-sort {

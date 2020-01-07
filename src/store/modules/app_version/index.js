@@ -5,18 +5,18 @@ import {getPageSize} from '@/util/formValidate';
 let isLoading = false;
 
 const defaultVersion = {
-    productType: '', // 客户端类型
     version: '', // 版本号
     versionCode: '', // 版本序列号
     updateLog: '', // 更新日志
     forced: '', // 是否强制升级
     uriPrefix: '', // 域名前缀
-    hardwareType: '', // 硬件类型
     fullPackageUri: '', // 全量升级包地址
     fullPackageMd5: '', // 包的md5
     incrPackageUri: '', // 增量升级包地址
     packageSize: '', // 包的大小
-    clientVersionStatsList: []
+    clientVersionStatsList: [],
+    districtCodeList: [],
+    batchList: []
 };
 
 const defaultSearchFields = {
@@ -24,7 +24,6 @@ const defaultSearchFields = {
     releaseAtEnd: '',
     forced: '', // 强制升级
     keyword: '', // 关键字
-    productType: '', // 升级类型
     dateRange: [] // 时间区间
 };
 
@@ -109,12 +108,6 @@ const mutations = {
 };
 
 function formatVersion(version) {
-    let versionCopy = _.cloneDeep(version);
-
-    if (!versionCopy.hardwareType) {
-        delete versionCopy.hardwareType;
-    }
-
     return Object.assign({}, version, {
         forced: version.forced === 1
     });

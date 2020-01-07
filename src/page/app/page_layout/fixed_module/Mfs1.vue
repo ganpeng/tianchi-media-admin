@@ -58,7 +58,8 @@ export default {
             swiperOption: {
                 slidesPerView: 1,
                 spaceBetween: 20,
-                centeredSlides: true,
+                // freeMode: true,
+                // centeredSlides: true,
                 autoplay: {
                     delay: 4500,
                     disableOnInteraction: false
