@@ -29,6 +29,8 @@
                     </span>
                 </swiper-slide>
                 <div class="swiper-pagination swiper-pagination-bullets" slot="pagination"></div>
+                <div class="swiper-button-prev" slot="button-prev"></div>
+                <div class="swiper-button-next" slot="button-next"></div>
             </swiper>
         </div>
     </div>
@@ -57,9 +59,6 @@ export default {
             navbarId: '',
             swiperOption: {
                 slidesPerView: 1,
-                spaceBetween: 20,
-                // freeMode: true,
-                // centeredSlides: true,
                 autoplay: {
                     delay: 4500,
                     disableOnInteraction: false
@@ -70,6 +69,10 @@ export default {
                     renderBullet(index, className) {
                         return `<span class="${className} swiper-pagination-bullet-custom"></span>`;
                     }
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev'
                 }
             }
         };
@@ -129,15 +132,15 @@ export default {
         justify-content: flex-end;
     }
     .swiper-wrapper {
-        width: 1200px;
         .swiper-container {
             position: relative;
-            width: 900px;
-            overflow: visible!important;
+            width: 994px;
+            height: 563px;
+            overflow: hidden;
             .inner-bg {
                 position: relative;
                 display: block;
-                height: 510px;
+                height: 563px;
                 background-repeat: no-repeat;
                 background-size: cover;
                 border-radius: 10px;
@@ -174,8 +177,6 @@ export default {
 <style lang="scss">
 .banner-container {
     .swiper-slide {
-        width: 900px!important;
-        height: 510px!important;
         background-color:rgba(37,45,63,0.5);
         border-radius:10px;
         &.swiper-slide-one {
@@ -230,9 +231,6 @@ export default {
         }
     }
     .swiper-pagination-bullets {
-        width: auto;
-        margin-left: 20px;
-        text-align: left;
         .swiper-pagination-bullet-custom {
             width: 8px;
             height: 8px;
@@ -240,10 +238,24 @@ export default {
             border-radius: 2px;
             margin: 0;
             margin-right: 8px;
+            opacity: 1;
             &.swiper-pagination-bullet-active {
                 width: 16px;
+                opacity: 1;
                 background: rgba(25,137,250,1);
             }
+        }
+    }
+    .swiper-button-prev,
+    .swiper-button-next {
+        display: none;
+        width: 50px;
+        height: 70px;
+    }
+    &:hover {
+        .swiper-button-prev,
+        .swiper-button-next {
+            display: block;
         }
     }
 }

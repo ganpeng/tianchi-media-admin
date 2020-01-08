@@ -254,7 +254,7 @@ html, body {
 
 .fixed-btn-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     position: fixed;
     bottom: 10px;
@@ -269,6 +269,12 @@ html, body {
     z-index: 1000;
     .el-button {
         margin-right: 0px;
+    }
+    .el-button + .el-button {
+        margin-left: 40px;
+    }
+    .el-dropdown {
+        margin-right: 40px;
     }
 }
 
