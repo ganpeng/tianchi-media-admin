@@ -127,9 +127,10 @@ export default {
     position: relative;
     overflow: hidden;
     .btn-field {
-        margin: 10px 0 10px 0;
         display: flex;
         justify-content: flex-end;
+        width: 994px;
+        margin: 10px auto;
     }
     .swiper-wrapper {
         .swiper-container {
