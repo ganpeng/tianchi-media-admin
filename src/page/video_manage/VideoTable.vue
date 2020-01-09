@@ -119,6 +119,7 @@
             <!--注入状态-->
             <el-table-column
                 align="center"
+                width="140"
                 label="注入状态">
                 <template slot-scope="scope">
                     <template v-if="scope.row.status">
