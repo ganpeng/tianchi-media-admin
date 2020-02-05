@@ -286,6 +286,13 @@
                         </span>
                     </template>
                 </el-table-column>
+                <el-table-column align="center" width="100px" label="cdn推流">
+                    <template slot-scope="scope">
+                        <span :class="[scope.row.cdnPush ? 'yes' : 'no']">
+                            {{scope.row.cdnPush ? '是' : '否'}}
+                        </span>
+                    </template>
+                </el-table-column>
                 <el-table-column align="center" width="120px" label="公共频道">
                     <template slot-scope="scope">
                         <span :class="[scope.row.common ? 'yes' : 'no']">

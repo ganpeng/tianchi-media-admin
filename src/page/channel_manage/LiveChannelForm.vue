@@ -27,6 +27,28 @@
                         @input="inputHandler($event, 'no')"
                     ></el-input>
                 </el-form-item>
+                <el-form-item label="CDN推流" prop="cdnPush">
+                    <el-radio @input="inputHandler(true, 'cdnPush')" :value="liveChannel.cdnPush" :label="true">是</el-radio>
+                    <el-radio @input="inputHandler(false, 'cdnPush')" :value="liveChannel.cdnPush" :label="false">否</el-radio>
+                </el-form-item>
+                <el-form-item v-if="liveChannel.cdnPush" label="推流地址" prop="pushAddress">
+                    <el-input
+                        placeholder="请输入pushAddress"
+                        :value="liveChannel.pushAddress"
+                        maxlength="300"
+                        @input="inputHandler($event, 'pushAddress')"
+                    >
+                    </el-input>
+                </el-form-item>
+                <el-form-item v-if="liveChannel.cdnPush" label="拉流地址" prop="pullAddress">
+                    <el-input
+                        placeholder="请输入pullAddress"
+                        :value="liveChannel.pullAddress"
+                        maxlength="300"
+                        @input="inputHandler($event, 'pullAddress')"
+                    >
+                    </el-input>
+                </el-form-item>
                 <el-form-item label="频道IP" prop="multicastIp">
                     <el-input
                         placeholder="请输入频道IP"
@@ -54,7 +76,7 @@
                 </el-form-item>
                 <el-form-item ref="protocolListFormItem" label="推流方式" prop="protocolList">
                     <el-checkbox :value="methodsChecked('HLS')" @change="methodsHandler($event, 'HLS')">HLS</el-checkbox>
-                    <el-checkbox :value="methodsChecked('UDP')" @change="methodsHandler($event, 'UDP')">UDP</el-checkbox>
+                    <el-checkbox v-if="!liveChannel.cdnPush" :value="methodsChecked('UDP')" @change="methodsHandler($event, 'UDP')">UDP</el-checkbox>
                 </el-form-item>
                 <el-form-item label="录制IP" prop="recordIp">
                     <el-input
@@ -223,6 +245,10 @@ export default {
                 //  dev_v2.6 新增
                 applicableClientList: [
                     { required: true, message: '请选择适用客户端' }
+                ],
+                //  年后新增的字段
+                cdnPush: [
+                    { required: true, message: '请选择是否为cdn推流' }
                 ]
             }
         };

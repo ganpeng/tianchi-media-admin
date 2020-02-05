@@ -193,7 +193,7 @@
             @size-change="handlePaginationChange($event, 'pageSize')"
             @current-change="handlePaginationChange($event, 'pageNum')"
             :current-page="pagination.pageNum"
-            :page-sizes="[5, 10, 20, 30, 50]"
+            :page-sizes="[] | pageSizes"
             :page-size="pagination.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="pagination.total">

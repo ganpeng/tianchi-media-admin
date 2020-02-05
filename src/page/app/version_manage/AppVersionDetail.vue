@@ -79,7 +79,7 @@
         </div>
         <div class="seperator-line"></div>
         <div class="fixed-btn-container">
-            <el-button v-if="version.releaseStatus !== 'PRE_RELEASED'" class="btn-style-two" type="primary" @click="gotoEdit">编辑</el-button>
+            <el-button v-if="version.releaseStatus === 'PRE_RELEASED'" class="btn-style-two" type="primary" @click="gotoEdit">编辑</el-button>
             <el-button class="btn-style-three" @click="goBack">返回列表</el-button>
         </div>
     </div>

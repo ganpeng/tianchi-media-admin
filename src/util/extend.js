@@ -192,10 +192,12 @@ let util = {
         return time;
     },
     getUploadHeaders(token) {
+        let cookie = document.cookie;
         return {
             'Accept': 'application/json',
             'x-tianchi-client': '{"role":"ADVISER","version":"v1.1.1","deviceId":"1234fads"}',
-            'x-tianchi-token': token
+            'x-tianchi-token': token,
+            'x-tianchi-cookie': cookie
         };
     },
     getRandomUrl(uri, count) {
