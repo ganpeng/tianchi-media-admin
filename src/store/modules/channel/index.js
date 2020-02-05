@@ -65,7 +65,11 @@ let defaultLiveChannel = {
     visible: false, // 是否上下架
     paymentType: 'FREE',
     //  dev_v2.6 新增
-    applicableClientList: ['TV']
+    applicableClientList: ['TV'],
+    // 年后新增的字段
+    cdnPush: false,
+    pushAddress: '',
+    pullAddress: ''
 };
 
 const defaultState = {
@@ -166,6 +170,14 @@ const mutations = {
     updateLiveChannel(state, payload) {
         let {key, value} = payload;
         state.liveChannel[key] = value;
+        if (key === 'cdnPush') {
+            if (value) {
+                state.liveChannel.protocolList = state.liveChannel.protocolList.filter((item) => item !== 'UDP');
+            } else {
+                state.liveChannel.pullAddress = '';
+                state.liveChannel.pushAddress = '';
+            }
+        }
     },
     resetLiveChannel(state) {
         state.liveChannel = _.cloneDeep(defaultLiveChannel);
@@ -330,7 +342,10 @@ const actions = {
                         record: null,
                         protocolList: [],
                         companyList: [],
-                        applicableClientList: ['TV']
+                        applicableClientList: ['TV'],
+                        cdnPush: false,
+                        pullAddress: '',
+                        pushAddress: ''
                     }, res.data)});
                 return res;
             }
