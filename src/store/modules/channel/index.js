@@ -29,7 +29,9 @@ let defaultSearchFields = {
     refCount: '', // 关联
     paymentType: '',
     // dev_v2.6 新增
-    applicableClientList: []
+    applicableClientList: [],
+    // 过完年后增加的字段
+    cdnPush: undefined
 };
 
 let defaultPagination = {
