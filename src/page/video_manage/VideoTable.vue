@@ -179,8 +179,8 @@
                 </template>
             </el-table-column>
             <!--子站拉取状态（子站）-->
-            <!--<el-table-column v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"-->
             <el-table-column
+                v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
                 align="center"
                 label="拉取状态">
                 <template slot-scope="scope">

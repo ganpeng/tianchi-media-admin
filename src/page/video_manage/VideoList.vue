@@ -421,6 +421,10 @@
             },
             // 批量取消'转码中'和'入库中'的视频注入（只有是'转码中'和'入库中'的视频才能取消）
             cancelInjectSelectedVideoHandler(videoStatus) {
+                // '取消注入'的权限与注入的权限相同
+                if (!this.$authority.isHasAuthority('storage:video:add')) {
+                    return;
+                }
                 let statusTag = videoStatus === 'SPLIT_TASK_ON_PROCESS' ? '转码' : '入库';
                 // 对选择的视频列表进行检测
                 let videoList = this.$refs.videoTable.getSelectedVideoList();
