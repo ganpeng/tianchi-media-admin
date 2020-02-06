@@ -98,6 +98,24 @@ export const exportTsVideos = ({videoIdList, isRetry}) => {
 };
 
 /**
+ * 根据id列表批量取消'转码中'和'入库中'的视频
+ */
+export const bacthCancelInjectVideos = ({storageVideoIdList}) => {
+    return service.post(`/v1/storage/video/batch-injection/cancel`, storageVideoIdList, {
+        baseURL: '/storage'
+    });
+};
+
+/**
+ * 根据id列表批量取消'拉取中'的视频
+ */
+export const bacthCancelPullVideoFromMainSite = ({storageVideoIdList}) => {
+    return service.post(`/v1/storage/video/batch-pull/cancel`, storageVideoIdList, {
+        baseURL: '/storage'
+    });
+};
+
+/**
  * 导出全部视频列表的EXCEL
  */
 export const exportAllVideoListExcel = () => {

@@ -144,6 +144,13 @@
                             @click="retryInjectSingleVideo(scope.row)">
                             重试
                         </span>
+                        <!--'转码中'和'入库中'的取消-->
+                        <span
+                            v-if="scope.row.status === 'SPLIT_TASK_ON_PROCESS' || scope.row.status === 'SPLIT_TASK_SUCCESS'"
+                            class="text-danger"
+                            @click="cancelInjectSingleVideo(scope.row)">
+                        取消
+                        </span>
                     </template>
                     <span v-else>---</span>
                 </template>
@@ -172,8 +179,8 @@
                 </template>
             </el-table-column>
             <!--子站拉取状态（子站）-->
+            <!--<el-table-column v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"-->
             <el-table-column
-                v-if="$wsCache.localStorage.get('siteInfo') && !$wsCache.localStorage.get('siteInfo').siteMasterEnable"
                 align="center"
                 label="拉取状态">
                 <template slot-scope="scope">
@@ -190,6 +197,12 @@
                             class="retry-text-btn"
                             @click="pullVideoFromMainSite(scope.row)">
                             重试
+                        </span>
+                        <!-- 取消拉取 -->
+                        <span v-if="scope.row.downloadStatus === 'ON_GOING'"
+                              class="text-danger"
+                              @click="cancelPullVideoFromMainSite(scope.row)">
+                            取消
                         </span>
                     </template>
                     <span v-else>---</span>
@@ -372,15 +385,17 @@
                     case 'UPLOAD_COMPLETED':
                         return '原文件上传成功';
                     case 'SPLIT_TASK_SUBMITTED':
-                        return '转码任务已提交';
+                        // 2020.2.6 产品改
+                        return '等待转码';
                     case 'SPLIT_TASK_ON_QUEUE':
-                        return '转码任务排队中';
+                        // 2020.2.6 产品改
+                        return '等待转码';
                     case 'SPLIT_TASK_ON_PENDING':
                         return '转码任务分配中';
                     case 'SPLIT_TASK_ON_PROCESS':
-                        return '转码任务转码中' + ' ' + video.transcodeProgress + '%';
+                        return '转码中' + ' ' + video.transcodeProgress + '%';
                     case 'SPLIT_TASK_SUCCESS':
-                        return '切片正在入库';
+                        return '入库中';
                     case 'SUCCESS':
                         return '注入成功';
                     case 'FAILED':
@@ -705,6 +720,53 @@
                     }
                 });
             },
+            // 取消注入
+            cancelInjectSingleVideo(video) {
+                // '取消注入'的权限与注入的权限相同
+                if (!this.$authority.isHasAuthority('storage:video:add')) {
+                    return;
+                }
+                let msg = '取消后将重新排队转码，确定要取消' + (video.status === 'SPLIT_TASK_ON_PROCESS' ? '转码吗？' : '入库吗？');
+                this.$confirm(msg, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.$service.bacthCancelInjectVideos({storageVideoIdList: [video.id]}).then((res) => {
+                        if (res && res.code === 0) {
+                            this.$message.success('视频取消' + (video.status === 'SPLIT_TASK_ON_PROCESS' ? '转码' : '入库') + '成功');
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: '视频取消' + (video.status === 'SPLIT_TASK_ON_PROCESS' ? '转码' : '入库') + '失败'
+                            });
+                        }
+                    });
+                });
+            },
+            // 取消拉取
+            cancelPullVideoFromMainSite(video) {
+                // '取消拉取'的权限与注入的权限相同
+                if (!this.$authority.isHasAuthority('storage:video:add')) {
+                    return;
+                }
+                this.$confirm('取消后将拉取失败，确定要取消拉取吗？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.$service.bacthCancelPullVideoFromMainSite({storageVideoIdList: [video.id]}).then((res) => {
+                        if (res && res.code === 0) {
+                            this.$message.success('视频取消拉取成功');
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: '视频取消拉取失败'
+                            });
+                        }
+                    });
+                });
+            },
             // 获取已选的视频列表
             getSelectedVideoList() {
                 return this.multipleSelection;
@@ -723,6 +785,10 @@
         .el-button {
             font-size: 14px;
         }
+    }
+
+    .text-danger {
+        cursor: pointer;
     }
 
     /*展示分享站点*/

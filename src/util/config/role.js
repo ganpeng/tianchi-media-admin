@@ -335,10 +335,6 @@ export const VIDEO_TRANSFER_STATUS = {
 // 视频的注入状态
 export const VIDEO_INJECTING_STATUS_OPTIONS = [
     {
-        value: 'UPLOAD_COMPLETED',
-        label: '上传成功'
-    },
-    {
         value: 'WAITING_SPLIT',
         label: '等待转码'
     },
