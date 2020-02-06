@@ -442,6 +442,20 @@
                     this.$message.warning('不存在可以重新拉取的视频');
                 }
             },
+            // 后端导出全部视频的EXCEL列表
+            exportAllVideoHandler() {
+                if (!this.$authority.isHasAuthority('storage:video:export')) {
+                    return;
+                }
+                this.$service.exportAllVideoListExcel().then(response => {
+                    let aLink = document.createElement('a');
+                    let blob = new Blob([response], {type: 'application/vnd.ms-excel'});
+                    aLink.href = URL.createObjectURL(blob);
+                    aLink.setAttribute('download', '所有视频表_' + new Date() + '.xlsx');
+                    aLink.click();
+                    this.$refs.loadElement.appendChild(aLink);
+                });
+            },
             // 注入失败视频----批量重试
             retryInjectSelectedVideoHandler() {
                 // 对选择的视频列表进行检测，注入失败的视频才能进行批量重试
