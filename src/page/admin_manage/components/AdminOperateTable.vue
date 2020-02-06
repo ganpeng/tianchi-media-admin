@@ -128,7 +128,7 @@
             };
         },
         methods: {
-            // 勾选专题
+            // 勾选管理员
             handleSelectionChange(val) {
                 this.multipleSelection = val;
                 if (this.multipleSelection.length === 0) {
@@ -237,7 +237,7 @@
                     return;
                 }
                 if (item.status === 'NORMAL') {
-                    this.$message.warning('当前专题处于启用状态，请禁用之后再进行删除操作');
+                    this.$message.warning('当前管理员处于启用状态，请禁用之后再进行删除操作');
                     return;
                 }
                 this.$confirm('此操作将删除' + item.name + '管理员, 是否继续?', '提示', {

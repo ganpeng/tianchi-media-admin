@@ -53,6 +53,14 @@
                                 <el-dropdown-item>
                                     <span @click="exportAllVideoHandler">导出全部</span>
                                 </el-dropdown-item>
+                                <!-- 取消转码 -->
+                                <el-dropdown-item>
+                                    <span @click="cancelInjectSelectedVideoHandler('SPLIT_TASK_ON_PROCESS')">取消转码</span>
+                                </el-dropdown-item>
+                                <!-- 取消入库 -->
+                                <el-dropdown-item>
+                                    <span @click="cancelInjectSelectedVideoHandler('SPLIT_TASK_SUCCESS')">取消入库</span>
+                                </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -138,6 +146,14 @@
                             <!-- 后端导出全部的视频列表 -->
                             <el-dropdown-item>
                                 <span @click="exportAllVideoHandler">导出全部</span>
+                            </el-dropdown-item>
+                            <!-- 取消转码 -->
+                            <el-dropdown-item>
+                                <span @click="cancelInjectSelectedVideoHandler('SPLIT_TASK_ON_PROCESS')">取消转码</span>
+                            </el-dropdown-item>
+                            <!-- 取消入库 -->
+                            <el-dropdown-item>
+                                <span @click="cancelInjectSelectedVideoHandler('SPLIT_TASK_SUCCESS')">取消入库</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -401,6 +417,41 @@
                     });
                 } else {
                     this.$message.warning('不存在可以重新拉取的视频');
+                }
+            },
+            // 批量取消'转码中'和'入库中'的视频注入（只有是'转码中'和'入库中'的视频才能取消）
+            cancelInjectSelectedVideoHandler(videoStatus) {
+                // '取消注入'的权限与注入的权限相同
+                if (!this.$authority.isHasAuthority('storage:video:add')) {
+                    return;
+                }
+                let statusTag = videoStatus === 'SPLIT_TASK_ON_PROCESS' ? '转码' : '入库';
+                // 对选择的视频列表进行检测
+                let videoList = this.$refs.videoTable.getSelectedVideoList();
+                for (let i = 0; i < videoList.length; i++) {
+                    if (videoList[i].status !== videoStatus) {
+                        this.$message.warning('取消' + statusTag + '仅支持' + statusTag + '中的视频');
+                        return;
+                    }
+                }
+                let storageVideoIdList = [];
+                videoList.forEach(function (item) {
+                    storageVideoIdList.push(item.id);
+                });
+                if (storageVideoIdList.length > 0) {
+                    this.$service.bacthCancelInjectVideos({storageVideoIdList}).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('已取消' + statusTag + '，请关注其状态更改');
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: '取消' + statusTag + '失败，请稍后重试',
+                                duration: 5000
+                            });
+                        }
+                    });
+                } else {
+                    this.$message.warning('不存在可以取消' + statusTag + '的视频');
                 }
             },
             // 后端导出全部视频的EXCEL列表
