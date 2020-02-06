@@ -384,6 +384,29 @@
                     this.$message.warning('请您先配置站点');
                 }
             },
+            // 拉取主站的视频到子站(只存在于子站)
+            pullVideoFromMaster(videoList) {
+                // let videoIdList = [];
+                // videoList.map(video => {
+                //     videoIdList.push(video.id);
+                // });
+                this.$service.batchPullVideoFromMaster({videoList}).then(response => {
+                    if (response && response.code === 0 && response.data.length === 0) {
+                        this.$message.success('正在拉取视频到本站，请关注其状态更改');
+                    } else if (response && response.code === 0 && response.data.length !== 0) {
+                        // 批量上传存在有特殊情况说明
+                        let message = '当前上传视频含有如下问题：';
+                        response.data.map(video => {
+                            message = message + '[' + video.originName + ']视频问题：' + video.failReason + ';';
+                        });
+                        this.$message({
+                            type: 'error',
+                            message: message,
+                            duration: 5000
+                        });
+                    }
+                });
+            },
             // 批量拉取主站的视频到子站（只有在当前视频是以前拉取过的且失败的才能重新拉取）
             batchPullVideoFromMainSite() {
                 // 对选择的视频列表进行检测，拉取失败的视频可以重新拉取
@@ -394,12 +417,12 @@
                         return;
                     }
                 }
-                let videoIdList = [];
-                videoList.forEach(function (item) {
-                    videoIdList.push(item.id);
-                });
-                if (videoIdList.length > 0) {
-                    this.$service.batchPullVideoFromMaster({videoIdList}).then(response => {
+                // let videoIdList = [];
+                // videoList.forEach(function (item) {
+                //     videoIdList.push(item.id);
+                // });
+                if (videoList.length > 0) {
+                    this.$service.batchPullVideoFromMaster({videoList}).then(response => {
                         if (response && response.code === 0 && response.data.length === 0) {
                             this.$message.success('正在拉取视频到本站，请关注其状态更改');
                         } else if (response && response.code === 0 && response.data.length !== 0) {
@@ -418,78 +441,6 @@
                 } else {
                     this.$message.warning('不存在可以重新拉取的视频');
                 }
-            },
-            // 批量取消'转码中'和'入库中'的视频注入（只有是'转码中'和'入库中'的视频才能取消）
-            cancelInjectSelectedVideoHandler(videoStatus) {
-                // '取消注入'的权限与注入的权限相同
-                if (!this.$authority.isHasAuthority('storage:video:add')) {
-                    return;
-                }
-                let statusTag = videoStatus === 'SPLIT_TASK_ON_PROCESS' ? '转码' : '入库';
-                // 对选择的视频列表进行检测
-                let videoList = this.$refs.videoTable.getSelectedVideoList();
-                for (let i = 0; i < videoList.length; i++) {
-                    if (videoList[i].status !== videoStatus) {
-                        this.$message.warning('取消' + statusTag + '仅支持' + statusTag + '中的视频');
-                        return;
-                    }
-                }
-                let storageVideoIdList = [];
-                videoList.forEach(function (item) {
-                    storageVideoIdList.push(item.id);
-                });
-                if (storageVideoIdList.length > 0) {
-                    this.$service.bacthCancelInjectVideos({storageVideoIdList}).then(response => {
-                        if (response && response.code === 0) {
-                            this.$message.success('已取消' + statusTag + '，请关注其状态更改');
-                        } else {
-                            this.$message({
-                                type: 'error',
-                                message: '取消' + statusTag + '失败，请稍后重试',
-                                duration: 5000
-                            });
-                        }
-                    });
-                } else {
-                    this.$message.warning('不存在可以取消' + statusTag + '的视频');
-                }
-            },
-            // 后端导出全部视频的EXCEL列表
-            exportAllVideoHandler() {
-                if (!this.$authority.isHasAuthority('storage:video:export')) {
-                    return;
-                }
-                this.$service.exportAllVideoListExcel().then(response => {
-                    let aLink = document.createElement('a');
-                    let blob = new Blob([response], {type: 'application/vnd.ms-excel'});
-                    aLink.href = URL.createObjectURL(blob);
-                    aLink.setAttribute('download', '所有视频表_' + new Date() + '.xlsx');
-                    aLink.click();
-                    this.$refs.loadElement.appendChild(aLink);
-                });
-            },
-            // 拉取主站的视频到子站(只存在于子站)
-            pullVideoFromMaster(videoList) {
-                let videoIdList = [];
-                videoList.map(video => {
-                    videoIdList.push(video.id);
-                });
-                this.$service.batchPullVideoFromMaster({videoIdList}).then(response => {
-                    if (response && response.code === 0 && response.data.length === 0) {
-                        this.$message.success('正在拉取视频到本站，请关注其状态更改');
-                    } else if (response && response.code === 0 && response.data.length !== 0) {
-                        // 批量上传存在有特殊情况说明
-                        let message = '当前上传视频含有如下问题：';
-                        response.data.map(video => {
-                            message = message + '[' + video.originName + ']视频问题：' + video.failReason + ';';
-                        });
-                        this.$message({
-                            type: 'error',
-                            message: message,
-                            duration: 5000
-                        });
-                    }
-                });
             },
             // 注入失败视频----批量重试
             retryInjectSelectedVideoHandler() {

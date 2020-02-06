@@ -614,8 +614,9 @@
             // 拉取主站的视频到子站（只有在当前视频是以前拉取过的且失败的才能重新拉取）
             pullVideoFromMainSite(item) {
                 if (item.downloadStatus === 'FAILED') {
-                    let videoIdList = [item.id];
-                    this.$service.batchPullVideoFromMaster({videoIdList}).then(response => {
+                    // let videoIdList = [item.id];
+                    let videoList = [item];
+                    this.$service.batchPullVideoFromMaster({videoList}).then(response => {
                         if (response && response.code === 0 && response.data.length === 0) {
                             this.$message.success('正在拉取视频到本站，请关注其状态更改');
                         } else if (response && response.code === 0 && response.data.length !== 0) {
