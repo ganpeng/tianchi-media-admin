@@ -81,6 +81,23 @@
             </div>
             <div v-show="searchFieldVisible" class="field-row">
                 <div class="search-field-item">
+                    <label class="search-field-item-label">cdn推流</label>
+                    <el-select
+                        :value="searchFields.cdnPush"
+                        clearable
+                        placeholder="全部"
+                        @input="inputHandler($event, 'cdnPush')"
+                    >
+                        <el-option
+                            v-for="(item, index) in [{name: '是', value: true}, {name: '否', value: false}]"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <!--
+                <div class="search-field-item">
                     <label class="search-field-item-label">公共频道</label>
                     <el-select
                         :value="searchFields.common"
@@ -96,6 +113,7 @@
                         </el-option>
                     </el-select>
                 </div>
+                -->
                 <div id="multi-selecter" class="search-field-item">
                     <label class="search-field-item-label">适用</label>
                     <el-select
