@@ -125,6 +125,13 @@
                             <div class="text-info-item-wrapper">
                                 <span class="label">适用客户端：</span>
                                 <span class="value">{{liveChannel.applicableClientList ? liveChannel.applicableClientList.join(', ') : ''}}</span>
+                                <span class="label">服务器转码：</span>
+                                <span class="value">{{liveChannel.transcode ? '是' : '否'}}</span> </div>
+                        </li>
+                        <li class="text-info-item">
+                            <div class="text-info-item-wrapper">
+                                <span class="label">转码音量设置：</span>
+                                <span class="value">{{liveChannel.volume || '无'}}</span>
                             </div>
                         </li>
                     </ul>

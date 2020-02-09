@@ -245,7 +245,7 @@ export default {
             templateTitle: '',
             inputRules: {
                 title: [
-                    { required: true, message: '请输入混排模块名称' }
+                    // { required: true, message: '请输入混排模块名称' }
                 ],
                 layoutTemplate: [
                     { required: true, message: '请选择混排模块板式' }

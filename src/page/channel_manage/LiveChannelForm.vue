@@ -78,6 +78,18 @@
                     <el-checkbox :value="methodsChecked('HLS')" @change="methodsHandler($event, 'HLS')">HLS</el-checkbox>
                     <el-checkbox v-if="!liveChannel.cdnPush" :value="methodsChecked('UDP')" @change="methodsHandler($event, 'UDP')">UDP</el-checkbox>
                 </el-form-item>
+                <el-form-item v-if="withHls" label="服务器转码" prop="transcode">
+                    <el-radio @input="inputHandler(true, 'transcode')" :value="liveChannel.transcode" :label="true">是</el-radio>
+                    <el-radio @input="inputHandler(false, 'transcode')" :value="liveChannel.transcode" :label="false">否</el-radio>
+                </el-form-item>
+                <el-form-item v-if="liveChannel.transcode" label="转码音量" prop="volume">
+                    <el-input
+                        placeholder="请输入转码音量"
+                        :value="liveChannel.volume"
+                        @input="inputHandler($event, 'volume')"
+                    >
+                    </el-input>
+                </el-form-item>
                 <el-form-item label="录制IP" prop="recordIp">
                     <el-input
                         placeholder="请输入录制IP"
@@ -249,6 +261,10 @@ export default {
                 //  年后新增的字段
                 cdnPush: [
                     { required: true, message: '请选择是否为cdn推流' }
+                ],
+                //  红河新增
+                volume: [
+                    { pattern: /^[dB0-9-]+$/, message: '请输入数字字符' }
                 ]
             }
         };
@@ -283,6 +299,10 @@ export default {
         appDisabled() {
             let hlsIndex = this.liveChannel.protocolList.findIndex((item) => item === 'HLS');
             return hlsIndex === -1;
+        },
+        withHls() {
+            let hlsIndex = this.liveChannel.protocolList.findIndex((item) => item === 'HLS');
+            return hlsIndex >= 0;
         }
     },
     created() {

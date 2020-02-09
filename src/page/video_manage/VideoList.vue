@@ -347,6 +347,19 @@
                     }
                 });
             },
+            /*
+            // 后端导出全部视频的EXCEL列表
+            exportAllVideoHandler() {
+                this.$service.exportAllVideoListExcel().then(response => {
+                    let aLink = document.createElement('a');
+                    let blob = new Blob([response], {type: 'application/vnd.ms-excel'});
+                    aLink.href = URL.createObjectURL(blob);
+                    aLink.setAttribute('download', '所有视频表_' + new Date() + '.xlsx');
+                    aLink.click();
+                    this.$refs.loadElement.appendChild(aLink);
+                });
+            },
+            */
             // 批量上传主站——将本地视频上传至主站(只存在于子站)
             batchPushToMaster() {
                 // 对选择的视频列表进行检测，（注入成功或拉取成功）且（非上传中、非上传成功）的视频可以上传主站

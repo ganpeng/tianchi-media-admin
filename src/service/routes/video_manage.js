@@ -192,3 +192,13 @@ export const getSuccessVideoList = ({keyword, pageNum, pageSize}) => {
         baseURL: '/storage'
     });
 };
+
+/**
+ * 导出全部视频列表的EXCEL
+ */
+export const exportAllVideoListExcel = () => {
+    return service.post('/v1/storage/video/export/excel', 0, {
+        baseURL: '/storage',
+        responseType: 'blob'
+    });
+};

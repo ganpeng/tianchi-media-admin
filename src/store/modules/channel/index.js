@@ -71,7 +71,10 @@ let defaultLiveChannel = {
     // 年后新增的字段
     cdnPush: false,
     pushAddress: '',
-    pullAddress: ''
+    pullAddress: '',
+    //  红河新增
+    transcode: false,
+    volume: ''
 };
 
 const defaultState = {
@@ -179,6 +182,13 @@ const mutations = {
                 state.liveChannel.pullAddress = '';
                 state.liveChannel.pushAddress = '';
             }
+        }
+        if (key === 'protocolList' && value.indexOf('HLS') === -1) {
+            state.liveChannel.transcode = false;
+            state.liveChannel.volume = '';
+        }
+        if (key === 'transcode' && !value) {
+            state.liveChannel.volume = '';
         }
     },
     resetLiveChannel(state) {
@@ -347,7 +357,9 @@ const actions = {
                         applicableClientList: ['TV'],
                         cdnPush: false,
                         pullAddress: '',
-                        pushAddress: ''
+                        pushAddress: '',
+                        transcode: false,
+                        volume: ''
                     }, res.data)});
                 return res;
             }

@@ -192,7 +192,13 @@
                         let sort = _.get(this.layout, `${navBarId}.data`).findIndex((item) => {
                             return item.id === refItem.refId;
                         });
-
+                        // console.log('++++++++++++++++++++++++++');
+                        // console.log(`refItem: ${refItem}`);
+                        // console.log(`refId: ${refItem.refId}`);
+                        // console.log(`navBarId: ${navBarId}`);
+                        // console.log(`layout: ${this.layout}`);
+                        // console.log(`sort: ${sort}`);
+                        // console.log('++++++++++++++++++++++++++');
                         if (sort < 0) {
                             this.$message.error('该布局模块不存在');
                             return false;

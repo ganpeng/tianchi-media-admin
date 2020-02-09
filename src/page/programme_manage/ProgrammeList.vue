@@ -183,6 +183,9 @@
                                 <el-dropdown-item>
                                     <span @click="batchDeletProgrammeHandler">批量删除</span>
                                 </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="exportAllProgrammeExcel">导出全部</span>
+                                </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>

@@ -325,11 +325,11 @@
                         //     }
                         // }
                         // 删除项目列表中的'幽默'项目，混排筛选中不存在'幽默'项目
-                        for (let i = 0; i < this.categoryOptions.length; i++) {
-                            if (this.categoryOptions[i].name === '幽默') {
-                                this.categoryOptions.splice(i, 1);
-                            }
-                        }
+                        // for (let i = 0; i < this.categoryOptions.length; i++) {
+                        //     if (this.categoryOptions[i].name === '幽默') {
+                        //         this.categoryOptions.splice(i, 1);
+                        //     }
+                        // }
                         // 设置二级分类的选项
                         if (this.categorySignCode) {
                             this.categoryOptions.map(category => {
