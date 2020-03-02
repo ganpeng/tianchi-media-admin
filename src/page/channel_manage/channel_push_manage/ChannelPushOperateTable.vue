@@ -20,6 +20,14 @@
                 label="台号">
                 <template slot-scope="scope">
                     <span>{{scope.row.no}}</span>
+                    <span @click="previewChannel(scope.row)"
+                          v-if="scope.row.visible"
+                          class="display-btn">
+                        <svg-icon icon-class="channel_video_play"></svg-icon>
+                    </span>
+                    <span v-else class="display-btn disabled">
+                        <svg-icon icon-class="channel_video_play"></svg-icon>
+                    </span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -93,13 +101,25 @@
                 </template>
             </el-table-column>
         </el-table>
+        <display-video-dialog
+            :url="previewVideoInfo.url"
+            :title="previewVideoInfo.title"
+            ref="displayVideoDialog"
+            :displayVideoDialogVisible="previewVideoInfo.visible"
+            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
+        </display-video-dialog>
     </div>
 </template>
 
 <script>
 
+    import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
+
     export default {
         name: 'ChannelPushOperateTable',
+        components: {
+            DisplayVideoDialog
+        },
         props: {
             channelPushList: {
                 type: Array,
@@ -110,10 +130,29 @@
         },
         data() {
             return {
-                multipleSelection: []
+                multipleSelection: [],
+                previewVideoInfo: {
+                    url: '',
+                    title: '',
+                    visible: false
+                }
             };
         },
         methods: {
+            previewChannel(channel) {
+                if (!channel.hlsPlayUrl) {
+                    this.$message.warning('当前轮播链接不存在');
+                    return;
+                }
+                this.previewVideoInfo.url = channel.hlsPlayUrl;
+                this.previewVideoInfo.title = channel.name;
+                this.previewVideoInfo.visible = true;
+                this.$refs.displayVideoDialog.showDialog();
+            },
+            // 关闭视频预览
+            closeDisplayVideoDialog(status) {
+                this.previewVideoInfo.visible = status;
+            },
             // 更改状态
             updateChannelPushStatus(channelInfo) {
                 let operateWords = channelInfo.visible ? '禁播' : '恢复';
