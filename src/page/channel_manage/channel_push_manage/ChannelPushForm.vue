@@ -31,20 +31,19 @@
                     placeholder="请填写频道编号数字，例如'001'">
                 </el-input>
             </el-form-item>
-            <el-form-item label="频道IP" prop="multicastIp" required>
+            <el-form-item label="录制IP" prop="recordIp" required>
                 <el-input
-                    v-model="channelPushInfo.multicastIp"
-                    type="number"
+                    placeholder="请输入录制IP"
                     size="medium"
-                    placeholder="请填写频道IP">
+                    v-model="channelPushInfo.recordIp">
                 </el-input>
             </el-form-item>
-            <el-form-item label="端口号" prop="multicastPort" required>
+            <el-form-item label="录制端口" prop="recordPort" required>
                 <el-input
-                    v-model="channelPushInfo.multicastPort"
                     type="number"
+                    placeholder="请输入录制端口"
                     size="medium"
-                    placeholder="请填写端口号">
+                    v-model="channelPushInfo.recordPort">
                 </el-input>
             </el-form-item>
             <!--  新加选项  -->
@@ -69,7 +68,7 @@
         </el-form>
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="saveChannelInfo" :loading="isLoading">保存</el-button>
-            <el-button class="btn-style-three" @click="toChannelList" plain>返回列表</el-button>
+            <el-button class="btn-style-three" @click="toChannelPushList" plain>返回列表</el-button>
         </div>
     </div>
 </template>
@@ -115,10 +114,30 @@
                     callback();
                 }
             };
+            let checkIP = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('录制IP不能为空'));
+                } else if (!this.$util.isIPAddress(value)) {
+                    return callback(new Error('请填写正确的录制IP'));
+                } else {
+                    callback();
+                }
+            };
+            let checkPort = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('录制端口不能为空'));
+                } else if (!this.$util.isPort(value)) {
+                    return callback(new Error('请填写正确的录制端口'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 isLoading: false,
                 channelPushInfo: {
                     category: 'LIVE',
+                    recordIp: '',
+                    recordPort: '',
                     serverGroup: '', // 新加字段
                     visible: false
                 },
@@ -131,6 +150,12 @@
                     ],
                     no: [
                         {validator: checkNo, trigger: 'blur'}
+                    ],
+                    recordIp: [
+                        {validator: checkIP, trigger: 'blur'}
+                    ],
+                    recordPort: [
+                        {validator: checkPort, trigger: 'blur'}
                     ],
                     serverGroup: [ // 新加校验
                         {required: true, message: '请输入所属服务器组'}

@@ -7,6 +7,9 @@
         <div class="detail-title-block">
             <div class="channel-status shelve" v-if="channelPushInfo.visible">正常</div>
             <div class="channel-status un-shelve" v-else>禁播</div>
+            <div class="title">
+                <label>{{channelPushInfo.no}}</label>&nbsp;&nbsp;<label>{{channelPushInfo.name}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
             <div class="channel-time">
                 <div>创建于{{channelPushInfo.createdAt | formatDate('yyyy.MM.DD')}}</div>
                 <div>更新于{{channelPushInfo.updatedAt | formatDate('yyyy.MM.DD')}}</div>
@@ -14,13 +17,13 @@
         </div>
         <!--相关信息-->
         <div class="about-channel">
-            <img :src="channelPushInfo.logoUri | imageUrl">
+            <svg-icon icon-class="inter_cut_placer"></svg-icon>
             <div class="info-container">
                 <div>
                     <ul class="info-list">
                         <li><span>内部名称：</span><label>{{channelPushInfo.innerName}}</label></li>
-                        <li><span>组播地址：</span><label>{{channelPushInfo.multicastIp}}</label></li>
-                        <li><span>端口号：</span><label>{{channelPushInfo.multicastPort}}</label></li>
+                        <li><span>录制IP：</span><label>{{channelPushInfo.recordIp}}</label></li>
+                        <li><span>录制端口：</span><label>{{channelPushInfo.recordPort}}</label></li>
                         <li><span>服务器组：</span><label>{{channelPushInfo.serverGroup}}</label></li>
                     </ul>
                 </div>
@@ -28,7 +31,7 @@
         </div>
         <div class="fixed-btn-container">
             <el-button class="btn-style-two" type="primary" @click="editInfo">编辑</el-button>
-            <el-button class="btn-style-three" @click="toChannelList" plain>返回列表</el-button>
+            <el-button class="btn-style-three" @click="toChannelPushList" plain>返回列表</el-button>
         </div>
     </div>
 </template>
@@ -52,7 +55,7 @@
         methods: {
             init() {
                 this.$util.toggleFixedBtnContainer();
-                this.$service.getChannelDetail(this.$route.params.id).then(response => {
+                this.$service.getChannelPushDetail(this.$route.params.id).then(response => {
                     if (response && response.code === 0) {
                         this.channelPushInfo = response.data;
                     }
@@ -135,7 +138,7 @@
         border-bottom: 1px solid #252D3F;
         text-align: left;
         overflow: hidden;
-        img {
+        .svg-icon {
             position: absolute;
             top: 0px;
             left: 20px;

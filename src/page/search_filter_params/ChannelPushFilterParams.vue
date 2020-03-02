@@ -24,7 +24,7 @@
                 <el-form-item label="状态">
                     <el-select
                         v-model="listQueryParams.visible"
-                        @change="getChannelList(true)"
+                        @change="getChannelPushList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
@@ -78,17 +78,9 @@
             },
             getChannelPushList(isReset) {
                 if (isReset) {
-                    for (let key in this.listQueryParams) {
-                        if (Array.isArray(this.listQueryParams[key])) {
-                            this.listQueryParams[key] = [];
-                        } else {
-                            this.listQueryParams[key] = '';
-                        }
-                    }
                     this.listQueryParams.category = 'LIVE';
-                    return;
                 }
-                this.$emit('getChannelList', this.listQueryParams, isReset);
+                this.$emit('getChannelPushList', this.listQueryParams, isReset);
             },
             clearFilters() {
                 for (let key in this.listQueryParams) {

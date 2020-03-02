@@ -123,7 +123,7 @@
                 this.listQueryParams.category = 'LIVE';
                 // 保存当前参数到localStorage中，下次页面重建的时候，自动填写并查询
                 wsCache.localStorage.set('ChannelPushListParams', this.listQueryParams);
-                this.$service.getChannelList(this.listQueryParams).then(response => {
+                this.$service.getChannelPushList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.channelPushList = response.data.list;
                         this.total = response.data.total;

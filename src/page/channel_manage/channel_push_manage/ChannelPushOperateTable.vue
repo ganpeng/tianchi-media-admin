@@ -5,7 +5,6 @@
             :data="channelPushList"
             header-row-class-name="common-table-header"
             row-class-name=channel-row
-            @row-dblclick="showChannelVideoMessage"
             @selection-change="handleSelectionChange"
             border
             style="width: 100%">
@@ -48,8 +47,14 @@
             <el-table-column
                 align="center"
                 min-width="80px"
-                prop="multicastPort"
-                label="端口号">
+                prop="recordIp"
+                label="录制IP">
+            </el-table-column>
+            <el-table-column
+                align="center"
+                min-width="80px"
+                prop="recordPort"
+                label="录制端口">
             </el-table-column>
             <el-table-column
                 align="center"
