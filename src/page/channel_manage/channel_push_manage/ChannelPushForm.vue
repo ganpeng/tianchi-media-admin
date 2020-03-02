@@ -31,17 +31,17 @@
                     placeholder="请填写频道编号数字，例如'001'">
                 </el-input>
             </el-form-item>
-            <el-form-item label="录制IP" prop="recordIp" required>
+            <el-form-item label="推流IP" prop="recordIp" required>
                 <el-input
-                    placeholder="请输入录制IP"
+                    placeholder="请输入推流IP"
                     size="medium"
                     v-model="channelPushInfo.recordIp">
                 </el-input>
             </el-form-item>
-            <el-form-item label="录制端口" prop="recordPort" required>
+            <el-form-item label="推流端口" prop="recordPort" required>
                 <el-input
                     type="number"
-                    placeholder="请输入录制端口"
+                    placeholder="请输入推流端口"
                     size="medium"
                     v-model="channelPushInfo.recordPort">
                 </el-input>
@@ -116,18 +116,18 @@
             };
             let checkIP = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('录制IP不能为空'));
+                    return callback(new Error('推流IP不能为空'));
                 } else if (!this.$util.isIPAddress(value)) {
-                    return callback(new Error('请填写正确的录制IP'));
+                    return callback(new Error('请填写正确的推流IP'));
                 } else {
                     callback();
                 }
             };
             let checkPort = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('录制端口不能为空'));
+                    return callback(new Error('推流端口不能为空'));
                 } else if (!this.$util.isPort(value)) {
-                    return callback(new Error('请填写正确的录制端口'));
+                    return callback(new Error('请填写正确的推流端口'));
                 } else {
                     callback();
                 }

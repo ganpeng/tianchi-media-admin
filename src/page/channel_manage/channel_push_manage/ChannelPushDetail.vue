@@ -22,8 +22,8 @@
                 <div>
                     <ul class="info-list">
                         <li><span>内部名称：</span><label>{{channelPushInfo.innerName}}</label></li>
-                        <li><span>录制IP：</span><label>{{channelPushInfo.recordIp}}</label></li>
-                        <li><span>录制端口：</span><label>{{channelPushInfo.recordPort}}</label></li>
+                        <li><span>推流IP：</span><label>{{channelPushInfo.recordIp}}</label></li>
+                        <li><span>推流端口：</span><label>{{channelPushInfo.recordPort}}</label></li>
                         <li><span>服务器组：</span><label>{{channelPushInfo.serverGroup}}</label></li>
                     </ul>
                 </div>

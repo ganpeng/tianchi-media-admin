@@ -48,13 +48,13 @@
                 align="center"
                 min-width="80px"
                 prop="recordIp"
-                label="录制IP">
+                label="推流IP">
             </el-table-column>
             <el-table-column
                 align="center"
                 min-width="80px"
                 prop="recordPort"
-                label="录制端口">
+                label="推流端口">
             </el-table-column>
             <el-table-column
                 align="center"
