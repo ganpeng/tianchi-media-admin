@@ -43,12 +43,18 @@ import DiffTimeVideoList from 'sysPage/video_manage/DiffTimeVideoList';
 import LiveChannelList from 'sysPage/channel_manage/LiveChannelList';
 import LiveChannelDetail from 'sysPage/channel_manage/LiveChannelDetail';
 import EditLiveChannelByImportExcel from 'sysPage/channel_manage/EditLiveChannelByImportExcel';
+// 轮播系统
 import CarouselChannelList from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelList';
 import CreateCarouselChannel from 'sysPage/channel_manage/carousel_channel_manage/CreateCarouselChannel';
 import CreateChannelByImportExcel from 'sysPage/channel_manage/carousel_channel_manage/CreateChannelByImportExcel';
 import EditChannelByImportExcel from 'sysPage/channel_manage/carousel_channel_manage/EditChannelByImportExcel';
 import CarouselChannelDetail from 'sysPage/channel_manage/carousel_channel_manage/CarouselChannelDetail';
 import EditCarouselChannel from 'sysPage/channel_manage/carousel_channel_manage/EditCarouselChannel';
+// 直播推流
+import ChannelPushList from 'sysPage/channel_manage/channel_push_manage/ChannelPushList';
+import CreateChannelPush from 'sysPage/channel_manage/channel_push_manage/CreateChannelPush';
+import ChannelPushDetail from 'sysPage/channel_manage/channel_push_manage/ChannelPushDetail';
+import EditChannelPush from 'sysPage/channel_manage/channel_push_manage/EditChannelPush';
 // 插播系统
 import InterCutList from 'sysPage/channel_manage/inter_cut_manage/InterCutList';
 import CreateInterCut from 'sysPage/channel_manage/inter_cut_manage/CreateInterCut';
@@ -595,6 +601,30 @@ export const routes = [
                 name: 'EditCarouselChannel',
                 component: EditCarouselChannel
             },
+            // 直播推流列表
+            {
+                path: '/channel-push/list',
+                name: 'ChannelPushList',
+                component: ChannelPushList
+            },
+            // 创建直播推流
+            {
+                path: '/channel-push/create',
+                name: 'CreateChannelPush',
+                component: CreateChannelPush
+            },
+            // 直播推流详情
+            {
+                path: '/channel-push/detail/:id',
+                name: 'ChannelPushDetail',
+                component: ChannelPushDetail
+            },
+            // 编辑直播推流
+            {
+                path: '/channel-push/edit/:id',
+                name: 'EditChannelPush',
+                component: EditChannelPush
+            },
             // 插播频道列表
             {
                 path: '/channel-inter-cut/list',
@@ -709,11 +739,11 @@ export const routes = [
             /**
              *
              FIGURE
-                SPECIAL
-                FIGURE_SUBJECT
-                PROGRAMME
-                FIGURE_SUBJECT'
-                */
+             SPECIAL
+             FIGURE_SUBJECT
+             PROGRAMME
+             FIGURE_SUBJECT'
+             */
             {
                 path: '/page-layout/:navbarId/:operator/figure/:index',
                 name: 'PersonModule',

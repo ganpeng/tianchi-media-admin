@@ -607,6 +607,11 @@ const ASIDE_LIST = [
             icon: 'shortcut_carousel_channel'
         },
         {
+            text: '直播推流',
+            uri: '/channel-push/list',
+            icon: 'shortcut_live_channel'
+        },
+        {
             text: '轮播插播',
             uri: '/channel-inter-cut/list',
             icon: 'shortcut_inter_cut'
