@@ -81,7 +81,7 @@
             </div>
             <div v-show="searchFieldVisible" class="field-row">
                 <div class="search-field-item">
-                    <label class="search-field-item-label">cdn推流</label>
+                    <label class="search-field-item-label">cdn拉流</label>
                     <el-select
                         :value="searchFields.cdnPush"
                         clearable
@@ -304,13 +304,7 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" width="100px" label="cdn推流">
-                    <template slot-scope="scope">
-                        <span :class="[scope.row.cdnPush ? 'yes' : 'no']">
-                            {{scope.row.cdnPush ? '是' : '否'}}
-                        </span>
-                    </template>
-                </el-table-column>
+                <!--
                 <el-table-column align="center" width="120px" label="公共频道">
                     <template slot-scope="scope">
                         <span :class="[scope.row.common ? 'yes' : 'no']">
@@ -318,6 +312,7 @@
                         </span>
                     </template>
                 </el-table-column>
+                -->
                 <el-table-column align="center" width="120px" label="推流方式">
                     <template slot-scope="scope">
                         {{scope.row.protocolList ? scope.row.protocolList.join(', ') : ''}}
@@ -326,6 +321,19 @@
                 <el-table-column align="center" width="120px" label="适用客户端">
                     <template slot-scope="scope">
                         {{scope.row.applicableClientList ? scope.row.applicableClientList.join(', ') : ''}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" width="120px" label="cdn拉流">
+                    <template slot-scope="scope">
+                        <span :class="[scope.row.cdnPush ? 'yes' : 'no']">
+                            {{scope.row.cdnPush ? '是' : '否'}}
+                        </span>
+                        <svg-icon
+                            v-if="scope.row.cdnPush"
+                            icon-class="copy_btn"
+                            class-name="copy-btn pointer"
+                            :data-clipboard-text="scope.row.pullAddress">
+                        </svg-icon>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" min-width="120px" label="启用/禁用">
@@ -389,6 +397,7 @@
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
     import role from '@/util/config/role';
 
+    const ClipboardJS = require('clipboard');
     const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
     const x2js = new X2JS();
     export default {
@@ -434,6 +443,9 @@
                 selectedChannelList: [],
                 currentItem: {}
             };
+        },
+        mounted() {
+            this.initClipboard();
         },
         created() {
             if (!this.$authority.isHasAuthority('content:channel:page')) {
@@ -769,6 +781,16 @@
                 } catch (err) {
                     console.log(err);
                 }
+            },
+            initClipboard() {
+                let clipboard = new ClipboardJS('.copy-btn');
+                clipboard.on('success', (e) => {
+                    this.$message.success('链接复制成功');
+                    e.clearSelection();
+                });
+                clipboard.on('error', (e) => {
+                    this.$message.error('链接复制失败');
+                });
             }
         }
     };

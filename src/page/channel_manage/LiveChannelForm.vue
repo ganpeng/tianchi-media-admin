@@ -27,10 +27,12 @@
                         @input="inputHandler($event, 'no')"
                     ></el-input>
                 </el-form-item>
-                <el-form-item label="CDN推流" prop="cdnPush">
+
+                <el-form-item label="CDN拉流" prop="cdnPush">
                     <el-radio @input="inputHandler(true, 'cdnPush')" :value="liveChannel.cdnPush" :label="true">是</el-radio>
                     <el-radio @input="inputHandler(false, 'cdnPush')" :value="liveChannel.cdnPush" :label="false">否</el-radio>
                 </el-form-item>
+                <!--
                 <el-form-item v-if="liveChannel.cdnPush" label="推流地址" prop="pushAddress">
                     <el-input
                         placeholder="请输入pushAddress"
@@ -40,20 +42,30 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item v-if="liveChannel.cdnPush" label="拉流地址" prop="pullAddress">
-                    <el-input
-                        placeholder="请输入pullAddress"
-                        :value="liveChannel.pullAddress"
-                        maxlength="300"
-                        @input="inputHandler($event, 'pullAddress')"
-                    >
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="频道IP" prop="multicastIp">
+                -->
+                <el-form-item v-if="!liveChannel.cdnPush" label="频道IP" prop="multicastIp">
                     <el-input
                         placeholder="请输入频道IP"
                         :value="liveChannel.multicastIp"
                         @input="inputHandler($event, 'multicastIp')"
+                    >
+                    </el-input>
+                </el-form-item>
+                <el-form-item v-if="!liveChannel.cdnPush" label="频道端口" prop="multicastPort">
+                    <el-input
+                        type="number"
+                        placeholder="请输入频道端口"
+                        :value="liveChannel.multicastPort"
+                        @input="inputHandler($event, 'multicastPort')"
+                    >
+                    </el-input>
+                </el-form-item>
+                <el-form-item v-if="liveChannel.cdnPush" label="拉流地址" prop="pullAddress">
+                    <el-input
+                        placeholder="请输入拉流地址"
+                        :value="liveChannel.pullAddress"
+                        maxlength="300"
+                        @input="inputHandler($event, 'pullAddress')"
                     >
                     </el-input>
                 </el-form-item>
@@ -65,19 +77,12 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item label="频道端口" prop="multicastPort">
-                    <el-input
-                        type="number"
-                        placeholder="请输入频道端口"
-                        :value="liveChannel.multicastPort"
-                        @input="inputHandler($event, 'multicastPort')"
-                    >
-                    </el-input>
-                </el-form-item>
+                <!--
                 <el-form-item ref="protocolListFormItem" label="推流方式" prop="protocolList">
                     <el-checkbox :value="methodsChecked('HLS')" @change="methodsHandler($event, 'HLS')">HLS</el-checkbox>
                     <el-checkbox v-if="!liveChannel.cdnPush" :value="methodsChecked('UDP')" @change="methodsHandler($event, 'UDP')">UDP</el-checkbox>
                 </el-form-item>
+                -->
                 <el-form-item v-if="withHls" label="服务器转码" prop="transcode">
                     <el-radio @input="inputHandler(true, 'transcode')" :value="liveChannel.transcode" :label="true">是</el-radio>
                     <el-radio @input="inputHandler(false, 'transcode')" :value="liveChannel.transcode" :label="false">否</el-radio>
@@ -87,39 +92,6 @@
                         placeholder="请输入转码音量"
                         :value="liveChannel.volume"
                         @input="inputHandler($event, 'volume')"
-                    >
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="录制IP" prop="recordIp">
-                    <el-input
-                        placeholder="请输入录制IP"
-                        :value="liveChannel.recordIp"
-                        @input="inputHandler($event, 'recordIp')"
-                    >
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="录制端口" prop="recordPort">
-                    <el-input
-                        type="number"
-                        placeholder="请输入录制端口"
-                        :value="liveChannel.recordPort"
-                        @input="inputHandler($event, 'recordPort')"
-                    >
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="videoPid" prop="videoPid">
-                    <el-input
-                        placeholder="请输入videoPid"
-                        :value="liveChannel.videoPid"
-                        @input="inputHandler($event, 'videoPid')"
-                    >
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="audioPid" prop="audioPid">
-                    <el-input
-                        placeholder="请输入audioPid"
-                        :value="liveChannel.audioPid"
-                        @input="inputHandler($event, 'audioPid')"
                     >
                     </el-input>
                 </el-form-item>
@@ -144,6 +116,64 @@
                     <el-radio @input="inputHandler(true, 'record')" :value="liveChannel.record" :label="true">是</el-radio>
                     <el-radio @input="inputHandler(false, 'record')" :value="liveChannel.record" :label="false">否</el-radio>
                 </el-form-item>
+                <el-form-item v-if="liveChannel.record" label="录制IP" prop="recordIp">
+                    <el-input
+                        placeholder="请输入录制IP"
+                        :value="liveChannel.recordIp"
+                        @input="inputHandler($event, 'recordIp')"
+                    >
+                    </el-input>
+                </el-form-item>
+                <el-form-item v-else label="录制IP">
+                    <el-input
+                        placeholder="请输入录制IP"
+                        :value="liveChannel.recordIp"
+                        @input="inputHandler($event, 'recordIp')"
+                    >
+                    </el-input>
+                </el-form-item>
+                <el-form-item v-if="liveChannel.record" label="录制端口" prop="recordPort">
+                    <el-input
+                        type="number"
+                        placeholder="请输入录制端口"
+                        :value="liveChannel.recordPort"
+                        @input="inputHandler($event, 'recordPort')"
+                    >
+                    </el-input>
+                </el-form-item>
+                <el-form-item v-else label="录制端口">
+                    <el-input
+                        type="number"
+                        placeholder="请输入录制端口"
+                        :value="liveChannel.recordPort"
+                        @input="inputHandler($event, 'recordPort')"
+                    >
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="videoPid" prop="videoPid">
+                    <el-input
+                        placeholder="请输入videoPid"
+                        :value="liveChannel.videoPid"
+                        @input="inputHandler($event, 'videoPid')"
+                    >
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="audioPid" prop="audioPid">
+                    <el-input
+                        placeholder="请输入audioPid"
+                        :value="liveChannel.audioPid"
+                        @input="inputHandler($event, 'audioPid')"
+                    >
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="会员" prop="paymentType">
+                    <el-radio @input="inputHandler('VIP', 'paymentType')" :value="liveChannel.paymentType" :label="'VIP'">是</el-radio>
+                    <el-radio @input="inputHandler('FREE', 'paymentType')" :value="liveChannel.paymentType" :label="'FREE'">否</el-radio>
+                </el-form-item>
+                <el-form-item ref="applicableClientListFormItem" label="适用客户端" prop="applicableClientList">
+                    <el-checkbox :value="clientChecked('TV')" @change="clientCheckedHandler($event, 'TV')">TV</el-checkbox>
+                    <el-checkbox :disabled="appDisabled" :value="clientChecked('APP')" @change="clientCheckedHandler($event, 'APP')">APP</el-checkbox>
+                </el-form-item>
                 <el-form-item label="频道图片" prop="logoUri">
                     <single-image-uploader
                         :uri="liveChannel.logoUri ? liveChannel.logoUri : ''"
@@ -152,16 +182,9 @@
                         :allowResolutions="[{width: 260, height: 260}]"
                     ></single-image-uploader>
                 </el-form-item>
-                <el-form-item label="会员" prop="paymentType">
-                    <el-radio @input="inputHandler('VIP', 'paymentType')" :value="liveChannel.paymentType" :label="'VIP'">是</el-radio>
-                    <el-radio @input="inputHandler('FREE', 'paymentType')" :value="liveChannel.paymentType" :label="'FREE'">否</el-radio>
-                </el-form-item>
+                <!--
                 <el-form-item label="公共频道">
                     <span>{{liveChannel.common ? '是' : '否'}}</span>
-                </el-form-item>
-                <el-form-item ref="applicableClientListFormItem" label="适用客户端" prop="applicableClientList">
-                    <el-checkbox :value="clientChecked('TV')" @change="clientCheckedHandler($event, 'TV')">TV</el-checkbox>
-                    <el-checkbox :disabled="appDisabled" :value="clientChecked('APP')" @change="clientCheckedHandler($event, 'APP')">APP</el-checkbox>
                 </el-form-item>
                 <el-form-item label="区域码" prop="companyList" style="min-width:1050px;">
                     <div class="my-tags">
@@ -180,6 +203,7 @@
                         :clearHandler="clearCompanyListHandler"
                     ></area-code-search>
                 </el-form-item>
+                -->
             </el-form>
         </el-col>
     </div>
@@ -261,6 +285,9 @@ export default {
                 //  年后新增的字段
                 cdnPush: [
                     { required: true, message: '请选择是否为cdn推流' }
+                ],
+                pullAddress: [
+                    { required: true, message: '请输入cdn拉流地址' }
                 ],
                 //  红河新增
                 volume: [
