@@ -15,6 +15,7 @@ import * as subjectRoutes from './routes/subject_manage';
 import * as layoutRoutes from './routes/layout_manage';
 import * as videoRoutes from './routes/video_manage';
 import * as channelRoutes from './routes/channel_manage';
+import * as channelPushRoutes from './routes/channel_push_manage';
 import * as versionRoutes from './routes/version_manage';
 import * as deviceRoutes from './routes/device_manage';
 import * as hotSearchRoutes from './routes/hot_search';
@@ -37,6 +38,6 @@ import * as roleRoutes from './routes/role_manage';
  * notice.Each module function should have a unique name. Otherwise，they will override each other.
  * @type {Object}
  */
-let service = Object.assign({}, deviceRoutes, adminRoutes, userRoutes, authorizeRoutes, personRoutes, navBarRoutes, programmeRoutes, uploadRoutes, liveChannelLayoutRoutes, programmeVideoRoutes, subjectRoutes, layoutRoutes, videoRoutes, channelRoutes, versionRoutes, productRoutes, siteRoutes, masterVideoRoutes, hotSearchRoutes, cornerMarkRoutes, pageLayoutRoutes, advertisingOwner, adRoutes, interCutRoutes, goodsRoutes, orderRoutes, comboRoutes, departmentRoutes, roleRoutes);
+let service = Object.assign({}, deviceRoutes, adminRoutes, userRoutes, authorizeRoutes, personRoutes, navBarRoutes, programmeRoutes, uploadRoutes, liveChannelLayoutRoutes, programmeVideoRoutes, subjectRoutes, layoutRoutes, videoRoutes, channelRoutes, channelPushRoutes, versionRoutes, productRoutes, siteRoutes, masterVideoRoutes, hotSearchRoutes, cornerMarkRoutes, pageLayoutRoutes, advertisingOwner, adRoutes, interCutRoutes, goodsRoutes, orderRoutes, comboRoutes, departmentRoutes, roleRoutes);
 
 export default service;
