@@ -179,8 +179,8 @@ const mutations = {
             if (value) {
                 state.liveChannel.protocolList = state.liveChannel.protocolList.filter((item) => item !== 'UDP');
             } else {
-                state.liveChannel.pullAddress = '';
-                state.liveChannel.pushAddress = '';
+                // state.liveChannel.pullAddress = '';
+                // state.liveChannel.pushAddress = '';
             }
         }
         if (key === 'protocolList' && value.indexOf('HLS') === -1) {
