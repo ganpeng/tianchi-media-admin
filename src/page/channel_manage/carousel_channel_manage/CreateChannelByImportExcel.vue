@@ -153,9 +153,9 @@
                         '（必填）',
                         protocol: '推流方式\n' +
                         '（必填,支持多选，/隔开）',
-                        publicChannel: '是否为公共频道\n' +
-                        '（必填）',
-                        company: '所属区域码，多个用/隔开',
+                        // publicChannel: '是否为公共频道\n' +
+                        // '（必填）',
+                        // company: '所属区域码，多个用/隔开',
                         logoUri: '频道封面链接\n' +
                         ' 260*260' +
                         '（必填）\n',
@@ -174,8 +174,8 @@
                         multicastPort: '1234',
                         serverGroup: 'group1',
                         protocol: 'HLS/UDP',
-                        publicChannel: '否',
-                        company: '073/099/3004',
+                        // publicChannel: '否',
+                        // company: '073/099/3004',
                         logoUri: '/image',
                         '备注说明': ''
                     }, {
@@ -191,8 +191,8 @@
                         multicastPort: '1234',
                         serverGroup: 'group2',
                         protocol: 'HLS',
-                        publicChannel: '是',
-                        company: '若为公共频道，则这里无需填写',
+                        // publicChannel: '是',
+                        // company: '若为公共频道，则这里无需填写',
                         logoUri: '/image',
                         '备注说明': ''
                     }, {
@@ -229,9 +229,9 @@
                         '（必填）',
                         protocol: '推流方式\n' +
                         '（必填,支持多选，/隔开）',
-                        publicChannel: '是否为公共频道\n' +
-                        '（必填）',
-                        company: '所属区域码，多个用/隔开',
+                        // publicChannel: '是否为公共频道\n' +
+                        // '（必填）',
+                        // company: '所属区域码，多个用/隔开',
                         logoUri: '频道封面链接\n' +
                         ' 260*260' +
                         '（必填）\n',
@@ -250,8 +250,8 @@
                         serviceId: '2002',
                         serverGroup: 'group1',
                         protocol: 'HLS/UDP',
-                        publicChannel: '否',
-                        company: '073/099/3004',
+                        // publicChannel: '否',
+                        // company: '073/099/3004',
                         logoUri: '/image',
                         '备注说明': ''
                     }, {
@@ -266,8 +266,8 @@
                         serviceId: '2003',
                         serverGroup: 'group2',
                         protocol: 'HLS',
-                        publicChannel: '是',
-                        company: '若为公共频道，则这里无需填写',
+                        // publicChannel: '是',
+                        // company: '若为公共频道，则这里无需填写',
                         logoUri: '/image',
                         '备注说明': ''
                     }];
@@ -337,21 +337,21 @@
                     // 设置protocolList
                     this.channelList[i].protocolList = this.channelList[i].protocol.split('/');
                     // 设置是否为公共频道
-                    this.channelList[i].common = this.channelList[i].publicChannel === '是';
+                    // this.channelList[i].common = this.channelList[i].publicChannel === '是';
                     // 设置是否为VIP 会员频道
                     this.channelList[i].paymentType = this.channelList[i].vip === '是' ? 'VIP' : 'FREE';
                     // 设置区域码companyList，非公共频道对区域码不做处理
-                    this.channelList[i].companyList = [];
-                    if (!this.channelList[i].common) {
-                        let companyList = this.channelList[i].company.split('/');
-                        for (let k = 0; k < companyList.length; k++) {
-                            this.companyOptions.map(company => {
-                                if (company.code.toString() === companyList[k]) {
-                                    this.channelList[i].companyList.push(company);
-                                }
-                            });
-                        }
-                    }
+                    // this.channelList[i].companyList = [];
+                    // if (!this.channelList[i].common) {
+                    //     let companyList = this.channelList[i].company.split('/');
+                    //     for (let k = 0; k < companyList.length; k++) {
+                    //         this.companyOptions.map(company => {
+                    //             if (company.code.toString() === companyList[k]) {
+                    //                 this.channelList[i].companyList.push(company);
+                    //             }
+                    //         });
+                    //     }
+                    // }
                     // 设置是否回看
                     if (this.$route.params.category === 'LIVE') {
                         this.channelList[i].record = this.channelList[i].transcribe === '是';
@@ -469,26 +469,26 @@
                     }
                 }
                 // 是否为公共频道
-                if (channel.publicChannel !== '是' && channel.publicChannel !== '否') {
-                    message = message + '请正确填写是否为公共频道;';
-                }
+                // if (channel.publicChannel !== '是' && channel.publicChannel !== '否') {
+                //     message = message + '请正确填写是否为公共频道;';
+                // }
                 // 所属区域，公共频道为'是'，对于区域码不进行验证
-                if (channel.publicChannel === '否') {
-                    if (this.$util.isEmpty(channel.company)) {
-                        message = message + '请填写区域码;';
-                    } else if (this.isCompanyExist(channel.company).length !== 0) {
-                        message = message + '以下区域码不存在：' + this.isCompanyExist(channel.company).toString() + ';';
-                    } else {
-                        // 检查非公共频道下是否区域码设置为全部；全部区域码存在、没有重复的、数量与全部区域码相同
-                        let companyList = channel.company.split('/');
-                        let list = _.uniq(companyList);
-                        if (companyList.length !== list.length) {
-                            message = message + '区域码存在重复;';
-                        } else if (companyList.length === this.companyOptions.length) {
-                            message = message + '公共频道和区域码设置存在冲突;';
-                        }
-                    }
-                }
+                // if (channel.publicChannel === '否') {
+                //     if (this.$util.isEmpty(channel.company)) {
+                //         message = message + '请填写区域码;';
+                //     } else if (this.isCompanyExist(channel.company).length !== 0) {
+                //         message = message + '以下区域码不存在：' + this.isCompanyExist(channel.company).toString() + ';';
+                //     } else {
+                //         // 检查非公共频道下是否区域码设置为全部；全部区域码存在、没有重复的、数量与全部区域码相同
+                //         let companyList = channel.company.split('/');
+                //         let list = _.uniq(companyList);
+                //         if (companyList.length !== list.length) {
+                //             message = message + '区域码存在重复;';
+                //         } else if (companyList.length === this.companyOptions.length) {
+                //             message = message + '公共频道和区域码设置存在冲突;';
+                //         }
+                //     }
+                // }
                 // 服务器组
                 if (this.$util.isEmpty(channel.serverGroup)) {
                     message = message + '请设置频道的服务器组;';
