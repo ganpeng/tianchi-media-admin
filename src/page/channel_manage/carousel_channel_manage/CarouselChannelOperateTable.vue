@@ -106,6 +106,7 @@
                 </template>
             </el-table-column>
             <el-table-column
+                v-if="false"
                 align="center"
                 min-width="70px"
                 prop="common"

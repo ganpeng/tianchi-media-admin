@@ -83,7 +83,7 @@
 <script>
     import UploadExcelComponent from 'sysComponents/custom_components/custom/UploadExcel';
     import XLSX from 'xlsx';
-    import _ from 'lodash';
+    // import _ from 'lodash';
 
     export default {
         name: 'EditLiveChannelByImportExcel',
@@ -94,7 +94,7 @@
                 updateDisabled: false,
                 tips: '',
                 channelList: [],
-                companyOptions: [],
+                // companyOptions: [],
                 tableHeader: [],
                 failNo: 0,
                 finishNo: 0,
@@ -112,11 +112,11 @@
                     }
                 });
                 // 获取所属区域的数据
-                this.$service.getFilialeList().then(response => {
-                    if (response && response.code === 0) {
-                        this.companyOptions = response.data;
-                    }
-                });
+                // this.$service.getFilialeList().then(response => {
+                //     if (response && response.code === 0) {
+                //         this.companyOptions = response.data;
+                //     }
+                // });
             },
             // 导出所有直播频道的表格
             exportTemplate() {
@@ -129,10 +129,10 @@
                             for (let i = 0; i < channel.typeList.length; i++) {
                                 type = type + '/' + channel.typeList[i].name;
                             }
-                            let company = '';
-                            for (let i = 0; i < channel.companyList.length; i++) {
-                                company = company + '/' + channel.companyList[i].code;
-                            }
+                            // let company = '';
+                            // for (let i = 0; i < channel.companyList.length; i++) {
+                            //     company = company + '/' + channel.companyList[i].code;
+                            // }
                             let simpleChannel = {
                                 id: channel.id,
                                 code: channel.code,
@@ -147,9 +147,9 @@
                                 multicastIp: channel.multicastIp,
                                 multicastPort: channel.multicastPort,
                                 serverGroup: channel.serverGroup,
-                                protocol: channel.protocolList ? channel.protocolList.join('/') : '',
-                                publicChannel: channel.common ? '是' : '否',
-                                company: company.slice(1)
+                                protocol: channel.protocolList ? channel.protocolList.join('/') : ''
+                                // publicChannel: channel.common ? '是' : '否',
+                                // company: company.slice(1)
                             };
                             exportChannelData.push(simpleChannel);
                         });
@@ -226,7 +226,7 @@
                 delete channelInfo.innerName;
                 delete channelInfo.name;
                 channelInfo.record = channelInfo.transcribe === '是';
-                channelInfo.common = channelInfo.publicChannel === '是';
+                // channelInfo.common = channelInfo.publicChannel === '是';
                 channelInfo.paymentType = channelInfo.vip === '是' ? 'VIP' : 'FREE';
                 channelInfo.typeList = [];
                 // 设置type
@@ -240,16 +240,16 @@
                 }
                 // 设置protocolList
                 channelInfo.protocolList = channelInfo.protocol.split('/');
-                channelInfo.companyList = [];
-                // 设置companyList
-                let companyList = channelInfo.company.split('/');
-                for (let k = 0; k < companyList.length; k++) {
-                    this.companyOptions.map(company => {
-                        if (company.code.toString() === companyList[k]) {
-                            channelInfo.companyList.push(company);
-                        }
-                    });
-                }
+                // channelInfo.companyList = [];
+                // // 设置companyList
+                // let companyList = channelInfo.company.split('/');
+                // for (let k = 0; k < companyList.length; k++) {
+                //     this.companyOptions.map(company => {
+                //         if (company.code.toString() === companyList[k]) {
+                //             channelInfo.companyList.push(company);
+                //         }
+                //     });
+                // }
                 this.$service.updateChannelPartInfoById({
                     id: this.channelList[index].id,
                     putChannelReq: channelInfo
@@ -300,26 +300,26 @@
                     message = message + '推流方式不存在;';
                 }
                 // 是否为公共频道
-                if (channel.publicChannel !== '是' && channel.publicChannel !== '否') {
-                    message = message + '请正确填写是否为公共频道;';
-                }
+                // if (channel.publicChannel !== '是' && channel.publicChannel !== '否') {
+                //     message = message + '请正确填写是否为公共频道;';
+                // }
                 // 所属区域，公共频道为'是'，对于区域码不进行验证
-                if (channel.publicChannel === '否') {
-                    if (this.$util.isEmpty(channel.company)) {
-                        message = message + '请填写区域码;';
-                    } else if (this.isCompanyExist(channel.company).length !== 0) {
-                        message = message + '以下区域码不存在：' + this.isCompanyExist(channel.company).toString() + ';';
-                    } else {
-                        // 检查非公共频道下是否区域码设置为全部；全部区域码存在、没有重复的、数量与全部区域码相同
-                        let companyList = channel.company.split('/');
-                        let list = _.uniq(companyList);
-                        if (companyList.length !== list.length) {
-                            message = message + '区域码存在重复;';
-                        } else if (companyList.length === this.companyOptions.length) {
-                            message = message + '公共频道和区域码设置存在冲突;';
-                        }
-                    }
-                }
+                // if (channel.publicChannel === '否') {
+                //     if (this.$util.isEmpty(channel.company)) {
+                //         message = message + '请填写区域码;';
+                //     } else if (this.isCompanyExist(channel.company).length !== 0) {
+                //         message = message + '以下区域码不存在：' + this.isCompanyExist(channel.company).toString() + ';';
+                //     } else {
+                //         // 检查非公共频道下是否区域码设置为全部；全部区域码存在、没有重复的、数量与全部区域码相同
+                //         let companyList = channel.company.split('/');
+                //         let list = _.uniq(companyList);
+                //         if (companyList.length !== list.length) {
+                //             message = message + '区域码存在重复;';
+                //         } else if (companyList.length === this.companyOptions.length) {
+                //             message = message + '公共频道和区域码设置存在冲突;';
+                //         }
+                //     }
+                // }
                 // 组播地址
                 if (this.$util.isEmpty(channel.multicastIp)) {
                     message = message + '组播地址不能为空;';

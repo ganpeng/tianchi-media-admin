@@ -35,7 +35,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="公共频道">
+                <el-form-item label="公共频道" v-if="false">
                     <el-select
                         v-model="listQueryParams.common"
                         @change="getChannelList(true)"
@@ -57,6 +57,21 @@
                         placeholder="全部">
                         <el-option
                             v-for="item in visibleOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item id="multi-selecter" label="适用">
+                    <el-select
+                        v-model="listQueryParams.applicableClientList"
+                        clearable
+                        multiple
+                        @change="getChannelList(true)"
+                        placeholder="全部">
+                        <el-option
+                            v-for="item in applicableClientListOption"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -85,22 +100,7 @@
                 </el-form-item>
             </el-form>
             <el-form :inline="true" class="more-filter-box filter-form" v-if="moreFilters">
-                <el-form-item id="multi-selecter" label="适用">
-                    <el-select
-                        v-model="listQueryParams.applicableClientList"
-                        clearable
-                        multiple
-                        @change="getChannelList(true)"
-                        placeholder="全部">
-                        <el-option
-                            v-for="item in applicableClientListOption"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="区域码">
+                <el-form-item label="区域码" v-if="false">
                     <el-select
                         v-model="listQueryParams.companyCode"
                         @change="getChannelList(true)"
