@@ -172,7 +172,7 @@
                 </el-form-item>
                 <el-form-item ref="applicableClientListFormItem" label="适用客户端" prop="applicableClientList">
                     <el-checkbox :value="clientChecked('TV')" @change="clientCheckedHandler($event, 'TV')">TV</el-checkbox>
-                    <el-checkbox :disabled="appDisabled" :value="clientChecked('APP')" @change="clientCheckedHandler($event, 'APP')">APP</el-checkbox>
+                    <el-checkbox :value="clientChecked('APP')" @change="clientCheckedHandler($event, 'APP')">APP</el-checkbox>
                 </el-form-item>
                 <el-form-item label="频道图片" prop="logoUri">
                     <single-image-uploader
