@@ -42,7 +42,7 @@
                         <li><span>tsID：</span><label>{{channelInfo.tsId ? channelInfo.tsId : '无' }}</label></li>
                         <li><span>serviceID：</span><label>{{channelInfo.serviceId ? channelInfo.serviceId :'无'}}</label>
                         </li>
-                        <li><span>公共频道：</span>
+                        <li v-if="false"><span>公共频道：</span>
                             <label class="is-common" v-if="channelInfo.common">是</label>
                             <label v-else>否</label>
                         </li>
@@ -95,7 +95,7 @@
             </div>
         </div>
         <div class="seperator-line"></div>
-        <div class="area-container">
+        <div class="area-container" v-if="false">
             <h4 class="content-sub-title">
                 所属区域&nbsp;&nbsp;
                 <span v-if="channelInfo.companyList.length > 0">{{channelInfo.companyList.length}}个</span>

@@ -120,10 +120,10 @@
                     <el-checkbox :disabled="appDisabled" label="APP"></el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
-            <el-form-item label="公共频道" prop="common" required>
+            <el-form-item label="公共频道" prop="common" v-if="false">
                 {{channelInfo.common ? '是' : '否'}}
             </el-form-item>
-            <el-form-item label="区域码" prop="companyList" required>
+            <el-form-item label="区域码" prop="companyList" v-if="false">
                 <div class="my-tags">
                     <el-tag
                         :key="index"
@@ -687,7 +687,8 @@
             };
             let checkCompanyList = (rule, value, callback) => {
                 if (this.channelInfo.companyList.length === 0) {
-                    return callback(new Error('请选择区域码'));
+                    // return callback(new Error('请选择区域码'));
+                    callback();
                 } else {
                     callback();
                 }
@@ -1719,7 +1720,8 @@
 
     // 视频分组
     .group-container {
-        > div {
+        /*> div {*/
+        ul {
             padding-bottom: 20px;
             display: flex;
             flex-wrap: nowrap;
