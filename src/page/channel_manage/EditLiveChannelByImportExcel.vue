@@ -83,7 +83,7 @@
 <script>
     import UploadExcelComponent from 'sysComponents/custom_components/custom/UploadExcel';
     import XLSX from 'xlsx';
-    import _ from 'lodash';
+    // import _ from 'lodash';
 
     export default {
         name: 'EditLiveChannelByImportExcel',
@@ -147,7 +147,7 @@
                                 multicastIp: channel.multicastIp,
                                 multicastPort: channel.multicastPort,
                                 serverGroup: channel.serverGroup,
-                                protocol: channel.protocolList ? channel.protocolList.join('/') : '',
+                                protocol: channel.protocolList ? channel.protocolList.join('/') : ''
                                 // publicChannel: channel.common ? '是' : '否',
                                 // company: company.slice(1)
                             };

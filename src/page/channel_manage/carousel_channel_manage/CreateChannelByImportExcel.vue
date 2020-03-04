@@ -89,7 +89,7 @@
 <script>
     import UploadExcelComponent from 'sysComponents/custom_components/custom/UploadExcel';
     import XLSX from 'xlsx';
-    import _ from 'lodash';
+    // import _ from 'lodash';
 
     export default {
         name: 'CreateChannelByImportExcel',
