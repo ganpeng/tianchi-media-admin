@@ -77,12 +77,10 @@
                     >
                     </el-input>
                 </el-form-item>
-                <!--
                 <el-form-item ref="protocolListFormItem" label="推流方式" prop="protocolList">
                     <el-checkbox :value="methodsChecked('HLS')" @change="methodsHandler($event, 'HLS')">HLS</el-checkbox>
                     <el-checkbox v-if="!liveChannel.cdnPush" :value="methodsChecked('UDP')" @change="methodsHandler($event, 'UDP')">UDP</el-checkbox>
                 </el-form-item>
-                -->
                 <el-form-item v-if="withHls" label="服务器转码" prop="transcode">
                     <el-radio @input="inputHandler(true, 'transcode')" :value="liveChannel.transcode" :label="true">是</el-radio>
                     <el-radio @input="inputHandler(false, 'transcode')" :value="liveChannel.transcode" :label="false">否</el-radio>
