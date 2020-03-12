@@ -719,6 +719,16 @@ const ASIDE_LIST = [
             text: '站点配置',
             uri: '/site-manage/config',
             icon: 'site_config'
+        },
+        {
+            text: '站点定制',
+            uri: '/site-custom',
+            icon: 'site_config'
+        },
+        {
+            text: '回看缩略图',
+            uri: '/lookback-thumbnail',
+            icon: 'site_config'
         }
     ],
     [
