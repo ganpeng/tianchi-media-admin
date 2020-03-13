@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="23px" viewBox="0 0 30 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>icon_playback copy</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1">
+        <g id="02-回看缩略图" transform="translate(-30.000000, -194.000000)">
+            <g id="icon_playback-copy" transform="translate(30.000000, 194.000000)">
+                <path d="M28,0 C29.1045695,-2.02906125e-16 30,0.8954305 30,2 L30,21 C30,22.1045695 29.1045695,23 28,23 L18,23 L18,11 C18,9.9456382 17.1841222,9.08183488 16.1492623,9.00548574 L16,9 L2,9 L2,2 C2,0.8954305 2.8954305,2.02906125e-16 4,0 L28,0 Z" id="Combined-Shape"></path>
+                <rect id="Rectangle" x="0" y="11" width="16" height="12" rx="1"></rect>
+            </g>
+        </g>
+    </g>
+</svg>
