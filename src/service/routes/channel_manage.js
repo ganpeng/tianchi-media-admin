@@ -192,3 +192,17 @@ export const exportAllChannelListExcel = ({channelCategory}) => {
         responseType: 'blob'
     });
 };
+
+/**
+ * 获取直播缩略图开关状态
+ */
+export const getThumbnailStatus = () => {
+    return service.get('/v1/sys/system-config/thumbnail-status');
+};
+
+/**
+ * 获取直播缩略图开关状态
+ */
+export const updateThumbnailStatus = () => {
+    return service.patch('/v1/sys/system-config/thumbnail-status');
+};

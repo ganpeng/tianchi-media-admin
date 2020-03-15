@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="270px" height="179px" viewBox="0 0 270 179" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>ON_ACTIVE</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="268" height="157" rx="8"></rect>
+        <rect id="path-3" x="20" y="107" width="68" height="40" rx="2"></rect>
+        <rect id="path-5" x="100" y="107" width="68" height="40" rx="2"></rect>
+        <rect id="path-7" x="180" y="107" width="68" height="40" rx="2"></rect>
+        <rect id="path-9" x="74" y="169" width="120" height="8" rx="4"></rect>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="02-回看缩略图" transform="translate(-448.000000, -179.000000)">
+            <g id="ON_ACTIVE" transform="translate(449.000000, 180.000000)">
+                <g id="ICON_THUMBNAIL">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <rect stroke="#3E495E" x="-0.5" y="-0.5" width="269" height="158" rx="8"></rect>
+                    <mask id="mask-4" fill="white">
+                        <use xlink:href="#path-3"></use>
+                    </mask>
+                    <rect stroke="#3E495E" x="19.5" y="106.5" width="69" height="41" rx="2"></rect>
+                    <mask id="mask-6" fill="white">
+                        <use xlink:href="#path-5"></use>
+                    </mask>
+                    <rect stroke="#3E495E" x="99.5" y="106.5" width="69" height="41" rx="2"></rect>
+                    <mask id="mask-8" fill="white">
+                        <use xlink:href="#path-7"></use>
+                    </mask>
+                    <rect stroke="#3E495E" x="179.5" y="106.5" width="69" height="41" rx="2"></rect>
+                    <mask id="mask-10" fill="white">
+                        <use xlink:href="#path-9"></use>
+                    </mask>
+                    <rect stroke="#3E495E" x="73.5" y="168.5" width="121" height="9" rx="4.5"></rect>
+                </g>
+                <path d="M134,30 C145.045695,30 154,38.954305 154,50 C154,61.045695 145.045695,70 134,70 C122.954305,70 114,61.045695 114,50 C114,38.954305 122.954305,30 134,30 Z M146.309718,42.6641923 C145.463569,41.9541888 144.202057,42.0645567 143.492054,42.910706 L143.492054,42.910706 L131.921877,56.699506 L124.261432,50.2716299 C123.415283,49.5616263 122.153772,49.6719942 121.443768,50.5181436 C120.733765,51.3642929 120.844133,52.6258041 121.690282,53.3358077 L121.690282,53.3358077 L130.882815,61.049259 C131.728965,61.7592626 132.990476,61.6488946 133.700479,60.8027453 L133.700479,60.8027453 L146.556232,45.4818564 C147.266235,44.6357071 147.155867,43.3741959 146.309718,42.6641923 Z" id="ICON_ON" fill="#3AC26F" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>
