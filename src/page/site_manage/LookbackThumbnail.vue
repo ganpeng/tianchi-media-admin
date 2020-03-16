@@ -64,7 +64,7 @@ export default {
                     thumbnailStatus: this.thumbnailStatus
                 });
                 if (res && res.code === 0) {
-                    if (this.thumbnailStatus) {
+                    if (this.thumbnailStatus === '1') {
                         this.$message.success('回看缩略图已开启');
                     } else {
                         this.$message.success('回看缩略图已关闭');
