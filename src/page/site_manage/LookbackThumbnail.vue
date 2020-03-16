@@ -4,25 +4,25 @@
         <div class="seperator-line"></div>
         <div class="content">
             <div v-if="isEdit" class="control-content">
-                <div v-if="thumbnailStatus" class="svg-wrapper">
+                <div v-if="thumbnailStatus === '1'" class="svg-wrapper">
                     <svg-icon icon-class="on_active"></svg-icon>
                     <p class="active">开</p>
                 </div>
-                <div @click="changeThumbnailStatus(true)" v-else class="svg-wrapper">
+                <div @click="changeThumbnailStatus('1')" v-else class="svg-wrapper">
                     <svg-icon icon-class="on_deactive"></svg-icon>
                     <p>开</p>
                 </div>
-                <div v-if="!thumbnailStatus" class="svg-wrapper">
+                <div v-if="thumbnailStatus === '0'" class="svg-wrapper">
                     <svg-icon icon-class="off_active"></svg-icon>
                     <p class="deactive">关</p>
                 </div>
-                <div @click="changeThumbnailStatus(false)" v-else class="svg-wrapper">
+                <div @click="changeThumbnailStatus('0')" v-else class="svg-wrapper">
                     <svg-icon icon-class="off_deactive"></svg-icon>
                     <p>关</p>
                 </div>
             </div>
             <div v-else class="display-content">
-                <div v-if="thumbnailStatus" class="svg-wrapper">
+                <div v-if="thumbnailStatus === '1'" class="svg-wrapper">
                     <svg-icon icon-class="on_active"></svg-icon>
                     <p class="active">开</p>
                 </div>
@@ -43,7 +43,7 @@ export default {
     name: 'LookbackThumbnail',
     data() {
         return {
-            thumbnailStatus: true,
+            thumbnailStatus: '',
             isEdit: false
         };
     },
@@ -51,7 +51,7 @@ export default {
         try {
             let res = await this.$service.getThumbnailStatus();
             if (res && res.code === 0) {
-                this.thumbnailStatus = res.data;
+                this.thumbnailStatus = res.data + '';
             }
         } catch (err) {
             console.log(err);

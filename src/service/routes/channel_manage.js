@@ -203,6 +203,9 @@ export const getThumbnailStatus = () => {
 /**
  * 获取直播缩略图开关状态
  */
-export const updateThumbnailStatus = () => {
-    return service.patch('/v1/sys/system-config/thumbnail-status');
+export const updateThumbnailStatus = (params) => {
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+    return service.patch(`/v1/sys/system-config/thumbnail-status?${paramsStr}`);
 };
