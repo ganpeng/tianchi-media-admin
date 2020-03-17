@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="270px" height="179px" viewBox="0 0 270 179" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>OFF_DEACTIVE</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="268" height="157" rx="8"></rect>
+        <rect id="path-3" x="20" y="107" width="68" height="40" rx="2"></rect>
+        <rect id="path-5" x="100" y="107" width="68" height="40" rx="2"></rect>
+        <rect id="path-7" x="180" y="107" width="68" height="40" rx="2"></rect>
+        <rect id="path-9" x="74" y="169" width="120" height="8" rx="4"></rect>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="02-回看缩略图" transform="translate(-448.000000, -496.000000)">
+            <g id="OFF_DEACTIVE" transform="translate(449.000000, 497.000000)">
+                <g id="ICON_THUMBNAIL">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <rect stroke="#3E495E" x="-0.5" y="-0.5" width="269" height="158" rx="8"></rect>
+                    <mask id="mask-4" fill="white">
+                        <use xlink:href="#path-3"></use>
+                    </mask>
+                    <rect stroke="#3E495E" x="19.5" y="106.5" width="69" height="41" rx="2"></rect>
+                    <mask id="mask-6" fill="white">
+                        <use xlink:href="#path-5"></use>
+                    </mask>
+                    <rect stroke="#3E495E" x="99.5" y="106.5" width="69" height="41" rx="2"></rect>
+                    <mask id="mask-8" fill="white">
+                        <use xlink:href="#path-7"></use>
+                    </mask>
+                    <rect stroke="#3E495E" x="179.5" y="106.5" width="69" height="41" rx="2"></rect>
+                    <mask id="mask-10" fill="white">
+                        <use xlink:href="#path-9"></use>
+                    </mask>
+                    <rect stroke="#3E495E" x="73.5" y="168.5" width="121" height="9" rx="4.5"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
