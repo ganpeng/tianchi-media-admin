@@ -453,8 +453,12 @@ const HARDWARE_TYPE_OPTIONS = [
         name: '3796'
     },
     {
-        value: 'HARDWARE_3798',
-        name: '3798'
+        value: 'HARDWARE_3798_210',
+        name: '3798_210'
+    },
+    {
+        value: 'HARDWARE_3798_310',
+        name: '3798_310'
     }
 ];
 
