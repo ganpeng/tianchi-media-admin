@@ -11,7 +11,7 @@ const defaultVersion = {
     updateLog: '', // 更新日志
     forced: '', // 是否强制升级
     uriPrefix: '', // 域名前缀
-    hardwareType: '', // 硬件类型
+    // hardwareType: '', // 硬件类型
     fullPackageUri: '', // 全量升级包地址
     fullPackageMd5: '', // 包的md5
     incrPackageUri: '', // 增量升级包地址
@@ -176,7 +176,7 @@ function formatVersion(version) {
         delete versionCopy.hardwareType;
     }
 
-    return Object.assign({}, version, {
+    return Object.assign({}, versionCopy, {
         forced: version.forced === 1
     });
 }
@@ -218,6 +218,7 @@ const actions = {
                 if (version.productType === 'TV_LAUNCHER') {
                     delete version.hardwareType;
                 }
+                console.log(version);
                 let res = await service.newPostVersion(version);
                 isLoading = false;
                 return res;

@@ -46,6 +46,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            <!--
             <el-form-item v-if="version.productType === 'TV_ROM_3798'" label="硬件类型" prop="hardwareType">
                 <el-select
                     clearable
@@ -62,6 +63,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            -->
             <el-form-item label="升级方式" prop="forced">
                 <el-select
                     clearable
