@@ -54,6 +54,13 @@
                     placeholder="请填写所属服务器组">
                 </el-input>
             </el-form-item>
+            <el-form-item label="推流地址" prop="pushAddress">
+                <el-input
+                    v-model="channelPushInfo.pushAddress"
+                    size="medium"
+                    placeholder="请填写推流地址">
+                </el-input>
+            </el-form-item>
             <el-form-item label="状态" prop="visible" required v-if="status === 'CREATE_CHANNEL_PUSH'"
                           class="channel-status">
                 <label>禁播</label>
@@ -139,6 +146,7 @@
                     recordIp: '',
                     recordPort: '',
                     serverGroup: '', // 新加字段
+                    pushAddress: '',
                     visible: false
                 },
                 infoRules: {

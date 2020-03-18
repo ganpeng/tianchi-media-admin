@@ -75,6 +75,12 @@
             </el-table-column>
             <el-table-column
                 align="center"
+                min-width="200px"
+                prop="pushAddress"
+                label="推流地址">
+            </el-table-column>
+            <el-table-column
+                align="center"
                 min-width="100px"
                 label="状态">
                 <template slot-scope="scope">

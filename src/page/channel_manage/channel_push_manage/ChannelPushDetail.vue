@@ -25,6 +25,7 @@
                         <li><span>推流IP：</span><label>{{channelPushInfo.recordIp}}</label></li>
                         <li><span>推流端口：</span><label>{{channelPushInfo.recordPort}}</label></li>
                         <li><span>服务器组：</span><label>{{channelPushInfo.serverGroup}}</label></li>
+                        <li><span>推流地址：</span><label>{{channelPushInfo.pushAddress}}</label></li>
                     </ul>
                 </div>
             </div>
