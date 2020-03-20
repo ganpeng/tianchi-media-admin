@@ -1042,6 +1042,22 @@ export const routes = [
                 path: '/app-page-layout/:navbarId/:operator/shuffle/:index',
                 name: 'AppShuffleModule',
                 component: () => import('@/page/app/page_layout/add_edit_module/AppShuffleModule')
+            },
+            // 站点配置下面新增
+            {
+                path: '/site-custom',
+                name: 'SiteCustom',
+                component: () => import('@/page/site_manage/SiteCustom')
+            },
+            {
+                path: '/site-custom/edit',
+                name: 'EditSiteCustom',
+                component: () => import('@/page/site_manage/EditSiteCustom')
+            },
+            {
+                path: '/lookback-thumbnail',
+                name: 'LookbackThumbnail',
+                component: () => import('@/page/site_manage/LookbackThumbnail')
             }
         ]
     },

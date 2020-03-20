@@ -428,8 +428,12 @@ const PRODUCT_TYPE_OPTIONS = [
         name: '应用升级'
     },
     {
-        value: 'TV_ROM_3798',
-        name: '系统升级'
+        value: 'TV_ROM_3798_200',
+        name: '系统升级(3798_200)'
+    },
+    {
+        value: 'TV_ROM_3798_310',
+        name: '系统升级(3798_310)'
     }
 ];
 
@@ -453,8 +457,12 @@ const HARDWARE_TYPE_OPTIONS = [
         name: '3796'
     },
     {
-        value: 'HARDWARE_3798',
-        name: '3798'
+        value: 'HARDWARE_3798_200',
+        name: '3798_200'
+    },
+    {
+        value: 'HARDWARE_3798_310',
+        name: '3798_310'
     }
 ];
 
@@ -719,6 +727,16 @@ const ASIDE_LIST = [
             text: '站点配置',
             uri: '/site-manage/config',
             icon: 'site_config'
+        },
+        {
+            text: '站点定制',
+            uri: '/site-custom',
+            icon: 'aside_station'
+        },
+        {
+            text: '回看缩略图',
+            uri: '/lookback-thumbnail',
+            icon: 'aside_playback'
         }
     ],
     [

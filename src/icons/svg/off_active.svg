@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="270px" height="179px" viewBox="0 0 270 179" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>OFF_DEACTIVE</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="268" height="157" rx="8"></rect>
+        <rect id="path-3" x="74" y="169" width="120" height="8" rx="4"></rect>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="02-回看缩略图" transform="translate(-876.000000, -496.000000)">
+            <g id="OFF_DEACTIVE" transform="translate(877.000000, 497.000000)">
+                <g id="ICON_THUMBNAIL-Copy-2">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <rect stroke="#3E495E" x="-0.5" y="-0.5" width="269" height="158" rx="8"></rect>
+                    <mask id="mask-4" fill="white">
+                        <use xlink:href="#path-3"></use>
+                    </mask>
+                    <rect stroke="#3E495E" x="73.5" y="168.5" width="121" height="9" rx="4.5"></rect>
+                </g>
+                <path d="M134,30 C145.045695,30 154,38.954305 154,50 C154,61.045695 145.045695,70 134,70 C122.954305,70 114,61.045695 114,50 C114,38.954305 122.954305,30 134,30 Z M128.343146,41.5147186 C127.562097,40.73367 126.295767,40.73367 125.514719,41.5147186 C124.73367,42.2957672 124.73367,43.5620972 125.514719,44.3431458 L125.514719,44.3431458 L131.171573,50 L125.514719,55.6568542 C124.73367,56.4379028 124.73367,57.7042328 125.514719,58.4852814 C126.295767,59.26633 127.562097,59.26633 128.343146,58.4852814 L128.343146,58.4852814 L134,52.8284271 L139.656854,58.4852814 C140.437903,59.26633 141.704233,59.26633 142.485281,58.4852814 C143.26633,57.7042328 143.26633,56.4379028 142.485281,55.6568542 L142.485281,55.6568542 L136.828427,50 L142.485281,44.3431458 C143.26633,43.5620972 143.26633,42.2957672 142.485281,41.5147186 C141.704233,40.73367 140.437903,40.73367 139.656854,41.5147186 L139.656854,41.5147186 L134,47.1715729 Z" id="Combined-Shape" fill="#ED4242" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -101,3 +101,31 @@ export const setBatchVideoToBatchSite = ({siteIdList, videoIdList}) => {
         baseURL: '/storage'
     });
 };
+
+/**
+ * 获取站点定制资源
+ */
+export const getSiteCustom = () => {
+    return service.get('/v1/content/start-up');
+};
+
+/**
+ * 更新站点定制资源
+ */
+export const updateSiteCustom = (reqBody) => {
+    return service.post('/v1/content/start-up', reqBody);
+};
+
+/**
+ * 获取站点资源logo
+ */
+export const getSiteCustomLogo = () => {
+    return service.get('/v1/content/logo');
+};
+
+/**
+ * 更新站点logo资源
+ */
+export const updateSiteCustomLogo = (reqBody) => {
+    return service.post('/v1/content/logo', reqBody);
+};

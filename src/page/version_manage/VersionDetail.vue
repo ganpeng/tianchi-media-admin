@@ -46,7 +46,7 @@
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
                             <label class="label">升级类型：</label>
-                            <span class="value">{{version.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}</span>
+                            <span class="value">{{getProductTypeName(version.productType)}}</span>
                         </div>
                     </li>
                     <li class="text-info-item">
@@ -141,6 +141,7 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import XLSX from 'xlsx';
 import _ from 'lodash';
+import role from '@/util/config/role';
 
 export default {
     name: 'VersionDetail',
@@ -158,6 +159,12 @@ export default {
         hardwareType() {
             return (hardwareType) => {
                 return hardwareType ? (hardwareType === 'HARDWARE_3796' ? '3796' : '3798') : '无';
+            };
+        },
+        getProductTypeName() {
+            return (productType) => {
+                let obj = role.PRODUCT_TYPE_OPTIONS.find((item) => item.value === productType);
+                return _.get(obj, 'name');
             };
         },
         updatedRatio() {
