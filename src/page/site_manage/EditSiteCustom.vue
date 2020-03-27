@@ -43,7 +43,7 @@
                     <label class="ui_button ui_button_primary" for="video-uploader">
                         <i class="el-icon-plus"></i>
                     </label>
-                    <input ref="videoUploader" type="file" id="video-uploader" accept="video/*">
+                    <input ref="videoUploader" type="file" id="video-uploader" accept="video/*,application/zip">
                 </div>
             </div>
         </div>
