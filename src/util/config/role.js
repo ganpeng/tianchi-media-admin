@@ -428,7 +428,7 @@ const PRODUCT_TYPE_OPTIONS = [
         name: '应用升级'
     },
     {
-        value: 'TV_ROM_3798_200',
+        value: 'TV_ROM_3798',
         name: '系统升级(3798_200)'
     },
     {
