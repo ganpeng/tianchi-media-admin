@@ -61,12 +61,14 @@
                             <span class="value">{{version.forced ? '强制升级' : '选择升级'}}</span>
                         </div>
                     </li>
+                    <!--
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
                             <label class="label">硬件类型：</label>
                             <span class="value">{{hardwareType(version.hardwareType)}}</span>
                         </div>
                     </li>
+                    -->
                     <li class="text-info-item">
                         <div class="text-info-item-wrapper">
                             <label class="label">升级包体积：</label>
