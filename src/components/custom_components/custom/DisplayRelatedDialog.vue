@@ -205,7 +205,7 @@
                         }
 
                         if (parseInt(sort) === 0) {
-                            this.$router.push({name: 'EditFixedModule', params: {navbarId: navBarId, index: sort}});
+                            this.$router.push({name: 'EditFixedModule', params: {navbarId: navBarId, index: sort}, query: {id: refItem.refId}});
                         } else {
                             switch (renderType) {
                                 case 'FIGURE':
