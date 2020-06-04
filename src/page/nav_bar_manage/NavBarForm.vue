@@ -56,7 +56,7 @@
                     </single-image-uploader>
                 </div>
             </el-form-item>
-            <el-form-item label="栏目分类" prop="signCode">
+            <el-form-item style="padding-top: 26px;" label="栏目分类" prop="signCode">
                 <el-select
                     v-model="navBarInfo.signCode"
                     clearable
@@ -70,36 +70,36 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="栏目板式" class="nav-bar-model" prop="layoutTemplate" required>
+            <el-form-item label="栏目版式" class="nav-bar-model" prop="layoutTemplate" required>
                 <el-radio-group v-model="navBarInfo.layoutTemplate">
                     <el-radio
                         label="FS_3"
                         v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_3')">
-                        新闻板式类
+                        新闻版式类
                         <svg-icon icon-class="model_news"></svg-icon>
                     </el-radio>
                     <el-radio
                         label="FS_2"
                         v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_2')">
-                        电影板式类
+                        电影版式类
                         <svg-icon icon-class="model_movie"></svg-icon>
                     </el-radio>
                     <el-radio
                         label="FS_1"
                         v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_1')">
-                        电视剧板式类
+                        电视剧版式类
                         <svg-icon icon-class="model_TV_drama"></svg-icon>
                     </el-radio>
                     <el-radio
                         label="FS_4"
                         v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_4')">
-                        专题板式类
+                        专题版式类
                         <svg-icon icon-class="model_subject"></svg-icon>
                     </el-radio>
                     <el-radio
                         label="FS_5"
                         v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_5')">
-                        儿童板式（只适用于儿童栏目）
+                        儿童版式（只适用于儿童栏目）
                         <svg-icon icon-class="model_child"></svg-icon>
                     </el-radio>
                 </el-radio-group>
@@ -161,7 +161,7 @@
             };
             let checkLayoutTemplate = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('请选择栏目板式'));
+                    return callback(new Error('请选择栏目版式'));
                 } else {
                     callback();
                 }

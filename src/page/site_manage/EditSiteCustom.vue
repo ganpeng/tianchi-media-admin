@@ -247,17 +247,18 @@ export default {
                 if (file.name !== 'ad.mp4' && file.name !== 'bootanimation.zip') {
                     errorMessage = 'mp4文件名称必须为ad.mp4，zip文件名称必须为bootanimation.zip，否则不可上传';
                     this.$refs.videoUploader.value = null;
-                } else {
-                    if (file.name === 'ad.mp4') {
-                        let videoInfo = await this.loadVideo(file);
-                        let width = _.get(videoInfo, 'width');
-                        let height = _.get(videoInfo, 'height');
-                        if (!(width === 1920 && height === 1080)) {
-                            errorMessage = 'mp4视频的分辨率必须是1920*1080的，否则不可上传';
-                            this.$refs.videoUploader.value = null;
-                        }
-                    }
                 }
+                // else {
+                //     if (file.name === 'ad.mp4') {
+                //         let videoInfo = await this.loadVideo(file);
+                //         let width = _.get(videoInfo, 'width');
+                //         let height = _.get(videoInfo, 'height');
+                //         if (!(width === 1920 && height === 1080)) {
+                //             errorMessage = 'mp4视频的分辨率必须是1920*1080的，否则不可上传';
+                //             this.$refs.videoUploader.value = null;
+                //         }
+                //     }
+                // }
                 return errorMessage;
             } catch (err) {
                 console.log(err);
