@@ -36,8 +36,7 @@
                 min-width="140px"
                 label="负责人">
                 <template slot-scope="scope">
-                    {{adminNameList(scope.row.adminList)}}
-                    <!-- {{scope.row.adminNameList}} -->
+                    {{scope.row.adminNameList}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -93,13 +92,6 @@
         },
         data() {
             return {};
-        },
-        computed: {
-            adminNameList() {
-                return (adminList) => {
-                    return adminList.filter((item) => item.administrative);
-                };
-            }
         },
         methods: {
             toDepartmentDetail(item) {

@@ -805,7 +805,7 @@
             "created_at": "19/11/2019 11:38:56",
             "main_menu": "内容管理",
             "permission": "content:programme:batchVisible",
-            "resource_name": "批量上下加",
+            "resource_name": "批量上下架",
             "resource_url": "[/v1/content/programme/visible]",
             "secondary_menu": "节目管理",
             "updated_at": "19/11/2019 11:38:56"

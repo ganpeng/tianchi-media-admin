@@ -30,7 +30,7 @@
                 </ul>
                 <div class="user-info">
                     <label>用户：</label>
-                    <span>{{getUserPropByKey('name')}}</span>
+                    <span>{{getUserPropByKey('mobile')}}</span>
                     <span v-if="getUserPropByKey('id')" class="name" @click="toUserDetail">查看</span>
                 </div>
             </div>
