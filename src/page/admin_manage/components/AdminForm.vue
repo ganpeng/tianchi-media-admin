@@ -9,7 +9,7 @@
             status-icon
             label-width="110px"
             class="form-block">
-            <el-form-item label="姓名" prop="name" required>
+            <el-form-item label="姓名" prop="name">
                 <el-input
                     v-model="adminInfo.name"
                     size="medium"
@@ -17,7 +17,7 @@
                     placeholder="请填写20个字以内的姓名">
                 </el-input>
             </el-form-item>
-            <el-form-item label="邮箱" prop="email" required>
+            <el-form-item label="邮箱" prop="email">
                 <el-input
                     v-model="adminInfo.email"
                     size="medium"
@@ -25,7 +25,7 @@
                     placeholder="请填写60个字以内的邮箱">
                 </el-input>
             </el-form-item>
-            <el-form-item label="手机" prop="mobile" required>
+            <el-form-item label="手机" prop="mobile">
                 <el-input
                     v-model="adminInfo.mobile"
                     size="medium"
@@ -33,7 +33,8 @@
                     placeholder="请填写手机号">
                 </el-input>
             </el-form-item>
-            <el-form-item label="部门" prop="departmentList" required>
+            <!-- <el-form-item label="部门" prop="departmentList"> -->
+            <el-form-item label="部门" prop="department">
                 <div class="my-tags">
                     <el-tag
                         :key="index"
@@ -59,7 +60,7 @@
                        class="close-btn el-select__caret el-input__icon el-icon-circle-close is-show-close"></i>
                 </el-autocomplete>
             </el-form-item>
-            <el-form-item label="角色" prop="roleId" required>
+            <el-form-item label="角色" prop="roleId">
                 <el-select
                     v-model="adminInfo.roleId"
                     clearable
