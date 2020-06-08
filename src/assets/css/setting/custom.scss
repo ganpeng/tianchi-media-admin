@@ -464,7 +464,7 @@ html, body {
 
 //  自定义form表单的样式
 .form-container {
-    overflow: hidden;
+    // overflow: hidden;
     margin-top: 20px;
 }
 
@@ -1731,6 +1731,9 @@ html, body {
     }
     .el-checkbox {
         padding: 0;
+    }
+    .el-form-item__content {
+        line-height: 34px;
     }
 }
 

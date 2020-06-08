@@ -25,18 +25,42 @@
                         <span class="prompt-info-icon">
                             <svg-icon icon-class="info_i_1"></svg-icon>
                             <div class="prompt-info-dialog">
-                                ·换台广告、详情页广告 <br>
-                                支持PNG/JPG/WEBP/GIF ，432*198，GIF1MB以内，其余200KB以内 <br>
-                                ·调音广告 <br>
-                                支持PNG，320*140，100KB以内 <br>
-                                ·暂停广告 <br>
-                                支持PNG/JPG/WEBP ，1200*600，1MB以内 <br>
-                                ·屏保广告 <br>
-                                支持PNG/JPG/WEBP，1920*1080，1MB以内 <br>
-                                ·开机广告 <br>
-                                支持MP4，1280*720以上，60MB以内 <br>
-                                ·贴片广告 <br>
-                                支持MP4，1280*720以上，60MB以内 <br>
+                                <p>
+                                    ·换台广告、详情页广告
+                                </p>
+                                <p>
+                                    支持PNG/JPG/WEBP/GIF ，432*198，GIF1MB以内，其余200KB以内
+                                </p>
+                                <p>
+                                    ·调音广告
+                                </p>
+                                <p>
+                                    支持PNG，320*140，100KB以内
+                                </p>
+                                <p>
+                                    ·暂停广告
+                                </p>
+                                <p>
+                                    支持PNG/JPG/WEBP ，1200*600，1MB以内
+                                </p>
+                                <p>
+                                    ·屏保广告
+                                </p>
+                                <p>
+                                    支持PNG/JPG/WEBP，1920*1080，1MB以内
+                                </p>
+                                <p>
+                                    ·开机广告
+                                </p>
+                                <p>
+                                    支持MP4，1280*720以上，60MB以内
+                                </p>
+                                <p>
+                                    ·贴片广告
+                                </p>
+                                <p>
+                                    支持MP4，1280*720以上，60MB以内
+                                </p>
                             </div>
                         </span>
                     </el-form-item>
@@ -137,7 +161,7 @@ export default {
         }
     }
     .prompt-info-dialog {
-        display: none;
+        // display: none;
         position: absolute;
         top: 14px;
         left: 32px;

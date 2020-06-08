@@ -9,7 +9,7 @@
             ref="adInfo"
             label-width="120px"
             class="form-block fill-form">
-            <el-form-item label="广告名称" prop="name" required>
+            <el-form-item label="广告名称" prop="name">
                 <el-input
                     v-model="adInfo.name"
                     size="medium"
@@ -318,7 +318,7 @@
         data() {
             let checkName = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
-                    return callback(new Error('广告名称不能为空'));
+                    return callback(new Error('请输入广告名称'));
                 } else if (this.$util.trim(value).length > 20) {
                     return callback(new Error('广告名称不能超过20字'));
                 } else {
