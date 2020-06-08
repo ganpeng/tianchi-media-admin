@@ -161,7 +161,7 @@ export default {
         }
     }
     .prompt-info-dialog {
-        // display: none;
+        display: none;
         position: absolute;
         top: 14px;
         left: 32px;
