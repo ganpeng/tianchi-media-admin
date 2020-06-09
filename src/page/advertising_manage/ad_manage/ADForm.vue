@@ -424,6 +424,7 @@
                 categoryOptions: [],
                 infoRules: {
                     name: [
+                        {required: true, message: '请输入广告名称'},
                         {validator: checkName, trigger: 'blur'}
                     ],
                     desc: [
