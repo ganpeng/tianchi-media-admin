@@ -45,26 +45,6 @@
         </div>
         <div class="module-row-two">
             <div class="content-field">
-                <div class="top-field">
-                    <div class="wrapper">
-                        <div :style="styleBgImageStr(1)" class="top-left-field">
-                            <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 1)"></corner-mark>
-                            <shuffle-btn
-                                v-if="isEdit"
-                                :addShuffleLayout="addShuffleLayout(1)"
-                            ></shuffle-btn>
-                        </div>
-                    </div>
-                    <div class="wrapper">
-                        <div :style="styleBgImageStr(2)" class="top-right-field">
-                            <corner-mark :squareIndex="2" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 2)"></corner-mark>
-                            <shuffle-btn
-                                v-if="isEdit"
-                                :addShuffleLayout="addShuffleLayout(2)"
-                            ></shuffle-btn>
-                        </div>
-                    </div>
-                </div>
                 <div class="bottom-field">
                     <div class="wrapper">
                         <div :style="styleBgImageStr(3)" class="bottom-left-field">
@@ -90,6 +70,26 @@
                             <shuffle-btn
                                 v-if="isEdit"
                                 :addShuffleLayout="addShuffleLayout(5)"
+                            ></shuffle-btn>
+                        </div>
+                    </div>
+                </div>
+                <div class="top-field">
+                    <div class="wrapper">
+                        <div :style="styleBgImageStr(1)" class="top-left-field">
+                            <corner-mark :squareIndex="1" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 1)"></corner-mark>
+                            <shuffle-btn
+                                v-if="isEdit"
+                                :addShuffleLayout="addShuffleLayout(1)"
+                            ></shuffle-btn>
+                        </div>
+                    </div>
+                    <div class="wrapper">
+                        <div :style="styleBgImageStr(2)" class="top-right-field">
+                            <corner-mark :squareIndex="2" :cornerMark="getLayoutItemCornerMark(navbarId, 0, 2)"></corner-mark>
+                            <shuffle-btn
+                                v-if="isEdit"
+                                :addShuffleLayout="addShuffleLayout(2)"
                             ></shuffle-btn>
                         </div>
                     </div>
@@ -491,6 +491,7 @@ export default {
         .top-field {
             display: flex;
             margin-bottom: 2%;
+            margin-top: 2%;
             .wrapper {
                 flex: 1;
                 &:first-child {
