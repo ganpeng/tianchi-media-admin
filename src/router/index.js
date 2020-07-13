@@ -152,6 +152,8 @@ import ADDetail from 'sysPage/advertising_manage/ad_manage/ADDetail';
 import OrderList from 'sysPage/order_manage/OrderList';
 import OrderDetail from 'sysPage/order_manage/OrderDetail';
 import ServerSpace from 'sysPage/server_manage/ServerSpace';
+// 网络设置密码
+import NetworkPassword from 'sysPage/network_password/NetworkPassword';
 
 Vue.use(Router);
 
@@ -226,6 +228,12 @@ export const routes = [
                 path: '/home',
                 name: 'Home',
                 component: Home
+            },
+            // 配置中心-网络设置密码
+            {
+                path: '/network-password',
+                name: 'NetworkPassword',
+                component: NetworkPassword
             },
             // 个人中心-我的信息
             {

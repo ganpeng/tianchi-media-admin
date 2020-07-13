@@ -737,6 +737,11 @@ const ASIDE_LIST = [
             text: '回看缩略图',
             uri: '/lookback-thumbnail',
             icon: 'aside_playback'
+        },
+        {
+            text: '网络密码',
+            uri: '/network-password',
+            icon: 'aside_playback'
         }
     ],
     [
