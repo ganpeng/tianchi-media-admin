@@ -154,6 +154,8 @@ import OrderDetail from 'sysPage/order_manage/OrderDetail';
 import ServerSpace from 'sysPage/server_manage/ServerSpace';
 // 网络设置密码
 import NetworkPassword from 'sysPage/network_password/NetworkPassword';
+// 激活码
+import ActivationCodeList from 'sysPage/activation_code_manage/ActivationCodeList';
 
 Vue.use(Router);
 
@@ -228,6 +230,12 @@ export const routes = [
                 path: '/home',
                 name: 'Home',
                 component: Home
+            },
+            // 版本设备-激活码列表
+            {
+                path: '/manage-activation-code/list',
+                name: 'ActivationCodeList',
+                component: ActivationCodeList
             },
             // 配置中心-网络设置密码
             {

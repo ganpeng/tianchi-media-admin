@@ -149,25 +149,29 @@ let util = {
         }
         if (format) {
             // handle MM
-            format = format.replace(/MM/g, date.getMonth() + 1);
+            format = format.replace(/MM/g, this.fillNumberBit(date.getMonth() + 1));
         }
         if (format) {
             // handle DD
-            format = format.replace(/DD/g, date.getDate());
+            format = format.replace(/DD/g, this.fillNumberBit(date.getDate()));
         }
         if (format) {
             // handle HH
-            format = format.replace(/HH/g, date.getHours());
+            format = format.replace(/HH/g, this.fillNumberBit(date.getHours()));
         }
         if (format) {
             // handle mm
-            format = format.replace(/mm/g, date.getMinutes());
+            format = format.replace(/mm/g, this.fillNumberBit(date.getMinutes()));
         }
         if (format) {
             // handle SS
-            format = format.replace(/SS/g, date.getSeconds());
+            format = format.replace(/SS/g, this.fillNumberBit(date.getSeconds()));
         }
         return format;
+    },
+    // 数字4变为04
+    fillNumberBit(number) {
+        return (parseInt(number) / 100).toFixed(2).toString().replace('0.', '');
     },
     fromSecondsToTime(seconds) {
         if (!seconds) {

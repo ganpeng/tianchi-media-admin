@@ -662,6 +662,11 @@ const ASIDE_LIST = [
             text: '设备管理',
             uri: '/manage-device/list',
             icon: 'aside_device'
+        },
+        {
+            text: '激活码',
+            uri: '/manage-activation-code/list',
+            icon: 'aside_device'
         }
     ],
     [
