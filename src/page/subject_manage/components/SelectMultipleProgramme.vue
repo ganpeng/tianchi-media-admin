@@ -96,7 +96,7 @@
             };
         },
         mounted() {
-            this.getProgrammeList();
+            this.getProgrammeList({visible: true});
         },
         methods: {
             // 请求数据
