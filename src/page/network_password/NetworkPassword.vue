@@ -6,10 +6,10 @@
             <!-- 当前密码-->
             <div class="current-psd">
                 <label>当前密码</label>
-                <span>65011017</span>
+                <span>{{currentPassword}}</span>
             </div>
             <!--修改密码-->
-            <div class="modify-psd-block">
+            <div class="modify-psd-block" v-show="currentState === 1">
                 <el-form
                     :model="infoForm"
                     status-icon
@@ -42,29 +42,26 @@
                 </el-form>
             </div>
         </div>
-        <div id="psd-list-block">
+        <div id="psd-list-block" v-if="passwordList.length !== 0">
             <div class="psd-title">历史密码</div>
             <div class="psd-table">
                 <div class="psd-header">
                     <label>日期</label>
                     <span>密码</span>
                 </div>
-                <div class="psd-row-block">
-                    <label>2020-07-08</label>
-                    <span>12345678</span>
-                </div>
-                <div class="psd-row-block">
-                    <label>2020-07-08</label>
-                    <span>12345678</span>
-                </div>
-                <div class="psd-row-block">
-                    <label>2020-07-08</label>
-                    <span>12345678</span>
+                <div class="psd-row-block" v-for="item in passwordList" :key="item.id">
+                    <label>{{item.createdAt | formatDate('yyyy-MM-DD')}}</label>
+                    <span>{{item.password}}</span>
                 </div>
             </div>
         </div>
         <div class="operate-item">
-            <el-button class="btn-style-two" type="primary" @click="submitForm">保存</el-button>
+            <el-button class="btn-style-two" type="primary" @click="currentState = 1" v-if="currentState === 0">
+                编辑
+            </el-button>
+            <el-button class="btn-style-two" type="primary" @click="submitForm" v-else>
+                保存
+            </el-button>
         </div>
     </div>
 </template>
@@ -76,7 +73,7 @@
             let checkOldMoon = (rule, value, callback) => {
                 if (this.$util.isEmpty(value)) {
                     return callback(new Error('原密码不能为空'));
-                } else if (!this.$util.isPassword(value)) {
+                } else if (!/^\d{8}$/.test(value)) {
                     return callback(new Error('请输入8位原密码'));
                 } else {
                     callback();
@@ -101,6 +98,10 @@
                 }
             };
             return {
+                // 0代表详情状态，1代表编辑状态
+                currentState: 0,
+                passwordList: [],
+                currentPassword: '',
                 infoForm: {
                     moon: '',
                     newMoon: '',
@@ -123,9 +124,17 @@
             };
         },
         mounted() {
-
+            this.getNetPsdList();
         },
         methods: {
+            getNetPsdList() {
+                this.$service.getNetPsdList().then(response => {
+                    if (response && response.code === 0) {
+                        this.currentPassword = response.data.currentPassword;
+                        this.passwordList = response.data.netPasswordLogList || [];
+                    }
+                });
+            },
             submitForm() {
                 this.$refs['infoForm'].validate((valid) => {
                     if (valid) {
@@ -136,6 +145,20 @@
                 });
             },
             updateMoon() {
+                this.$service.updateNetPsd({
+                    originPassword: this.infoForm.moon,
+                    newPassword: this.infoForm.newMoon
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('网络密码设置成功');
+                        this.currentState = 0;
+                        this.infoForm.moon = '';
+                        this.infoForm.newMoon = '';
+                        this.infoForm.checkMoon = '';
+                        this.$refs['infoForm'].resetFields();
+                        this.getNetPsdList();
+                    }
+                })
             }
         }
     };
@@ -144,6 +167,7 @@
 <style lang="scss">
 
     #psd-container {
+        height: 186px;
         .el-form {
             margin-right: 260px;
 
