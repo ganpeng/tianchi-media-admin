@@ -1,10 +1,14 @@
 <template>
-    <div id="page-layout-container" class="page-layout-container">
+    <!--背景图设置位置-->
+    <div id="page-layout-container"
+         class="page-layout-container">
+        <img id="nav-background"
+             v-if="currentBackgroundImage.uri"
+             :src="currentBackgroundImage.uri">
         <div id="top"></div>
         <div class="columns-container wrapper" ref="wrapperBox">
             <ul class="columns-list clearfix content">
-                <li
-                    :style="navbarStyle(navbar)"
+                <li :style="navbarStyle(navbar)"
                     v-for="(navbar) in navbarList"
                     :key="navbar.id"
                     @click="columnsTabChangeHandler(navbar)"
@@ -13,7 +17,6 @@
                 </li>
             </ul>
         </div>
-        <div class="seperator-line"></div>
         <div class="page-layout-content">
             <fixed-layout
                 :layoutTemplate="layoutTemplate"
@@ -43,7 +46,7 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <!--设置栏目背景图-->
-            <el-button class="btn-style-two contain-svg-icon">
+            <el-button class="btn-style-two contain-svg-icon" @click="uploadImage">
                 <svg-icon icon-class="back_image"></svg-icon>
             </el-button>
             <!--排序-->
@@ -51,6 +54,11 @@
                        :class="['layout-sort-btn', 'btn-style-three', layoutList.length <= 0 && 'disabled']">
                 <svg-icon icon-class="sort"></svg-icon>
             </el-button>
+            <single-image-uploader
+                ref="singleImageUploader"
+                :uploadSuccessHandler="uploadSuccessHandler"
+                :allowResolutions="allowResolutions">
+            </single-image-uploader>
             <!--
             <el-dropdown
                 class="btn-wrapper-dropdown"
@@ -118,25 +126,36 @@
 
     import FixedLayout from './FixedLayout';
     import OtherLayout from './OtherLayout';
+    import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
 
     export default {
         name: 'PageLayout',
         components: {
             FixedLayout,
             OtherLayout,
-            draggable
+            draggable,
+            SingleImageUploader
         },
         data() {
             return {
+                currentBackgroundImage: {
+                    uri: ''
+                },
                 activeId: '',
                 navbarId: '',
                 layoutTemplate: '',
-                sortView: false
+                sortView: false,
+                allowResolutions: [{width: 1920, height: 1080}]
             };
         },
         async mounted() {
             let content = document.querySelector('.content');
             content.addEventListener('scroll', this.toggleTopBottomBtns.bind(this), false);
+            this.$service.getNavBarDetail(this.$route.params.navbarId).then(response => {
+                if (response && response.code === 0 && response.data.backGroundImage) {
+                    this.currentBackgroundImage = response.data.backGroundImage;
+                }
+            })
         },
         async created() {
             try {
@@ -212,6 +231,21 @@
                 //  2.3.0 新增的部分
                 getLayoutByNavbarId: 'pageLayout/getLayoutByNavbarId'
             }),
+            uploadImage() {
+                this.$refs.singleImageUploader.$refs.singleImageUploader.click();
+            },
+            // 上传图片成功
+            uploadSuccessHandler(image) {
+                this.$service.updateNavBarBackground({
+                    id: this.$route.params.navbarId,
+                    backGroundImage: image
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.currentBackgroundImage = image;
+                        this.$message.success('设置背景成功');
+                    }
+                });
+            },
             setNavBarWidth() {
                 let columnsItem = document.querySelectorAll('.columns-item');
                 let columnsList = document.querySelector('.columns-list');
@@ -228,6 +262,13 @@
                     this.layoutTemplate = navbar.layoutTemplate;
                     this.$router.push({name: 'PageLayout', params: {navbarId: navbar.id}});
                     await this.getLayoutByNavbarId(navbar.id);
+                    this.$service.getNavBarDetail(navbar.id).then(response => {
+                        if (response && response.code === 0 && response.data.backGroundImage) {
+                            this.currentBackgroundImage = response.data.backGroundImage;
+                        } else {
+                            this.currentBackgroundImage = {uri: ''};
+                        }
+                    })
                 } catch (err) {
                     console.log(err);
                 }
@@ -310,7 +351,21 @@
         }
     };
 </script>
+
 <style lang="scss" scoped>
+
+    #page-layout-container {
+        img#nav-background {
+            position: fixed;
+            z-index: -1000px;
+            width: 100%;
+            height: 100%;
+            top: 60px;
+            left: 200px;
+            right: 0;
+            bottom: 0;
+        }
+    }
 
     #page-operate-block {
         .el-dropdown {
@@ -327,6 +382,9 @@
                 margin-left: 20px;
                 background: rgba(255, 255, 255, 1);
             }
+        }
+        .single-image-uploader-container {
+            display: none;
         }
     }
 

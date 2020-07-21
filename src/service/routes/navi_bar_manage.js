@@ -45,6 +45,17 @@ export const updateNavBar = ({id, name, picRemark, focalImage, image, signCode, 
     });
 };
 
+/**
+ * 修改栏目的背景图
+ */
+export const updateNavBarBackground = ({id, backGroundImage}) => {
+    return service.patch('/v1/content/nav-bar', {
+        applicableClientList: ['TV'],
+        id,
+        backGroundImage
+    });
+};
+
 //  移动端的栏目管理接口开始
 /**
  * 更新移动端navbar信息
