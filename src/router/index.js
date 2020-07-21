@@ -66,6 +66,7 @@ import VersionDetail from 'sysPage/version_manage/VersionDetail';
 import HotPerson from 'sysPage/person_manage/HotPerson';
 import PreviewProgrammeList from 'sysPage/channel_manage/PreviewProgrammeList';
 import DeviceList from 'sysPage/device_manage/DeviceList';
+import DeviceImport from 'sysPage/device_manage/DeviceImport';
 import ProductList from 'sysPage/product_manage/ProductList';
 import CreateCategoryProduct from 'sysPage/product_manage/category_product/CreateCategoryProduct';
 import EditCategoryProduct from 'sysPage/product_manage/category_product/EditCategoryProduct';
@@ -215,6 +216,12 @@ export const routes = [
         path: '/person-manage/import',
         name: 'PersonImport',
         component: PersonImport
+    },
+    // 设备导入
+    {
+        path: '/manage-device/import',
+        name: 'DeviceImport',
+        component: DeviceImport
     },
     {
         path: '/channel-live/import',
