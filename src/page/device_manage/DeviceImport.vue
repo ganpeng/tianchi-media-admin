@@ -31,7 +31,8 @@
                             <label class="ui_button ui_button_primary" for="person-import-uploader">
                                 选择文件
                             </label>
-                            <input name="file" ref="personImportUploader" class="el-upload__input" type="file" id="person-import-uploader" accept=".xlsx, .xls">
+                            <input name="file" ref="personImportUploader" class="el-upload__input" type="file"
+                                   id="person-import-uploader" accept=".xlsx, .xls">
                         </div>
                     </div>
                 </div>
@@ -40,97 +41,98 @@
     </div>
 </template>
 <script>
-import {uploadRequest} from '../../util/upload';
-export default {
-    name: 'PersonImport',
-    data() {
-        return {
-            progress: 0,
-            importStatus: '',
-            file: null,
-            success: false
-        };
-    },
-    created() {
-        this.$nextTick(() => {
-            let testUpload = document.querySelector('#person-import-uploader');
-            let dragContainer = document.querySelector('#person-drag-container');
+    import {uploadRequest} from '../../util/upload';
 
-            testUpload.addEventListener('change', (e) => {
-                let file = e.target.files[0];
-                this.uploadChangeHandler(file);
+    export default {
+        name: 'PersonImport',
+        data() {
+            return {
+                progress: 0,
+                importStatus: '',
+                file: null,
+                success: false
+            };
+        },
+        created() {
+            this.$nextTick(() => {
+                let testUpload = document.querySelector('#person-import-uploader');
+                let dragContainer = document.querySelector('#person-drag-container');
+
+                testUpload.addEventListener('change', (e) => {
+                    let file = e.target.files[0];
+                    this.uploadChangeHandler(file);
+                });
+
+                dragContainer.addEventListener('drop', (evt) => {
+                    evt.stopPropagation();
+                    evt.preventDefault();
+
+                    const dt = evt.dataTransfer;
+                    const files = dt.files;
+                    const item = dt.items[0];
+                    if (item.webkitGetAsEntry().isDirectory) {
+                        this.$message.error('只能拖拽上传文件，不支持文件夹');
+                        return false;
+                    }
+
+                    if (files.length > 0) {
+                        this.uploadChangeHandler(files[0]);
+                    }
+                });
+
+                dragContainer.addEventListener('dragover', function (evt) {
+                    evt.stopPropagation();
+                    evt.preventDefault();
+                });
             });
-
-            dragContainer.addEventListener('drop', (evt) => {
-                evt.stopPropagation();
-                evt.preventDefault();
-
-                const dt = evt.dataTransfer;
-                const files = dt.files;
-                const item = dt.items[0];
-                if (item.webkitGetAsEntry().isDirectory) {
-                    this.$message.error('只能拖拽上传文件，不支持文件夹');
-                    return false;
-                }
-
-                if (files.length > 0) {
-                    this.uploadChangeHandler(files[0]);
-                }
-            });
-
-            dragContainer.addEventListener('dragover', function (evt) {
-                evt.stopPropagation();
-                evt.preventDefault();
-            });
-        });
-    },
-    methods: {
-        async uploadChangeHandler(file) {
-            try {
-                if (!this.isUploading) {
-                    this.file = file;
-                    let formData = new FormData();
-                    formData.append('file', file);
-                    let headers = this.$util.getUploadHeaders(this.$store.state.user.token);
-                    let options = {
-                        formData,
-                        headers,
-                        uri: `/admin/v1/content/figure/import`,
-                        progressHandler: (event) => {
-                            let percent = event.loaded / event.total * 100;
-                            this.progress = Math.round(percent);
-                        }
-                    };
-                    this.isUploading = true;
-                    let data = await uploadRequest(options);
-                    let res = JSON.parse(data);
-                    this.uploadSuccessHandler(res);
+        },
+        methods: {
+            async uploadChangeHandler(file) {
+                try {
+                    if (!this.isUploading) {
+                        this.file = file;
+                        let formData = new FormData();
+                        formData.append('file', file);
+                        let headers = this.$util.getUploadHeaders(this.$store.state.user.token);
+                        let options = {
+                            formData,
+                            headers,
+                            uri: `/admin/v1/stb/import`,
+                            progressHandler: (event) => {
+                                let percent = event.loaded / event.total * 100;
+                                this.progress = Math.round(percent);
+                            }
+                        };
+                        this.isUploading = true;
+                        let data = await uploadRequest(options);
+                        let res = JSON.parse(data);
+                        this.uploadSuccessHandler(res);
+                        this.isUploading = false;
+                        this.$refs.programmeImportUploader.value = null;
+                    }
+                } catch (err) {
+                    console.log(err);
                     this.isUploading = false;
+                    this.success = false;
                     this.$refs.programmeImportUploader.value = null;
                 }
-            } catch (err) {
-                console.log(err);
-                this.isUploading = false;
-                this.success = false;
-                this.$refs.programmeImportUploader.value = null;
-            }
-        },
-        uploadSuccessHandler(res) {
-            if (res && res.code === 0) {
-                this.importStatus = '人物导入成功';
-                this.success = true;
-                this.$message.success('人物导入成功');
-            } else {
-                this.importStatus = res.message;
-                this.success = false;
-                this.$message.error(res.message);
+            },
+            uploadSuccessHandler(res) {
+                if (res && res.code === 0) {
+                    this.importStatus = '设备导入成功';
+                    this.success = true;
+                    this.$message.success('设备导入成功');
+                } else {
+                    this.importStatus = res.message;
+                    this.success = false;
+                    this.$message.error(res.message);
+                }
             }
         }
-    }
-};
+    };
 </script>
 <style lang="scss" scoped>
-.person-import-container {
-    background: #1A2233;
-}
+    .person-import-container {
+        background: #1A2233;
+    }
 </style>

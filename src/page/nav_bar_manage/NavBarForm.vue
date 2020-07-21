@@ -56,6 +56,21 @@
                     </single-image-uploader>
                 </div>
             </el-form-item>
+            <!-- 备注 -->
+            <el-form-item
+                v-show="navBarInfo.type === 'IMAGES'"
+                ref="picRemarkItem"
+                style="padding-top: 22px;margin-bottom: 0"
+                label="备注" label-width="200px"
+                prop="picRemark"
+                required>
+                <el-input
+                    size="medium"
+                    v-model="navBarInfo.picRemark"
+                    :disabled="navBarInfo.type !== 'IMAGES'"
+                    placeholder="请填写栏目备注，10字以内">
+                </el-input>
+            </el-form-item>
             <el-form-item style="padding-top: 26px;" label="栏目分类" prop="signCode">
                 <el-select
                     v-model="navBarInfo.signCode"
@@ -75,32 +90,51 @@
                     <el-radio
                         label="FS_3"
                         v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_3')">
-                        新闻版式类
+                        新闻类版式
                         <svg-icon icon-class="model_news"></svg-icon>
                     </el-radio>
                     <el-radio
                         label="FS_2"
                         v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_2')">
-                        电影版式类
+                        电影类版式
                         <svg-icon icon-class="model_movie"></svg-icon>
                     </el-radio>
                     <el-radio
                         label="FS_1"
                         v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_1')">
-                        电视剧版式类
+                        电视剧类版式
                         <svg-icon icon-class="model_TV_drama"></svg-icon>
                     </el-radio>
                     <el-radio
                         label="FS_4"
                         v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_4')">
-                        专题版式类
+                        专题类版式
                         <svg-icon icon-class="model_subject"></svg-icon>
+                    </el-radio>
+                    <el-radio
+                        label="FS_8"
+                        v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_8')">
+                        教育类版式
+                        <svg-icon icon-class="model_edu"></svg-icon>
+                    </el-radio>
+                    <el-radio
+                        label="FS_7"
+                        v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_7')">
+                        党建类版式
+                        <svg-icon icon-class="model_party"></svg-icon>
+                    </el-radio>
+                    <el-radio
+                        label="FS_6"
+                        v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_6')">
+                        分类版式
+                        <svg-icon icon-class="model_category"></svg-icon>
                     </el-radio>
                     <el-radio
                         label="FS_5"
                         v-if="status === 'CREATE' || (status === 'EDIT' && navBarInfo.layoutTemplate === 'FS_5')">
-                        儿童版式（只适用于儿童栏目）
+                        少儿栏目板式
                         <svg-icon icon-class="model_child"></svg-icon>
+                        <label class="notice">*仅限少儿栏目使用</label>
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
@@ -151,6 +185,16 @@
                     callback();
                 }
             };
+            // 检测图片备注
+            let checkPicRemark = (rule, value, callback) => {
+                if (this.navBarInfo.type === 'IMAGES' && this.$util.isEmpty(this.navBarInfo.picRemark)) {
+                    return callback(new Error('请选择填写备注'));
+                } else if (this.navBarInfo.type === 'IMAGES' && this.navBarInfo.picRemark.length > 10) {
+                    return callback(new Error('备注应在10字以内'));
+                } else {
+                    callback();
+                }
+            };
             // 检测标题图片
             let checkImageUri = (rule, value, callback) => {
                 if (this.navBarInfo.type === 'IMAGES' && !(this.navBarInfo.focalImage.uri && this.navBarInfo.image.uri)) {
@@ -177,6 +221,7 @@
                     focalImage: {},
                     // 非落焦图
                     image: {},
+                    picRemark: '',
                     signCode: '',
                     layoutTemplate: '',
                     applicableClientList: ['TV']
@@ -188,6 +233,10 @@
                     ],
                     name: [
                         {validator: checkName, trigger: 'blur'}
+                    ],
+                    picRemark: [
+                        {validator: checkPicRemark, trigger: 'blur'},
+                        {validator: checkPicRemark, trigger: 'change'}
                     ],
                     uri: [
                         {validator: checkImageUri, trigger: 'change'}
@@ -222,7 +271,11 @@
                 if (this.navBarInfo.type === 'WORDS') {
                     this.navBarInfo.focalImage = {};
                     this.navBarInfo.image = {};
-                    this.$refs['imageInfo'].clearValidate();
+                    this.navBarInfo.picRemark = '';
+                    this.$nextTick(function () {
+                        this.$refs['picRemarkItem'].clearValidate();
+                        this.$refs['imageInfo'].clearValidate();
+                    });
                 } else {
                     this.navBarInfo.name = '';
                     this.$refs['wordsInfo'].clearValidate();
@@ -257,6 +310,7 @@
                 if (this.navBarInfo.type.toString() === 'WORDS') {
                     this.navBarInfo.image = {};
                     this.navBarInfo.focalImage = {};
+                    this.navBarInfo.picRemark = '';
                 } else {
                     this.navBarInfo.name = '';
                 }
@@ -311,7 +365,7 @@
                     this.$refs['navBarInfo'].validateField('uri', function (validate) {
                         if (!validate) {
                             imagesCount++;
-                            if (imagesCount === 2) {
+                            if (imagesCount === 3) {
                                 that.saveNavBarInfo();
                             }
                         }
@@ -319,7 +373,15 @@
                     this.$refs['navBarInfo'].validateField('layoutTemplate', function (validate) {
                         if (!validate) {
                             imagesCount++;
-                            if (imagesCount === 2) {
+                            if (imagesCount === 3) {
+                                that.saveNavBarInfo();
+                            }
+                        }
+                    });
+                    this.$refs['navBarInfo'].validateField('picRemark', function (validate) {
+                        if (!validate) {
+                            imagesCount++;
+                            if (imagesCount === 3) {
                                 that.saveNavBarInfo();
                             }
                         }
@@ -344,9 +406,9 @@
         /* 标题名称框 */
         .words-box {
             position: absolute;
-            left: 84px;
+            left: 33px;
             top: 0px;
-            margin-left: 120px;
+            margin-left: 170px;
             .el-input {
                 width: 300px;
             }
@@ -418,10 +480,10 @@
         /*标题类型*/
         .title-type {
             position: relative;
-            margin-bottom: 40px;
+            margin-bottom: 0px;
             .el-radio-group {
                 margin-top: 14px;
-                margin-bottom: 120px;
+                margin-bottom: 170px;
                 width: 60px;
             }
             .el-radio {
@@ -437,27 +499,34 @@
     .nav-bar-model {
         .el-radio-group {
             margin-top: 12px;
-            width: 900px;
+            width: 1000px;
             .el-radio:nth-child(3) {
-                margin-left: 0px;
-                margin-top: 26px;
+                margin-bottom: 26px;
             }
-            .el-radio:nth-child(4) {
-                margin-top: 26px;
+            .el-radio:nth-child(4), .el-radio:nth-child(7) {
+                margin-bottom: 26px;
+                margin-left: 0;
             }
             .el-radio:nth-child(5) {
-                margin-top: 26px;
-                margin-left: 0px;
+                margin-bottom: 26px;
+            }
+            .el-radio__label {
+                position: relative;
+                .notice {
+                    position: absolute;
+                    left: 90px;
+                    bottom: -20px;
+                    font-size: 12px;
+                    font-weight: 400;
+                    color: rgba(111, 116, 128, 1);
+                }
             }
         }
         .svg-icon {
             display: block;
             margin-top: 10px;
-            width: 370px !important;
+            width: 281px !important;
             height: 158px !important;
-            &.svg-icon-model_child {
-                height: 112px !important;
-            }
         }
     }
 

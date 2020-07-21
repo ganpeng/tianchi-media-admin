@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="370px" height="158px" viewBox="0 0 370 158" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
-    <title>电视剧类版式</title>
+<svg width="283px" height="160px" viewBox="0 0 283 160" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>thumbnail_tvseries</title>
     <desc>Created with Sketch.</desc>
     <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="07-03栏目管理-添加栏目" transform="translate(-350.000000, -541.000000)" fill-rule="nonzero">
-            <g id="电视剧类版式" transform="translate(350.000000, 541.000000)">
-                <rect id="Rectangle" stroke="#3E495E" stroke-width="0.5" x="0.25" y="0.25" width="369.5" height="157.5" rx="4"></rect>
-                <rect id="Rectangle-Copy" fill="#2A3040" x="10" y="9" width="68" height="80" rx="4"></rect>
-                <rect id="Rectangle-Copy" fill="#2A3040" x="10" y="97" width="112" height="52" rx="4"></rect>
-                <rect id="Rectangle-Copy" fill="#2A3040" x="130" y="97" width="112" height="52" rx="4"></rect>
-                <rect id="Rectangle-Copy" fill="#2A3040" x="250" y="97" width="112" height="52" rx="4"></rect>
-                <rect id="Rectangle-Copy-3" fill="#2A3040" x="294" y="9" width="68" height="80" rx="4"></rect>
-                <rect id="Rectangle" fill="#2A3040" x="86" y="9" width="200" height="80" rx="4"></rect>
+        <g id="06--栏目管理-添加栏目-2.8" transform="translate(-974.000000, -400.000000)">
+            <g id="thumbnail_tvseries" transform="translate(975.000000, 401.000000)">
+                <rect id="Rectangle-Copy" fill="#2A3040" fill-rule="nonzero" x="7" y="18" width="52" height="71" rx="2"></rect>
+                <rect id="Rectangle-Copy" fill="#2A3040" fill-rule="nonzero" x="7" y="97" width="85" height="46" rx="2"></rect>
+                <rect id="Rectangle-Copy" fill="#2A3040" fill-rule="nonzero" x="98" y="97" width="86" height="46" rx="2"></rect>
+                <rect id="Rectangle-Copy" fill="#2A3040" fill-rule="nonzero" x="190" y="97" width="85" height="46" rx="2"></rect>
+                <rect id="Rectangle-Copy-3" fill="#2A3040" fill-rule="nonzero" x="223" y="18" width="52" height="71" rx="2"></rect>
+                <rect id="Rectangle" fill="#2A3040" fill-rule="nonzero" x="65" y="18" width="152" height="71" rx="2"></rect>
+                <rect id="矩形备份-2" stroke="#3E495E" stroke-width="0.5" x="0" y="0" width="281" height="158" rx="4"></rect>
             </g>
         </g>
     </g>
