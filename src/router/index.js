@@ -156,6 +156,8 @@ import ServerSpace from 'sysPage/server_manage/ServerSpace';
 import NetworkPassword from 'sysPage/network_password/NetworkPassword';
 // 激活码
 import ActivationCodeList from 'sysPage/activation_code_manage/ActivationCodeList';
+// 激活码开关
+import ActivationCodeSwitch from 'sysPage/activation_code_switch_manage/ActivationCodeSwitch';
 
 Vue.use(Router);
 
@@ -230,6 +232,12 @@ export const routes = [
                 path: '/home',
                 name: 'Home',
                 component: Home
+            },
+            // 版本设备-激活码开关
+            {
+                path: '/manage-activation-code-switch/switch',
+                name: 'ActivationCodeSwitch',
+                component: ActivationCodeSwitch
             },
             // 版本设备-激活码列表
             {

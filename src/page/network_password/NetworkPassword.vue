@@ -2,6 +2,7 @@
 <template>
     <div id="network-psd-container">
         <div class="content-title">网络设置密码</div>
+        <div class="seperator-line"></div>
         <div id="psd-container">
             <!-- 当前密码-->
             <div class="current-psd">

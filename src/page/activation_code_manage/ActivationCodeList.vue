@@ -33,8 +33,7 @@
                 <el-button
                     class="btn-style-two contain-svg-icon"
                     @click="generateActivationCode">
-                    <svg-icon icon-class="add"></svg-icon>
-                    激活码
+                    生成激活码
                 </el-button>
             </div>
         </div>
@@ -95,7 +94,7 @@
                 },
                 total: 0,
                 codeList: [],
-                isDisabled: true
+                isDisabled: false
             };
         },
         mounted() {
@@ -110,15 +109,31 @@
                 this.getCodeList();
             },
             generateActivationCode() {
-                this.$prompt('请输入添加数量，仅可输入数字', '添加激活码', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    inputPattern: /^\d$/,
+                this.$prompt(' ', '添加激活码', {
+                    customClass: 'active-code-message',
+                    confirmButtonText: '生成',
+                    showCancelButton: false,
+                    inputPlaceholder: '请输入添加数量，仅可输入数字',
+                    inputPattern: /^[1-9]\d*$/,
                     inputErrorMessage: '请输入正确的数值'
                 }).then(({value}) => {
-
+                    this.createActiveCode(value);
                 }).catch(() => {
                 });
+            },
+            createActiveCode(num) {
+                this.$service.createActiveCode({num}).then(response => {
+                    if (response.type === 'application/octet-stream' || response.type === 'application/vnd.ms-excel') {
+                        this.$message.success('正在导出激活码列表，请稍等');
+                        let aLink = document.createElement('a');
+                        let blob = new Blob([response], {type: 'application/vnd.ms-excel'});
+                        aLink.href = URL.createObjectURL(blob);
+                        aLink.setAttribute('download', '激活码列表_' + this.$util.formatDate(new Date(), 'yyyy-MM-DD_HH:mm:SS') + '.xlsx');
+                        aLink.click();
+                    } else {
+                        this.$message.warning('生成激活码失败,请重新生成');
+                    }
+                })
             },
             setBatchDisabledStatus(isDisabled) {
                 this.isDisabled = isDisabled;

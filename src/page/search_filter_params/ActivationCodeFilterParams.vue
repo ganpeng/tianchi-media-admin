@@ -23,12 +23,12 @@
                 </el-form-item>
                 <el-form-item label="状态">
                     <el-select
-                        v-model="listQueryParams.visible"
+                        v-model="listQueryParams.status"
                         @change="getCodeList(true)"
                         clearable
                         placeholder="全部">
                         <el-option
-                            v-for="item in visibleOptions"
+                            v-for="item in statusOptions"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -38,7 +38,7 @@
                 <el-form-item label="生成时间">
                     <el-date-picker
                         prefix-icon="0"
-                        v-model="createRangeTime"
+                        v-model="activeRangeTime"
                         type="daterange"
                         @change="getCodeList(true)"
                         value-format="timestamp"
@@ -50,7 +50,7 @@
                 <el-form-item label="使用时间">
                     <el-date-picker
                         prefix-icon="0"
-                        v-model="createRangeTime"
+                        v-model="activeRangeTime"
                         type="daterange"
                         @change="getCodeList(true)"
                         value-format="timestamp"
@@ -80,17 +80,20 @@
         data() {
             return {
                 listQueryParams: {
-                    createdAtBegin: '',
-                    createdAtEnd: '',
+                    startActiveAt: '',
+                    endActiveAt: '',
+                    startCreatedAt: '',
+                    endCreatedAt: '',
                     keyword: '',
-                    visible: ''
+                    status: ''
                 },
-                createRangeTime: [],
-                visibleOptions: [{
-                    value: true,
+                activeRangeTime: [],
+                activeRangeTime: [],
+                statusOptions: [{
+                    value: 'USED',
                     label: '已使用'
                 }, {
-                    value: false,
+                    value: 'UNUSED',
                     label: '未使用'
                 }]
             };
@@ -100,21 +103,31 @@
         },
         methods: {
             initFilterParams(params) {
-                this.listQueryParams.createdAtBegin = params.createdAtBegin ? params.createdAtBegin : '';
-                this.listQueryParams.createdAtEnd = params.createdAtEnd ? params.createdAtEnd : '';
-                this.createRangeTime = params.createdAtBegin ? [params.createdAtBegin, params.createdAtEnd] : [];
+                this.listQueryParams.startActiveAt = params.startActiveAt ? params.startActiveAt : '';
+                this.listQueryParams.endActiveAt = params.endActiveAt ? params.endActiveAt : '';
+                this.activeRangeTime = params.startActiveAt ? [params.startActiveAt, params.endActiveAt] : [];
+                this.listQueryParams.startCreatedAt = params.startCreatedAt ? params.startCreatedAt : '';
+                this.listQueryParams.endCreatedAt = params.endCreatedAt ? params.endCreatedAt : '';
+                this.activeRangeTime = params.startCreatedAt ? [params.startCreatedAt, params.endCreatedAt] : [];
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
-                this.listQueryParams.visible = params.visible !== '' ? params.visible : '';
+                this.listQueryParams.status = params.status ? params.status : '';
             },
             init() {
             },
             getCodeList(isReset) {
-                if (this.createRangeTime && this.createRangeTime.length === 2) {
-                    this.listQueryParams.createdAtBegin = this.createRangeTime[0];
-                    this.listQueryParams.createdAtEnd = this.createRangeTime[1];
+                if (this.activeRangeTime && this.activeRangeTime.length === 2) {
+                    this.listQueryParams.startActiveAt = this.activeRangeTime[0];
+                    this.listQueryParams.endActiveAt = this.activeRangeTime[1];
                 } else {
-                    this.listQueryParams.createdAtBegin = '';
-                    this.listQueryParams.createdAtEnd = '';
+                    this.listQueryParams.startActiveAt = '';
+                    this.listQueryParams.endActiveAt = '';
+                }
+                if (this.activeRangeTime && this.activeRangeTime.length === 2) {
+                    this.listQueryParams.startCreatedAt = this.activeRangeTime[0];
+                    this.listQueryParams.endCreatedAt = this.activeRangeTime[1];
+                } else {
+                    this.listQueryParams.startCreatedAt = '';
+                    this.listQueryParams.endCreatedAt = '';
                 }
                 this.$emit('getCodeList', this.listQueryParams, isReset);
             },
@@ -126,7 +139,8 @@
                         this.listQueryParams[key] = '';
                     }
                 }
-                this.createRangeTime = [];
+                this.activeRangeTime = [];
+                this.activeRangeTime = [];
                 this.getCodeList(true);
             }
         }

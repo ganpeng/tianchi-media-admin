@@ -747,6 +747,11 @@ const ASIDE_LIST = [
             text: '网络密码',
             uri: '/network-password',
             icon: 'aside_playback'
+        },
+        {
+            text: '激活码开关',
+            uri: '/manage-activation-code-switch/switch',
+            icon: 'aside_playback'
         }
     ],
     [

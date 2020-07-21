@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="130px" height="234px" viewBox="0 0 130 234" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>OFF_ACTIVE</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="02-04激活码开关编辑-2.8" transform="translate(-603.000000, -524.000000)" fill-rule="nonzero">
+            <g id="OFF_ACTIVE" transform="translate(603.000000, 524.000000)">
+                <g id="首页推荐版式备份">
+                    <rect id="Rectangle" stroke="#3E495E" stroke-width="0.5" x="0.25" y="0.75" width="129.5" height="232.5" rx="10"></rect>
+                    <rect id="Rectangle" fill="#212839" x="18" y="25" width="94" height="60" rx="2"></rect>
+                    <rect id="Rectangle-Copy-9" fill="#2A3040" opacity="0.5" x="10" y="155" width="110" height="60" rx="2"></rect>
+                    <rect id="Rectangle-Copy-4" fill="#2A3040" opacity="0.5" x="10" y="90" width="54" height="29" rx="2"></rect>
+                    <rect id="Rectangle-Copy-7" fill="#2A3040" opacity="0.5" x="10" y="121" width="54" height="29" rx="2"></rect>
+                    <rect id="Rectangle-Copy-6" fill="#2A3040" opacity="0.5" x="66" y="90" width="54" height="29" rx="2"></rect>
+                    <rect id="Rectangle-Copy-8" fill="#2A3040" opacity="0.5" x="66" y="121" width="54" height="29" rx="2"></rect>
+                    <path d="M116,25 L125,25 L125,25 L125,85 L116,85 C114.895431,85 114,84.1045695 114,83 L114,27 C114,25.8954305 114.895431,25 116,25 Z" id="Rectangle-Copy-2" fill="#212839"></path>
+                    <path d="M7,25 L16,25 L16,25 L16,85 L7,85 C5.8954305,85 5,84.1045695 5,83 L5,27 C5,25.8954305 5.8954305,25 7,25 Z" id="Rectangle-Copy-3" fill="#212839" transform="translate(10.500000, 55.000000) scale(-1, 1) translate(-10.500000, -55.000000) "></path>
+                </g>
+                <path d="M65,36 C76.045695,36 85,44.954305 85,56 C85,67.045695 76.045695,76 65,76 C53.954305,76 45,67.045695 45,56 C45,44.954305 53.954305,36 65,36 Z M59.3431458,47.5147186 C58.5620972,46.73367 57.2957672,46.73367 56.5147186,47.5147186 C55.73367,48.2957672 55.73367,49.5620972 56.5147186,50.3431458 L56.5147186,50.3431458 L62.1715729,56 L56.5147186,61.6568542 C55.73367,62.4379028 55.73367,63.7042328 56.5147186,64.4852814 C57.2957672,65.26633 58.5620972,65.26633 59.3431458,64.4852814 L59.3431458,64.4852814 L65,58.8284271 L70.6568542,64.4852814 C71.4379028,65.26633 72.7042328,65.26633 73.4852814,64.4852814 C74.26633,63.7042328 74.26633,62.4379028 73.4852814,61.6568542 L73.4852814,61.6568542 L67.8284271,56 L73.4852814,50.3431458 C74.26633,49.5620972 74.26633,48.2957672 73.4852814,47.5147186 C72.7042328,46.73367 71.4379028,46.73367 70.6568542,47.5147186 L70.6568542,47.5147186 L65,53.1715729 Z" id="Combined-Shape" fill="#ED4242"></path>
+            </g>
+        </g>
+    </g>
+</svg>

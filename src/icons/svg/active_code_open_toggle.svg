@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="130px" height="234px" viewBox="0 0 130 234" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>ON_ACTIVE</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="02-04激活码开关编辑-2.8" transform="translate(-320.000000, -205.000000)" fill-rule="nonzero">
+            <g id="ON_ACTIVE" transform="translate(320.000000, 205.000000)">
+                <g id="首页推荐版式">
+                    <rect id="Rectangle" stroke="#3E495E" stroke-width="0.5" x="0.25" y="0.75" width="129.5" height="232.5" rx="10"></rect>
+                    <rect id="Rectangle" fill="#2A3040" x="18" y="25" width="94" height="60" rx="2"></rect>
+                    <rect id="Rectangle-Copy-9" fill="#2A3040" opacity="0.5" x="10" y="155" width="110" height="60" rx="2"></rect>
+                    <rect id="Rectangle-Copy-4" fill="#2A3040" opacity="0.5" x="10" y="90" width="54" height="29" rx="2"></rect>
+                    <rect id="Rectangle-Copy-7" fill="#2A3040" opacity="0.5" x="10" y="121" width="54" height="29" rx="2"></rect>
+                    <rect id="Rectangle-Copy-6" fill="#2A3040" opacity="0.5" x="66" y="90" width="54" height="29" rx="2"></rect>
+                    <rect id="Rectangle-Copy-8" fill="#2A3040" opacity="0.5" x="66" y="121" width="54" height="29" rx="2"></rect>
+                    <path d="M116,25 L125,25 L125,25 L125,85 L116,85 C114.895431,85 114,84.1045695 114,83 L114,27 C114,25.8954305 114.895431,25 116,25 Z" id="Rectangle-Copy-2" fill="#2A3040"></path>
+                    <path d="M7,25 L16,25 L16,25 L16,85 L7,85 C5.8954305,85 5,84.1045695 5,83 L5,27 C5,25.8954305 5.8954305,25 7,25 Z" id="Rectangle-Copy-3" fill="#2A3040" transform="translate(10.500000, 55.000000) scale(-1, 1) translate(-10.500000, -55.000000) "></path>
+                </g>
+                <path d="M64,36 C75.045695,36 84,44.954305 84,56 C84,67.045695 75.045695,76 64,76 C52.954305,76 44,67.045695 44,56 C44,44.954305 52.954305,36 64,36 Z M76.309718,48.6641923 C75.4635686,47.9541888 74.2020575,48.0645567 73.4920539,48.910706 L73.4920539,48.910706 L61.9218769,62.699506 L54.2614325,56.2716299 C53.4152831,55.5616263 52.1537719,55.6719942 51.4437684,56.5181436 C50.7337648,57.3642929 50.8441327,58.6258041 51.690282,59.3358077 L51.690282,59.3358077 L60.8828153,67.049259 C61.7289647,67.7592626 62.9904759,67.6488946 63.7004794,66.8027453 L63.7004794,66.8027453 L76.5562316,51.4818564 C77.2662352,50.6357071 77.1558673,49.3741959 76.309718,48.6641923 Z" id="ICON_ON" fill="#3AC26F"></path>
+            </g>
+        </g>
+    </g>
+</svg>
