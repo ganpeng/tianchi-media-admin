@@ -14,7 +14,8 @@
                 :data-id="item.id"
                 :class="{'invisible-item':!item.visible}">
                 <div>
-                    <label>{{item.name}}</label>
+                    <label v-if="item.name">{{item.name}}</label>
+                    <label v-else class="pic-remark">{{item.picRemark}}</label>
                     <i class="el-icon-circle-close"
                        @click="removeNavBar(item, index)"
                        v-if="item.type === 'CUSTOM'">
@@ -221,6 +222,9 @@
                     -ms-text-overflow: ellipsis;
                     text-overflow: ellipsis;
                     -webkit-line-clamp: 1;
+                    &.pic-remark {
+                        color: #A3D0FD;
+                    }
                     img {
                         margin-top: 6px;
                         height: 20px;

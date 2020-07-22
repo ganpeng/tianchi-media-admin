@@ -18,6 +18,13 @@
             </ul>
         </div>
         <div class="page-layout-content">
+            <el-button
+                id="remove-back-image"
+                class="btn-style-two contain-svg-icon"
+                v-if="currentBackgroundImage.uri"
+                @click="removeBackImage">
+                <svg-icon icon-class="back_image"></svg-icon>
+            </el-button>
             <fixed-layout
                 :layoutTemplate="layoutTemplate"
             ></fixed-layout>
@@ -152,8 +159,11 @@
             let content = document.querySelector('.content');
             content.addEventListener('scroll', this.toggleTopBottomBtns.bind(this), false);
             this.$service.getNavBarDetail(this.$route.params.navbarId).then(response => {
-                if (response && response.code === 0 && response.data.backGroundImage) {
+                if (response && response.code === 0 && response.data.backGroundImage && response.data.backGroundImage.uri) {
                     this.currentBackgroundImage = response.data.backGroundImage;
+                    setTimeout(function () {
+                        document.querySelector('#global-content').style = 'background:transparent';
+                    }, 1000);
                 }
             })
         },
@@ -221,6 +231,9 @@
                 }
             }
         },
+        destroyed() {
+            document.querySelector('#global-content').style = 'background:#1A2233';
+        },
         methods: {
             ...mapMutations({
                 //  2.3.0 新增的部分
@@ -234,6 +247,25 @@
             uploadImage() {
                 this.$refs.singleImageUploader.$refs.singleImageUploader.click();
             },
+            // 删除背景图片
+            removeBackImage() {
+                this.$confirm('此操作将清除背景, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'error'
+                }).then(() => {
+                    this.$service.updateNavBarBackground({
+                        id: this.$route.params.navbarId,
+                        backGroundImage: {}
+                    }).then(response => {
+                        if (response && response.code === 0) {
+                            document.querySelector('#global-content').style = 'background:#1A2233';
+                            this.currentBackgroundImage = {uri: ''};
+                            this.$message.success('清除背景成功');
+                        }
+                    });
+                });
+            },
             // 上传图片成功
             uploadSuccessHandler(image) {
                 this.$service.updateNavBarBackground({
@@ -241,6 +273,7 @@
                     backGroundImage: image
                 }).then(response => {
                     if (response && response.code === 0) {
+                        document.querySelector('#global-content').style = 'background:transparent';
                         this.currentBackgroundImage = image;
                         this.$message.success('设置背景成功');
                     }
@@ -263,10 +296,16 @@
                     this.$router.push({name: 'PageLayout', params: {navbarId: navbar.id}});
                     await this.getLayoutByNavbarId(navbar.id);
                     this.$service.getNavBarDetail(navbar.id).then(response => {
-                        if (response && response.code === 0 && response.data.backGroundImage) {
+                        if (response && response.code === 0 && response.data.backGroundImage && response.data.backGroundImage.uri) {
                             this.currentBackgroundImage = response.data.backGroundImage;
+                            setTimeout(function () {
+                                document.querySelector('#global-content').style = 'background:transparent';
+                            }, 200);
                         } else {
-                            this.currentBackgroundImage = {uri: ''};
+                            document.querySelector('#global-content').style = 'background:#1A2233';
+                            this.$nextTick(function () {
+                                this.currentBackgroundImage = {uri: ''};
+                            });
                         }
                     })
                 } catch (err) {
@@ -353,11 +392,31 @@
 </script>
 
 <style lang="scss" scoped>
+    .page-layout-content {
+        position: relative;
+        #remove-back-image {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            left: 0;
+            min-width: 60px;
+            width: 60px;
+            height: 40px;
+            background: rgba(0, 98, 196, 1);
+            border-radius: 20px;
+            .svg-icon {
+                margin-top: 10px;
+                width: 30px;
+                height: 20px;
+            }
+        }
+    }
 
     #page-layout-container {
         img#nav-background {
             position: fixed;
-            z-index: -1000px;
+            z-index: -1;
             width: 100%;
             height: 100%;
             top: 60px;
