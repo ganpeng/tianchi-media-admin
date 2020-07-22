@@ -231,7 +231,7 @@
                 }
             }
         },
-        destroyed() {
+        beforeDestroy() {
             document.querySelector('#global-content').style = 'background:#1A2233';
         },
         methods: {
