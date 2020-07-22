@@ -3,10 +3,6 @@
  */
 
 import service from '../config';
-import qs from 'querystring';
-import _ from 'lodash';
-import util from '../../util/extend';
-
 
 /**
  * 获取网络设置密码列表

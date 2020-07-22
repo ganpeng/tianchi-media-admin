@@ -159,7 +159,7 @@
                         this.$refs['infoForm'].resetFields();
                         this.getNetPsdList();
                     }
-                })
+                });
             }
         }
     };

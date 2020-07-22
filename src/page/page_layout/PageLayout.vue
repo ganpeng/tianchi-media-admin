@@ -165,7 +165,7 @@
                         document.querySelector('#global-content').style = 'background:transparent';
                     }, 1000);
                 }
-            })
+            });
         },
         async created() {
             try {
@@ -307,7 +307,7 @@
                                 this.currentBackgroundImage = {uri: ''};
                             });
                         }
-                    })
+                    });
                 } catch (err) {
                     console.log(err);
                 }

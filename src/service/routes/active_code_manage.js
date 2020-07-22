@@ -27,7 +27,7 @@ export const getCodeList = ({keyword, status, startActiveAt, endActiveAt, pageNu
         startActiveAt: startActiveAt ? new Date(startActiveAt).getTime() : '',
         endActiveAt: endActiveAt ? new Date(endActiveAt).getTime() : '',
         startCreatedAt: startCreatedAt ? new Date(startCreatedAt).getTime() : '',
-        endCreatedAt: endCreatedAt ? new Date(endCreatedAt).getTime() : '',
+        endCreatedAt: endCreatedAt ? new Date(endCreatedAt).getTime() : ''
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
@@ -36,7 +36,6 @@ export const getCodeList = ({keyword, status, startActiveAt, endActiveAt, pageNu
 
     return service.get(`/v1/active_code/page?${paramsStr}`);
 };
-
 
 /**
  * 激活码删除
@@ -51,7 +50,6 @@ export const removeActiveCode = (id) => {
 export const batchDeleteActiveCode = ({idList}) => {
     return service.delete('/v1/active_code', {data: idList});
 };
-
 
 /**
  * 导出选中激活码
@@ -69,7 +67,6 @@ export const exportSelectedActiveCode = ({idList}) => {
         responseType: 'blob'
     });
 };
-
 
 /**
  * 激活码开关情况

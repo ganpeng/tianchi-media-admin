@@ -70,7 +70,7 @@
                         splitLine: {
                             lineStyle: {color: '#3E495E'}
                         }
-                    },
+                    }
                 },
                 textStyle: {
                     color: 'rgba(168,171,179,1)'

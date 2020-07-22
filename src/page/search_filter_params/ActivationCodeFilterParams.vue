@@ -88,7 +88,7 @@
                     status: ''
                 },
                 activeRangeTime: [],
-                activeRangeTime: [],
+                createRangeTime: [],
                 statusOptions: [{
                     value: 'USED',
                     label: '已使用'
@@ -106,9 +106,10 @@
                 this.listQueryParams.startActiveAt = params.startActiveAt ? params.startActiveAt : '';
                 this.listQueryParams.endActiveAt = params.endActiveAt ? params.endActiveAt : '';
                 this.activeRangeTime = params.startActiveAt ? [params.startActiveAt, params.endActiveAt] : [];
+
                 this.listQueryParams.startCreatedAt = params.startCreatedAt ? params.startCreatedAt : '';
                 this.listQueryParams.endCreatedAt = params.endCreatedAt ? params.endCreatedAt : '';
-                this.activeRangeTime = params.startCreatedAt ? [params.startCreatedAt, params.endCreatedAt] : [];
+                this.createRangeTime = params.startCreatedAt ? [params.startCreatedAt, params.endCreatedAt] : [];
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
                 this.listQueryParams.status = params.status ? params.status : '';
             },
@@ -122,9 +123,9 @@
                     this.listQueryParams.startActiveAt = '';
                     this.listQueryParams.endActiveAt = '';
                 }
-                if (this.activeRangeTime && this.activeRangeTime.length === 2) {
-                    this.listQueryParams.startCreatedAt = this.activeRangeTime[0];
-                    this.listQueryParams.endCreatedAt = this.activeRangeTime[1];
+                if (this.createRangeTime && this.createRangeTime.length === 2) {
+                    this.listQueryParams.startCreatedAt = this.createRangeTime[0];
+                    this.listQueryParams.endCreatedAt = this.createRangeTime[1];
                 } else {
                     this.listQueryParams.startCreatedAt = '';
                     this.listQueryParams.endCreatedAt = '';
@@ -140,7 +141,7 @@
                     }
                 }
                 this.activeRangeTime = [];
-                this.activeRangeTime = [];
+                this.createRangeTime = [];
                 this.getCodeList(true);
             }
         }

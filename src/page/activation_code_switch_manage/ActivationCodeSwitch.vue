@@ -52,7 +52,7 @@
                 codeSwitchInfo: {
                     status: true
                 }
-            }
+            };
         },
         mounted() {
             this.$util.toggleFixedBtnContainer();
@@ -64,7 +64,7 @@
                     if (response && response.code === 0) {
                         this.codeSwitchInfo.status = response.data;
                     }
-                })
+                });
             },
             saveInfo() {
                 this.$service.updateCodeSwitchInfo(this.codeSwitchInfo.status).then(response => {
@@ -72,10 +72,10 @@
                         this.pageStatus = 0;
                         this.getCodeSwitchInfo();
                     }
-                })
+                });
             }
         }
-    }
+    };
 </script>
 
 <style scoped lang="scss">

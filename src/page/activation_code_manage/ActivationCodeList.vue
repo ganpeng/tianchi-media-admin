@@ -133,7 +133,7 @@
                     } else {
                         this.$message.warning('生成激活码失败,请重新生成');
                     }
-                })
+                });
             },
             setBatchDisabledStatus(isDisabled) {
                 this.isDisabled = isDisabled;
