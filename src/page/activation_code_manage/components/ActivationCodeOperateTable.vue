@@ -23,10 +23,10 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                prop="userId"
+                prop="mobile"
                 label="用户ID">
                 <template slot-scope="scope">
-                    {{scope.row.userId || '/'}}
+                    {{scope.row.mobile || '/'}}
                 </template>
             </el-table-column>
             <el-table-column
