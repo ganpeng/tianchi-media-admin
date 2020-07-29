@@ -259,7 +259,7 @@
             },
             getType() {
                 return (type) => {
-                    return type ? (type === 'HARDWARE_3796' ? '3796' : '3798') : '------';
+                    return type || '------';
                 };
             },
             getDistrictName() {
