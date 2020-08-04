@@ -4,7 +4,7 @@
         <div class="content-title">栏目预览</div>
         <ul class="preview-list">
             <li v-for="(item, index) in previewNavBarList" :key="index" v-if="item.visible">
-                <label>{{item.name}}</label>
+                <label>{{item.name || item.picRemark}}</label>
             </li>
         </ul>
         <div class="content-title">栏目调整</div>
@@ -173,6 +173,7 @@
                 border: 1px solid transparent;
                 background-color: rgba(42, 48, 64, 0.3);
                 label {
+                    opacity: 0.5;
                     color: #3E495E;
                     img {
                         -webkit-filter: opacity(.3);

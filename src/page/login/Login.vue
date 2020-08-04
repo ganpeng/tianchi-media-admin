@@ -273,6 +273,7 @@
     #login-container {
         .el-input__inner {
             padding-left: 50px !important;
+            padding-right: 32px !important;
         }
     }
 

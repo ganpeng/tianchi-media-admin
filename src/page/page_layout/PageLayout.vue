@@ -41,7 +41,7 @@
         <div class="fixed-btn-container" id="page-operate-block">
             <!--添加模块-->
             <el-dropdown @command="addLayout($event)" placement="bottom">
-                <el-button class="btn-style-two contain-svg-icon">
+                <el-button class="btn-style-two contain-svg-icon hover-state">
                     <svg-icon icon-class="add"></svg-icon>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
@@ -53,7 +53,7 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <!--设置栏目背景图-->
-            <el-button class="btn-style-two contain-svg-icon" @click="uploadImage">
+            <el-button class="btn-style-two contain-svg-icon hover-state" @click="uploadImage">
                 <svg-icon icon-class="back_image"></svg-icon>
             </el-button>
             <!--排序-->
@@ -145,6 +145,7 @@
         },
         data() {
             return {
+                timer: '',
                 currentBackgroundImage: {
                     uri: ''
                 },
@@ -161,7 +162,7 @@
             this.$service.getNavBarDetail(this.$route.params.navbarId).then(response => {
                 if (response && response.code === 0 && response.data.backGroundImage && response.data.backGroundImage.uri) {
                     this.currentBackgroundImage = response.data.backGroundImage;
-                    setTimeout(function () {
+                    this.timer = setTimeout(function () {
                         document.querySelector('#global-content').style = 'background:transparent';
                     }, 1000);
                 }
@@ -232,6 +233,7 @@
             }
         },
         beforeDestroy() {
+            clearTimeout(this.timer);
             document.querySelector('#global-content').style = 'background:#1A2233';
         },
         methods: {
@@ -405,6 +407,9 @@
             height: 40px;
             background: rgba(0, 98, 196, 1);
             border-radius: 20px;
+            &:hover {
+                background-color: #1989FA;
+            }
             .svg-icon {
                 margin-top: 10px;
                 width: 30px;
@@ -633,6 +638,13 @@
             }
         }
     }
+
+    #page-operate-block .el-button {
+        &.hover-state:hover {
+            background-color: #1989FA;
+        }
+    }
+
 </style>
 <style lang="scss">
     .delete-btn {

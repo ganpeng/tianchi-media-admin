@@ -195,7 +195,10 @@
     #psd-container {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-start;
+        .modify-psd-block {
+            margin-left: 300px;
+        }
     }
 
     #psd-list-block {

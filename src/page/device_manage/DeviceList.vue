@@ -75,7 +75,7 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <div class="search-field-item">
+                    <div class="search-field-item" v-if="false">
                         <label class="search-field-item-label">固件版本</label>
                         <el-select
                             :value="searchFields.status"
@@ -301,6 +301,7 @@
                     return;
                 }
                 this.resetSearchFields();
+                this.searchHandler();
             },
             keyupHandler(e) {
                 if (e.keyCode === 13) {

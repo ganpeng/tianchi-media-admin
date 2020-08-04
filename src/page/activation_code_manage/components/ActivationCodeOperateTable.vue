@@ -16,7 +16,7 @@
                 prop="activeCode"
                 label="激活码">
                 <template slot-scope="scope">
-                    <span @click="toCodeDetail(scope.row)" class="ellipsis four name">
+                    <span class="ellipsis four">
                     {{scope.row.activeCode}}
                     </span>
                 </template>
