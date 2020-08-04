@@ -442,9 +442,28 @@
             background: rgba(0, 98, 196, 1);
             border-radius: 20px;
             opacity: 0.9;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
             &.layout-sort-btn {
                 margin-left: 20px;
                 background: rgba(255, 255, 255, 1);
+            }
+            .svg-icon-add {
+                margin-top: 10px;
+                width: 20px;
+                height: 20px;
+            }
+            .svg-icon-back_image {
+                margin-top: 10px;
+                width: 30px;
+                height: 20px;
+            }
+            .svg-icon-sort {
+                margin-top: 10px;
+                width: 20px;
+                height: 20px;
             }
         }
         .single-image-uploader-container {
@@ -482,15 +501,16 @@
         .columns-list {
             .columns-item {
                 float: left;
-                padding: 0 20px;
+                padding: 0 17px;
                 text-align: center;
                 margin-right: 10px;
                 height: 62px;
                 line-height: 62px;
-                font-size: 24px;
-                color: #6F7480;
                 cursor: pointer;
                 border-bottom: 2px solid transparent;
+                font-size: 20px;
+                font-weight: 400;
+                color: rgba(255, 255, 255, 0.6);
                 &.active {
                     color: #fff;
                     border-bottom-color: $mainColor;
