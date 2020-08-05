@@ -49,6 +49,16 @@ service.interceptors.response.use((response) => {
             });
         }
     }
+    // 异地登录
+    if (response && (response.data.code === 1003 || response.data.code === 1001)) {
+        MessageBox.alert('该账号已在其他位置登录，如非本人操作，可点击重新登录后修改密码。', '异地登录提示', {
+            confirmButtonText: '确定',
+            callback: () => {
+                store.dispatch('user/logout', false);
+            }
+        });
+        return;
+    }
     return response.data;
 }, (err) => {
     console.log('err');
