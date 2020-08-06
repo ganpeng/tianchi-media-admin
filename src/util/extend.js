@@ -253,11 +253,17 @@ let util = {
                 }, 1000);
             }
         }).catch((err) => {
-            console.log(`上传地址获取失败, 错误原因: ${err}`);
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                util.loopGetUploadServer(resolve);
-            }, 1000);
+            let code = _.get(err, 'response.data.code');
+            if (code === 1001 || code === 1003) {
+                console.log(`上传地址获取失败, 账号已被踢出, 错误原因: ${err}`);
+                clearTimeout(timer);
+            } else {
+                console.log(`上传地址获取失败, 错误原因: ${err}`);
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    util.loopGetUploadServer(resolve);
+                }, 1000);
+            }
         });
     },
     getUploadServer() {
