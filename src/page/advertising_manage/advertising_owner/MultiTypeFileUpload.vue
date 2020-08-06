@@ -260,7 +260,7 @@ export default {
         },
         async deleteImage(id, index) {
             try {
-                let confirm = await this.$confirm(`您确定要删除图片吗, 是否继续?`, '提示', {
+                let confirm = await this.$confirm(`您确定要删除资源吗, 是否继续?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'error'

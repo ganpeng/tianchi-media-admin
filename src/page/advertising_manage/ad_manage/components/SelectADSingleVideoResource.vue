@@ -145,7 +145,7 @@
     }
 
     .el-radio-group {
-        padding-bottom: 50px;
+        padding-bottom: 68px;
         margin-left: 40px;
         overflow: hidden;
         .el-radio {
