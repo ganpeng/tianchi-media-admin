@@ -175,23 +175,22 @@ let util = {
     },
     fromSecondsToTime(seconds) {
         if (!seconds) {
-            return '0秒';
+            return '00:00:00';
         }
-        let time = parseInt(seconds) + '秒';
+        let time = parseInt(seconds);
         if (parseInt(seconds) > 60) {
             let second = parseInt(seconds) % 60;
             let min = parseInt(seconds / 60);
-            time = min + '分' + second + '秒';
+            time = (min > 9 ? min : '0' + min) + ':' + (second > 9 ? second : '0' + second);
             if (min > 60) {
                 min = parseInt(seconds / 60) % 60;
                 let hour = parseInt(parseInt(seconds / 60) / 60);
-                time = hour + '小时' + min + '分' + second + '秒';
-                if (hour > 24) {
-                    hour = parseInt(parseInt(seconds / 60) / 60) % 24;
-                    let day = parseInt(parseInt(parseInt(seconds / 60) / 60) / 24);
-                    time = day + '天' + hour + '小时' + min + '分' + second + '秒';
-                }
+                time = (hour > 9 ? hour : '0' + hour) + ':' + (min > 9 ? min : '0' + min) + ':' + (second > 9 ? second : '0' + second);
+            } else {
+                time = '00:' + (min > 9 ? min : '0' + min) + ':' + (second > 9 ? second : '0' + second);
             }
+        } else {
+            time = '00:00:' + (time > 9 ? time : '0' + time);
         }
         return time;
     },
