@@ -211,3 +211,10 @@ export const exportAllProgramme = () => {
         responseType: 'blob'
     });
 };
+
+/**
+ * 节目选中批量下载
+ */
+export const batchDownloadProgramme = ({idList}) => {
+    return service.patch(`/v1/content/programme/download`, idList);
+};

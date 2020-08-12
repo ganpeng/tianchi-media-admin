@@ -67,7 +67,7 @@
         </el-table-column>
         <el-table-column
             align="center"
-            label="状态">
+            label="有效性">
             <template slot-scope="scope">
                     <span v-if="scope.row.adStatus === 'ACTIVE' && scope.row.visible"
                           class="status-normal">生效中</span>
@@ -80,7 +80,7 @@
         </el-table-column>
         <el-table-column
             align="center"
-            label="上下架">
+            label="状态">
             <template slot-scope="scope">
                 <input
                     class="my-switch switch-anim"

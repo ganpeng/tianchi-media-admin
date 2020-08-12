@@ -24,11 +24,13 @@ import PersonList from 'sysPage/person_manage/PersonList';
 import CreatePerson from 'sysPage/person_manage/CreatePerson';
 import EditPerson from 'sysPage/person_manage/EditPerson';
 import DisplayPerson from 'sysPage/person_manage/DisplayPerson';
+// 节目管理
 import CreateProgramme from 'sysPage/programme_manage/CreateProgramme';
 import ProgrammeTypeManage from 'sysPage/programme_manage/ProgrammeTypeManage';
 import EditProgramme from 'sysPage/programme_manage/EditProgramme';
 import DisplayProgramme from 'sysPage/programme_manage/DisplayProgramme';
 import ProgrammeList from 'sysPage/programme_manage/ProgrammeList';
+import DownloadProgrammeList from 'sysPage/programme_manage/DownloadProgrammeList';
 // 专题模块
 import CreateProgrammeSubject from 'sysPage/subject_manage/CreateProgrammeSubject';
 import CreateFigureSubject from 'sysPage/subject_manage/CreateFigureSubject';
@@ -436,6 +438,12 @@ export const routes = [
                 path: '/programme-manage/list',
                 name: 'ProgrammeList',
                 component: ProgrammeList
+            },
+            // 节目管理-节目下载列表
+            {
+                path: '/programme-manage/download-list',
+                name: 'DownloadProgrammeList',
+                component: DownloadProgrammeList
             },
             // 节目类别管理
             {
