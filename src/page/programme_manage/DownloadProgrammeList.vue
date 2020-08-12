@@ -18,26 +18,20 @@
                             </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>
-                            <span @click="batchShelve">重试选中</span>
+                            <span @click="batchRetry">重试选中</span>
                         </el-dropdown-item>
                         <el-dropdown-item>
-                            <span @click="batchUnShelve">删除选中</span>
+                            <span @click="batchRemove">删除选中</span>
                         </el-dropdown-item>
                         <el-dropdown-item>
-                            <span @click="batchRemove">删除全部</span>
+                            <span @click="batchRemoveAll">删除全部</span>
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
-            <el-button
-                class="btn-style-two contain-svg-icon"
-                @click="createDownloadProgramme">
-                <svg-icon icon-class="export"></svg-icon>
-                导出
-            </el-button>
         </div>
         <download-Programme-operate-table
-            ref="downloadProgrammeOperateTable"
+            ref="programmeOperateTable"
             :downloadProgrammeList="downloadProgrammeList"
             v-on:getDownloadProgrammeList="getDownloadProgrammeList"
             v-on:setBatchDisabledStatus="setBatchDisabledStatus">
@@ -61,13 +55,13 @@
             </span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item>
-                        <span @click="batchShelve">重试选中</span>
+                        <span @click="batchRetry">重试选中</span>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                        <span @click="batchUnShelve">删除选中</span>
+                        <span @click="batchRemove">删除选中</span>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                        <span @click="batchRemove">删除全部</span>
+                        <span @click="batchRemoveAll">删除全部</span>
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -118,17 +112,17 @@
             setBatchDisabledStatus(isDisabled) {
                 this.isDisabled = isDisabled;
             },
-            // 批量上架
-            batchShelve() {
-                this.$refs.subjectOperateTable.batchUpdateStatus(true);
+            // 重试选中
+            batchRetry() {
+                this.$refs.programmeOperateTable.batchRetry();
             },
-            // 批量下架
-            batchUnShelve() {
-                this.$refs.subjectOperateTable.batchUpdateStatus(false);
-            },
-            // 批量删除
+            // 删除选中
             batchRemove() {
-                this.$refs.subjectOperateTable.batchRemove();
+                this.$refs.programmeOperateTable.batchRemove();
+            },
+            // 删除全部
+            batchRemoveAll() {
+                this.$refs.programmeOperateTable.batchRemoveAll();
             },
             getDownloadProgrammeList(searchParams, isReset) {
                 // 设置请求参数
@@ -147,12 +141,6 @@
                         this.total = response.data.total;
                     }
                 });
-            },
-            createDownloadProgramme() {
-                if (!this.$authority.isHasAuthority('user:membershipScheme:add')) {
-                    return;
-                }
-                this.$router.push({name: 'CreateDownloadProgramme'});
             }
         }
     };

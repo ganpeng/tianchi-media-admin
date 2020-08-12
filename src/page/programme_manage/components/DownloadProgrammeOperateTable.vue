@@ -21,7 +21,7 @@
             min-width="220px"
             label="节目名称">
             <template slot-scope="scope">
-                <span @click="toDownloadProgrammeDetail(scope.row)" class="ellipsis four name">
+                <span class="ellipsis four">
                     {{scope.row.name}}
                 </span>
             </template>
@@ -100,6 +100,50 @@
             };
         },
         methods: {
+            // 重试选中
+            batchRetry() {
+                if (!this.multipleSelection || this.multipleSelection.length === 0) {
+                    this.$message.warning('请先选择节目');
+                    return;
+                }
+                let idList = [];
+                this.multipleSelection.map(item => {
+                    idList.push(item.id);
+                });
+                this.$service.batchDownloadProgramme({idList}).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('节目批量下载重试成功!');
+                        this.$emit('getDownloadProgrammeList');
+                        this.multipleSelection = [];
+                        this.$emit('setBatchDisabledStatus', true);
+                    }
+                });
+            },
+            // 删除选中
+            batchRemove() {
+                if (!this.multipleSelection || this.multipleSelection.length === 0) {
+                    this.$message.warning('请先选择节目');
+                    return;
+                }
+                this.$confirm('此操作将批量删除下载节目, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let idList = [];
+                    this.multipleSelection.map(item => {
+                        idList.push(item.id);
+                    });
+                    this.$service.batchRemoveDownloadProgramme({idList}).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('节目批量删除成功!');
+                            this.$emit('getDownloadProgrammeList');
+                            this.multipleSelection = [];
+                            this.$emit('setBatchDisabledStatus', true);
+                        }
+                    });
+                });
+            },
             handleSelectionChange(val) {
                 this.multipleSelection = val;
                 if (this.multipleSelection.length === 0) {
@@ -108,17 +152,19 @@
                     this.$emit('setBatchDisabledStatus', false);
                 }
             },
-            toDownloadProgrammeDetail(item) {
-                if (!this.$authority.isHasAuthority('user:membershipScheme:get')) {
-                    return;
-                }
-                this.$router.push({
-                    name: 'DownloadProgrammeDetail',
-                    params: {id: item.id}
+            removeDownloadProgramme(item) {
+                this.$confirm('此操作将删除下载节目, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.batchRemoveDownloadProgramme({idList: [item.id]}).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('节目删除成功!');
+                            this.$emit('getDownloadProgrammeList');
+                        }
+                    });
                 });
-            },
-            removeDownloadProgramme() {
-
             }
         }
     };
