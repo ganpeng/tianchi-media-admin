@@ -54,7 +54,8 @@
                     <span
                         @click="toggleSearchField"
                         :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
-                        更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                        更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i
+                        v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
                     </span>
                 </div>
                 <div v-show="searchFieldVisible" class="field-row">
@@ -74,7 +75,7 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <div class="search-field-item">
+                    <div class="search-field-item" v-if="false">
                         <label class="search-field-item-label">固件版本</label>
                         <el-select
                             :value="searchFields.status"
@@ -114,14 +115,12 @@
                 <div class="table-operator-field clearfix">
                     <div class="float-left"></div>
                     <div class="float-right">
-                        <!--
                         <el-button
-                            disabled
+                            @click="importDevice"
                             class="btn-style-two contain-svg-icon">
-                                <svg-icon icon-class="add"></svg-icon>
-                            添加
+                            <svg-icon icon-class="import"></svg-icon>
+                            导入
                         </el-button>
-                        -->
                     </div>
                 </div>
                 <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
@@ -180,7 +179,7 @@
                             {{scope.row.lastOnlineTime | formatDate('yyyy-MM-DD') | padEmpty}}
                         </template>
                     </el-table-column>
-                    <el-table-column  align="center" label="状态">
+                    <el-table-column align="center" label="状态">
                         <template slot-scope="scope">
                             <input
                                 class="my-switch switch-anim"
@@ -219,6 +218,7 @@
     import {mapGetters, mapActions, mapMutations} from 'vuex';
     import _ from 'lodash';
     import role from '@/util/config/role';
+
     export default {
         name: 'DeviceList',
         components: {},
@@ -259,7 +259,7 @@
             },
             getType() {
                 return (type) => {
-                    return type ? (type === 'HARDWARE_3796' ? '3796' : '3798') : '------';
+                    return type || '------';
                 };
             },
             getDistrictName() {
@@ -290,14 +290,22 @@
                 deleteDeviceById: 'device/deleteDeviceById',
                 getFilialeList: 'channel/getFilialeList'
             }),
+            importDevice() {
+                let routeData = this.$router.resolve({
+                    name: 'DeviceImport'
+                });
+                window.open(routeData.href, '_blank');
+            },
             clearSearchFields() {
                 if (!this.$authority.isHasAuthority('user:stb:page')) {
                     return;
                 }
                 this.resetSearchFields();
+                this.searchHandler();
             },
             keyupHandler(e) {
-                if (e.keyCode === 13) {}
+                if (e.keyCode === 13) {
+                }
             },
             handlePaginationChange(value, key) {
                 if (!this.$authority.isHasAuthority('user:stb:page')) {

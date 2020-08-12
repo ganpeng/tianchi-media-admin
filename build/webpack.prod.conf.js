@@ -34,6 +34,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         new webpack.DefinePlugin({
             'process.env': env
         }),
+        // uglifyjs压缩混淆
         new UglifyJsPlugin({
             uglifyOptions: {
                 compress: {
@@ -41,6 +42,7 @@ const webpackConfig = merge(baseWebpackConfig, {
                 }
             },
             sourceMap: config.build.productionSourceMap,
+            // 使用多个进程进行操作
             parallel: true
         }),
         // extract css into its own file

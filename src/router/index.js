@@ -66,6 +66,7 @@ import VersionDetail from 'sysPage/version_manage/VersionDetail';
 import HotPerson from 'sysPage/person_manage/HotPerson';
 import PreviewProgrammeList from 'sysPage/channel_manage/PreviewProgrammeList';
 import DeviceList from 'sysPage/device_manage/DeviceList';
+import DeviceImport from 'sysPage/device_manage/DeviceImport';
 import ProductList from 'sysPage/product_manage/ProductList';
 import CreateCategoryProduct from 'sysPage/product_manage/category_product/CreateCategoryProduct';
 import EditCategoryProduct from 'sysPage/product_manage/category_product/EditCategoryProduct';
@@ -152,6 +153,12 @@ import ADDetail from 'sysPage/advertising_manage/ad_manage/ADDetail';
 import OrderList from 'sysPage/order_manage/OrderList';
 import OrderDetail from 'sysPage/order_manage/OrderDetail';
 import ServerSpace from 'sysPage/server_manage/ServerSpace';
+// 网络设置密码
+import NetworkPassword from 'sysPage/network_password/NetworkPassword';
+// 激活码
+import ActivationCodeList from 'sysPage/activation_code_manage/ActivationCodeList';
+// 激活码开关
+import ActivationCodeSwitch from 'sysPage/activation_code_switch_manage/ActivationCodeSwitch';
 
 Vue.use(Router);
 
@@ -210,6 +217,12 @@ export const routes = [
         name: 'PersonImport',
         component: PersonImport
     },
+    // 设备导入
+    {
+        path: '/manage-device/import',
+        name: 'DeviceImport',
+        component: DeviceImport
+    },
     {
         path: '/channel-live/import',
         name: 'LiveChannelImport',
@@ -226,6 +239,24 @@ export const routes = [
                 path: '/home',
                 name: 'Home',
                 component: Home
+            },
+            // 版本设备-激活码开关
+            {
+                path: '/manage-activation-code-switch/switch',
+                name: 'ActivationCodeSwitch',
+                component: ActivationCodeSwitch
+            },
+            // 版本设备-激活码列表
+            {
+                path: '/manage-activation-code/list',
+                name: 'ActivationCodeList',
+                component: ActivationCodeList
+            },
+            // 配置中心-网络设置密码
+            {
+                path: '/network-password',
+                name: 'NetworkPassword',
+                component: NetworkPassword
             },
             // 个人中心-我的信息
             {

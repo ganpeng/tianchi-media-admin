@@ -137,7 +137,7 @@
                 }
             };
             let checkDepartment = (rule, value, callback) => {
-                if (this.$util.isEmpty(value)) {
+                if (this.adminInfo.departmentList.length === 0) {
                     return callback(new Error('请选择部门'));
                 } else {
                     callback();
@@ -232,7 +232,7 @@
                 });
             },
             validateDepartmentList() {
-                this.$refs['adminInfo'].validateField('departmentList');
+                this.$refs['adminInfo'].validateField('department');
             },
             removeAllDepartment() {
                 this.adminInfo.departmentList.splice(0);

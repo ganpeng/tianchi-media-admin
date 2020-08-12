@@ -4,7 +4,7 @@
         <div class="content-title">栏目预览</div>
         <ul class="preview-list">
             <li v-for="(item, index) in previewNavBarList" :key="index" v-if="item.visible">
-                <label>{{item.name}}</label>
+                <label>{{item.name || item.picRemark}}</label>
             </li>
         </ul>
         <div class="content-title">栏目调整</div>
@@ -14,7 +14,8 @@
                 :data-id="item.id"
                 :class="{'invisible-item':!item.visible}">
                 <div>
-                    <label>{{item.name}}</label>
+                    <label v-if="item.name">{{item.name}}</label>
+                    <label v-else class="pic-remark">{{item.picRemark}}</label>
                     <i class="el-icon-circle-close"
                        @click="removeNavBar(item, index)"
                        v-if="item.type === 'CUSTOM'">
@@ -172,6 +173,7 @@
                 border: 1px solid transparent;
                 background-color: rgba(42, 48, 64, 0.3);
                 label {
+                    opacity: 0.5;
                     color: #3E495E;
                     img {
                         -webkit-filter: opacity(.3);
@@ -221,6 +223,9 @@
                     -ms-text-overflow: ellipsis;
                     text-overflow: ellipsis;
                     -webkit-line-clamp: 1;
+                    &.pic-remark {
+                        color: #A3D0FD;
+                    }
                     img {
                         margin-top: 6px;
                         height: 20px;

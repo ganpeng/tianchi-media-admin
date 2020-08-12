@@ -662,6 +662,11 @@ const ASIDE_LIST = [
             text: '设备管理',
             uri: '/manage-device/list',
             icon: 'aside_device'
+        },
+        {
+            text: '激活码',
+            uri: '/manage-activation-code/list',
+            icon: 'aside_active_code'
         }
     ],
     [
@@ -737,6 +742,16 @@ const ASIDE_LIST = [
             text: '回看缩略图',
             uri: '/lookback-thumbnail',
             icon: 'aside_playback'
+        },
+        {
+            text: '网络密码',
+            uri: '/network-password',
+            icon: 'aside_net_psd'
+        },
+        {
+            text: '激活码开关',
+            uri: '/manage-activation-code-switch/switch',
+            icon: 'aside_active_code'
         }
     ],
     [

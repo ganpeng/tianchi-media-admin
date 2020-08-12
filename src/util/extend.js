@@ -149,45 +149,48 @@ let util = {
         }
         if (format) {
             // handle MM
-            format = format.replace(/MM/g, date.getMonth() + 1);
+            format = format.replace(/MM/g, this.fillNumberBit(date.getMonth() + 1));
         }
         if (format) {
             // handle DD
-            format = format.replace(/DD/g, date.getDate());
+            format = format.replace(/DD/g, this.fillNumberBit(date.getDate()));
         }
         if (format) {
             // handle HH
-            format = format.replace(/HH/g, date.getHours());
+            format = format.replace(/HH/g, this.fillNumberBit(date.getHours()));
         }
         if (format) {
             // handle mm
-            format = format.replace(/mm/g, date.getMinutes());
+            format = format.replace(/mm/g, this.fillNumberBit(date.getMinutes()));
         }
         if (format) {
             // handle SS
-            format = format.replace(/SS/g, date.getSeconds());
+            format = format.replace(/SS/g, this.fillNumberBit(date.getSeconds()));
         }
         return format;
     },
+    // 数字4变为04
+    fillNumberBit(number) {
+        return (parseInt(number) / 100).toFixed(2).toString().replace('0.', '');
+    },
     fromSecondsToTime(seconds) {
         if (!seconds) {
-            return '0秒';
+            return '00:00:00';
         }
-        let time = parseInt(seconds) + '秒';
+        let time = parseInt(seconds);
         if (parseInt(seconds) > 60) {
             let second = parseInt(seconds) % 60;
             let min = parseInt(seconds / 60);
-            time = min + '分' + second + '秒';
+            time = (min > 9 ? min : '0' + min) + ':' + (second > 9 ? second : '0' + second);
             if (min > 60) {
                 min = parseInt(seconds / 60) % 60;
                 let hour = parseInt(parseInt(seconds / 60) / 60);
-                time = hour + '小时' + min + '分' + second + '秒';
-                if (hour > 24) {
-                    hour = parseInt(parseInt(seconds / 60) / 60) % 24;
-                    let day = parseInt(parseInt(parseInt(seconds / 60) / 60) / 24);
-                    time = day + '天' + hour + '小时' + min + '分' + second + '秒';
-                }
+                time = (hour > 9 ? hour : '0' + hour) + ':' + (min > 9 ? min : '0' + min) + ':' + (second > 9 ? second : '0' + second);
+            } else {
+                time = '00:' + (min > 9 ? min : '0' + min) + ':' + (second > 9 ? second : '0' + second);
             }
+        } else {
+            time = '00:00:' + (time > 9 ? time : '0' + time);
         }
         return time;
     },
@@ -249,11 +252,17 @@ let util = {
                 }, 1000);
             }
         }).catch((err) => {
-            console.log(`上传地址获取失败, 错误原因: ${err}`);
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                util.loopGetUploadServer(resolve);
-            }, 1000);
+            let code = _.get(err, 'response.data.code');
+            if (code === 1001 || code === 1003) {
+                console.log(`上传地址获取失败, 账号已被踢出, 错误原因: ${err}`);
+                clearTimeout(timer);
+            } else {
+                console.log(`上传地址获取失败, 错误原因: ${err}`);
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    util.loopGetUploadServer(resolve);
+                }, 1000);
+            }
         });
     },
     getUploadServer() {

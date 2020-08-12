@@ -17,8 +17,8 @@ export const setNavBarList = (navBarList) => {
 /**
  * 新增栏目
  */
-export const createNavBar = ({name, focalImage, image, signCode, layoutTemplate}) => {
-    return service.post('/v1/content/nav-bar', {name, focalImage, image, signCode, layoutTemplate});
+export const createNavBar = ({name, picRemark, focalImage, image, signCode, layoutTemplate}) => {
+    return service.post('/v1/content/nav-bar', {name, picRemark, focalImage, image, signCode, layoutTemplate});
 };
 
 /**
@@ -32,15 +32,27 @@ export const getNavBarDetail = (id) => {
 /**
  * 修改栏目信息
  */
-export const updateNavBar = ({id, name, focalImage, image, signCode, layoutTemplate, applicableClientList}) => {
+export const updateNavBar = ({id, name, picRemark, focalImage, image, signCode, layoutTemplate, applicableClientList}) => {
     return service.patch('/v1/content/nav-bar', {
         id,
         name,
         focalImage,
+        picRemark,
         image,
         signCode,
         layoutTemplate,
         applicableClientList
+    });
+};
+
+/**
+ * 修改栏目的背景图
+ */
+export const updateNavBarBackground = ({id, backGroundImage}) => {
+    return service.patch('/v1/content/nav-bar', {
+        applicableClientList: ['TV'],
+        id,
+        backGroundImage
     });
 };
 
