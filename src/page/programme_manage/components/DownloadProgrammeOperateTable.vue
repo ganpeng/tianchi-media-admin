@@ -49,8 +49,13 @@
             min-width="220px"
             label="状态">
             <template slot-scope="scope">
-                <span v-if="scope.row.downloadStatus === 'FAILED'">重试</span>
-                {{scope.row.downloadStatus | getDownloadStatus}}
+                <span v-if="scope.row.downloadStatus === 'SUCCESS'" class="status-normal">成功</span>
+                <span v-if="scope.row.downloadStatus === 'FAILED'" class="status-abnormal">失败</span>
+                <span v-if="scope.row.downloadStatus === 'ON_GOING'" class="status-on-going">下载中</span>
+                <span v-if="scope.row.downloadStatus === 'FAILED'" class="retry-text-btn"
+                      @click="downloadRetry(scope.row)">
+                    重试
+                </span>
             </template>
         </el-table-column>
         <el-table-column
@@ -67,8 +72,8 @@
             min-width="140px"
             label="下载时间">
             <template slot-scope="scope">
-                <div>{{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}</div>
-                <div>{{scope.row.updatedAt | formatDate('HH:mm:SS')}}</div>
+                <div>{{scope.row.downloadTime | formatDate('yyyy-MM-DD')}}</div>
+                <div>{{scope.row.downloadTime | formatDate('HH:mm:SS')}}</div>
             </template>
         </el-table-column>
         <el-table-column
@@ -98,7 +103,7 @@
         },
         filters: {
             getDownloadStatus(status) {
-                return {'ON_GOING': '下载中', 'SUCCESS': '成功', 'FAILED': '失败'}[status]
+                return {'ON_GOING': '下载中', 'SUCCESS': '成功', 'FAILED': '失败'}[status];
             }
         },
         data() {
@@ -107,11 +112,17 @@
             };
         },
         methods: {
-            // 重试选中
+            // 重试选中，只有下载失败的节目可以重试
             batchRetry() {
                 if (!this.multipleSelection || this.multipleSelection.length === 0) {
                     this.$message.warning('请先选择节目');
                     return;
+                }
+                for (let i = 0; i < this.multipleSelection.length; i++) {
+                    if (this.multipleSelection[i].downloadStatus !== 'FAILED') {
+                        this.$message.warning('只有下载失败的节目可以重试');
+                        return;
+                    }
                 }
                 let idList = [];
                 this.multipleSelection.map(item => {
@@ -126,11 +137,28 @@
                     }
                 });
             },
-            // 删除选中
+            // 重试
+            downloadRetry(item) {
+                this.$service.batchDownloadProgramme({idList: [item.id]}).then(response => {
+                    if (response && response.code === 0) {
+                        this.$message.success('节目批量下载重试成功!');
+                        this.$emit('getDownloadProgrammeList');
+                        this.multipleSelection = [];
+                        this.$emit('setBatchDisabledStatus', true);
+                    }
+                });
+            },
+            // 删除选中,只有'成功'和'失败'的才可以删除
             batchRemove() {
                 if (!this.multipleSelection || this.multipleSelection.length === 0) {
                     this.$message.warning('请先选择节目');
                     return;
+                }
+                for (let i = 0; i < this.multipleSelection.length; i++) {
+                    if (this.multipleSelection[i].downloadStatus === 'ON_GOING') {
+                        this.$message.warning('只有下载成功和失败的才可以删除');
+                        return;
+                    }
                 }
                 this.$confirm('此操作将批量删除下载节目, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -173,7 +201,12 @@
                     this.$emit('setBatchDisabledStatus', false);
                 }
             },
+            // 只有'成功'和'失败'的才可以删除
             removeDownloadProgramme(item) {
+                if (item.downloadStatus === 'ON_GOING') {
+                    this.$message.warning('下载中的节目不能删除');
+                    return;
+                }
                 this.$confirm('此操作将删除下载节目, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

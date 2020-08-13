@@ -248,5 +248,5 @@ export const batchRemoveDownloadProgramme = ({idList}) => {
  * 下载节目列表删除全部
  */
 export const removeAllDownloadProgramme = () => {
-    return service.post(`/v1/content/programme/download/delete`, '');
+    return service.post(`/v1/content/programme/download/delete`, ' ');
 };
