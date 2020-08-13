@@ -11,7 +11,7 @@
         </el-table-column>
         <el-table-column
             align="center"
-            prop="id"
+            prop="code"
             width="120px"
             label="节目编号">
         </el-table-column>
@@ -29,26 +29,28 @@
         <el-table-column
             align="center"
             prop="price"
-            min-width="220px"
+            width="100px"
             label="节目海报">
             <template slot-scope="scope">
-                {{scope.row.price / 100}}
+                <img v-if="scope.row.coverImage && scope.row.coverImage.uri" style="width:70px;height:auto;"
+                     :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
+                <span v-else>{{ '' | padEmpty }}</span>
             </template>
         </el-table-column>
         <el-table-column
             align="center"
-            prop="validityDays"
+            prop="downloadIp"
             min-width="220px"
             label="服务器地址">
-            <template slot-scope="scope">
-            </template>
         </el-table-column>
         <el-table-column
             align="center"
-            prop="validityDays"
+            prop="downloadStatus"
             min-width="220px"
             label="状态">
             <template slot-scope="scope">
+                <span v-if="scope.row.downloadStatus === 'FAILED'">重试</span>
+                {{scope.row.downloadStatus | getDownloadStatus}}
             </template>
         </el-table-column>
         <el-table-column
@@ -65,8 +67,8 @@
             min-width="140px"
             label="下载时间">
             <template slot-scope="scope">
-                <div>{{scope.row.createdAt | formatDate('yyyy-MM-DD')}}</div>
-                <div>{{scope.row.createdAt | formatDate('HH:mm:SS')}}</div>
+                <div>{{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}</div>
+                <div>{{scope.row.updatedAt | formatDate('HH:mm:SS')}}</div>
             </template>
         </el-table-column>
         <el-table-column
@@ -92,6 +94,11 @@
                 default: function () {
                     return [];
                 }
+            }
+        },
+        filters: {
+            getDownloadStatus(status) {
+                return {'ON_GOING': '下载中', 'SUCCESS': '成功', 'FAILED': '失败'}[status]
             }
         },
         data() {
@@ -140,6 +147,20 @@
                             this.$emit('getDownloadProgrammeList');
                             this.multipleSelection = [];
                             this.$emit('setBatchDisabledStatus', true);
+                        }
+                    });
+                });
+            },
+            batchRemoveAll() {
+                this.$confirm('此操作将删除所有下载节目, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.removeAllDownloadProgramme().then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('全部节目删除成功!');
+                            this.$emit('getDownloadProgrammeList');
                         }
                     });
                 });

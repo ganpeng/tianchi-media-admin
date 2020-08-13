@@ -224,7 +224,7 @@ export const batchDownloadProgramme = ({idList}) => {
  */
 export const getDownloadProgrammeList = ({pageNum, pageSize, keyword, downloadStatus}) => {
     const params = {
-        pageNum,
+        pageNum: pageNum - 1,
         pageSize,
         keyword,
         downloadStatus
@@ -242,4 +242,11 @@ export const getDownloadProgrammeList = ({pageNum, pageSize, keyword, downloadSt
  */
 export const batchRemoveDownloadProgramme = ({idList}) => {
     return service.post(`/v1/content/programme/download/delete`, idList);
+};
+
+/**
+ * 下载节目列表删除全部
+ */
+export const removeAllDownloadProgramme = () => {
+    return service.post(`/v1/content/programme/download/delete`, '');
 };

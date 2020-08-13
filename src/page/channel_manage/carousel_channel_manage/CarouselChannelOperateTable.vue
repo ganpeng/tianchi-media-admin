@@ -73,13 +73,10 @@
                 align="center"
                 min-width="120px"
                 prop="multicastIp"
-                label="组播地址">
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="80px"
-                prop="multicastPort"
-                label="端口号">
+                label="轮播地址">
+                <template slot-scope="scope">
+                    <span>{{scope.row.multicastIp}}:{{scope.row.multicastPort}}</span>
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
@@ -117,7 +114,7 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                label="状态">
+                label="定时">
                 <template slot-scope="scope">
                     <span v-if="scope.row.applyStatus === 'ACTIVE'"
                           class="status-normal">生效中</span>
@@ -130,7 +127,7 @@
             <el-table-column
                 align="center"
                 min-width="100px"
-                label="启用/禁用">
+                label="状态">
                 <template slot-scope="scope">
                     <input
                         class="my-switch switch-anim"
