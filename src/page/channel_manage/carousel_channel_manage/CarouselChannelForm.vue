@@ -642,6 +642,22 @@
                 <el-button type="primary" @click="confirmGroup">确 定</el-button>
             </div>
         </el-dialog>
+        <!-- 关联节目 -->
+        <el-dialog
+            title="关联节目"
+            :visible.sync="selectProgrammeVisible"
+            :close-on-click-modal=false
+            custom-class="normal-dialog"
+            top="13vh"
+            width="80%">
+            <select-single-programme
+                v-if="selectProgrammeVisible">
+            </select-single-programme>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="selectProgrammeVisible = false">取消</el-button>
+                <el-button type="primary" @click="confirmLinkProgramme">下一步</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -654,6 +670,7 @@
     import {CHANNEL_LOGO_DIMENSION} from '@/util/config/dimension';
     import _ from 'lodash';
     import draggable from 'vuedraggable';
+    import SelectSingleProgramme from './components/SelectSingleProgramme';
 
     const ClipboardJS = require('clipboard');
 
@@ -673,7 +690,8 @@
             SelectMultipleVideo,
             SortDialog,
             SingleImageUploader,
-            draggable
+            draggable,
+            SelectSingleProgramme
         },
         data() {
             let checkName = (rule, value, callback) => {
@@ -818,6 +836,7 @@
                 }
             };
             return {
+                selectProgrammeVisible: true,
                 groupInfo: {
                     name: '',
                     durationFormat: '',
@@ -1000,6 +1019,9 @@
             this.init();
         },
         methods: {
+            confirmLinkProgramme() {
+
+            },
             removeGroup(index) {
                 this.carouselGroup.splice(index, 1);
                 this.$nextTick(function () {
