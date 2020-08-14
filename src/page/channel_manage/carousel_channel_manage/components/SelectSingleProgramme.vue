@@ -31,7 +31,8 @@
         <programme-operate-table
             ref="programmeOperateTable"
             model="MULTIPLE"
-            :programmeList="programmeList">
+            :programmeList="programmeList"
+            :currentSelectedProgrammeId="currentSelectedProgrammeId">
         </programme-operate-table>
         <el-pagination
             @size-change="handleSizeChange"
@@ -53,6 +54,12 @@
         components: {
             ProgrammeOperateTable
         },
+        props: {
+            currentSelectedProgrammeId: {
+                type: String,
+                default: ''
+            }
+        },
         data() {
             return {
                 // 本地选择节目列表
@@ -68,17 +75,12 @@
             };
         },
         mounted() {
-            this.getProgrammeList();
+            this.getProgrammeList(true);
         },
         methods: {
             // 请求数据
-            getProgrammeList(searchParams) {
+            getProgrammeList(isMounted) {
                 this.listQueryParams.pageNum = this.pageNum - 1;
-                if (searchParams) {
-                    for (let key in searchParams) {
-                        this.listQueryParams[key] = searchParams[key];
-                    }
-                }
                 this.$service.getProgrammeList(this.listQueryParams).then(response => {
                     if (response && response.code === 0) {
                         this.programmeList = response.data.list;
@@ -93,12 +95,8 @@
                 this.pageNum = pageNum;
                 this.getProgrammeList();
             },
-            // 取消选择某一个节目
-            cancelSelectedProgramme(programme) {
-                this.$refs.programmeOperateTable.cancelSelectRow(programme);
-            },
             // 获取选择的节目列表
-            getSelectedProgrammeList() {
+            getSelectedProgramme() {
                 return this.$refs.programmeOperateTable.getSelectedProgramme();
             },
             handleSizeChange(pageSize) {

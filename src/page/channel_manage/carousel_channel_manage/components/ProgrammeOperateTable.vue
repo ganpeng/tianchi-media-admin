@@ -110,12 +110,18 @@
                 default: function () {
                     return [];
                 }
+            },
+            currentSelectedProgrammeId: {
+                type: String,
+                default: ''
             }
         },
         data() {
             return {
                 currentRow: {}
             };
+        },
+        mounted() {
         },
         methods: {
             handleCurrentChange(val) {
@@ -131,13 +137,12 @@
             },
             // 获取当前选中的节目列表
             getSelectedProgramme() {
-                return this.multipleSelection;
+                return this.currentRow;
             },
             setCurrentRow() {
                 if (this.currentRow && this.currentRow.id) {
                     this.programmeList.map(item => {
                         if (item.id === this.currentRow.id) {
-                            console.log('设置');
                             this.$refs.programmeTable.setCurrentRow(item);
                         }
                     });

@@ -443,11 +443,20 @@
             <el-table-column
                 align="center"
                 label="操作"
-                width="110px"
+                width="130px"
                 class="operate">
                 <template slot-scope="scope">
                     <div class="operator-btn-wrapper">
-                        <span class="btn-text" @click="popAppendVideoDialogue(scope.$index + 1)">添加</span>
+                        <el-dropdown placement="bottom" @command="handleAppendVideoCommand($event, scope.$index + 1)">
+                        <span class="el-dropdown-link">
+                        添加<i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="programmeVideo">节目内视频</el-dropdown-item>
+                                <el-dropdown-item command="video">视频</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <!--<span class="btn-text" @click="popAppendVideoDialogue(scope.$index + 1)">添加</span>-->
                         <span class="btn-text text-danger" @click="removeConfirm(scope.$index,scope.row)">删除</span>
                     </div>
                 </template>
@@ -644,20 +653,53 @@
         </el-dialog>
         <!-- 关联节目 -->
         <el-dialog
-            title="关联节目"
-            :visible.sync="selectProgrammeVisible"
+            :title="selectProgrammeVideoStepIndex === 0 ? '关联节目' : '关联节目内视频'"
+            :visible.sync="selectProgrammeVideoVisible"
             :close-on-click-modal=false
             custom-class="normal-dialog"
+            :before-close="closeSelectProgrammeVideo"
             top="13vh"
             width="80%">
+            <!-- 选择单个节目 -->
             <select-single-programme
-                v-if="selectProgrammeVisible">
+                ref="selectSingleProgramme"
+                :currentSelectedProgrammeId="currentSelectedProgrammeId"
+                v-show="selectProgrammeVideoVisible && (selectProgrammeVideoStepIndex === 0)">
             </select-single-programme>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="selectProgrammeVisible = false">取消</el-button>
+            <!-- 选择多个节目内视频 -->
+            <select-programme-multiple-video
+                ref="selectMutipleProgrammeVideo"
+                v-if="selectProgrammeVideoVisible && (selectProgrammeVideoStepIndex === 1)"
+                :currentSelectedProgrammeId="currentSelectedProgrammeId"
+                :currentSelectedVideoList="currentCarouselGroup.carouselVideoList">
+            </select-programme-multiple-video>
+            <!-- 底部按钮 -->
+            <span slot="footer" class="dialog-footer" v-if="selectProgrammeVideoStepIndex === 0">
+                <el-button @click="selectProgrammeVideoVisible = false">取消</el-button>
                 <el-button type="primary" @click="confirmLinkProgramme">下一步</el-button>
             </span>
+            <span slot="footer" class="dialog-footer" v-else>
+                <el-button @click="selectProgrammeVideoStepIndex = 0">上一步</el-button>
+                <el-button type="primary" @click="confirmLinkProgrammeVideo">确定</el-button>
+            </span>
         </el-dialog>
+        <!-- 关联节目内视频 -->
+        <!--<el-dialog-->
+        <!--title="关联节目内视频"-->
+        <!--:visible.sync="selectProgrammeVideoVisible"-->
+        <!--:close-on-click-modal=false-->
+        <!--custom-class="normal-dialog"-->
+        <!--top="13vh"-->
+        <!--width="80%">-->
+        <!--<select-programme-multiple-video-->
+        <!--v-if="selectProgrammeVideoVisible"-->
+        <!--:currentSelectedProgrammeId="currentSelectedProgrammeId">-->
+        <!--</select-programme-multiple-video>-->
+        <!--<span slot="footer" class="dialog-footer">-->
+        <!--<el-button @click="programmeVideoPreStep">上一步</el-button>-->
+        <!--<el-button type="primary" @click="confirmLinkProgramme">确定</el-button>-->
+        <!--</span>-->
+        <!--</el-dialog>-->
     </div>
 </template>
 
@@ -671,6 +713,7 @@
     import _ from 'lodash';
     import draggable from 'vuedraggable';
     import SelectSingleProgramme from './components/SelectSingleProgramme';
+    import SelectProgrammeMultipleVideo from './components/SelectProgrammeMultipleVideo';
 
     const ClipboardJS = require('clipboard');
 
@@ -691,7 +734,8 @@
             SortDialog,
             SingleImageUploader,
             draggable,
-            SelectSingleProgramme
+            SelectSingleProgramme,
+            SelectProgrammeMultipleVideo
         },
         data() {
             let checkName = (rule, value, callback) => {
@@ -836,7 +880,11 @@
                 }
             };
             return {
-                selectProgrammeVisible: true,
+                // 关联节目内视频变量
+                selectProgrammeVideoStepIndex: 0,
+                selectProgrammeVideoVisible: false,
+                currentSelectedProgrammeId: '',
+                currentProgrammeVideoIndex: '',
                 groupInfo: {
                     name: '',
                     durationFormat: '',
@@ -1019,8 +1067,38 @@
             this.init();
         },
         methods: {
+            // 视频添加处理
+            handleAppendVideoCommand(command, index) {
+                if (command === 'programmeVideo') {
+                    this.popAppendProgrammeVideoDialogue(index);
+                } else if (command === 'video') {
+                    this.popAppendVideoDialogue(index);
+                }
+            },
+            // 确认关联节目内视频
+            confirmLinkProgrammeVideo() {
+                let videoList = this.$refs.selectMutipleProgrammeVideo.getSelectedMultipleVideo();
+                if (videoList.length > 0) {
+                    this.appendVideo(videoList);
+                } else {
+                    this.$message.warning('请选择节目内视频');
+                }
+            },
+            // 关闭选择节目视频弹窗
+            closeSelectProgrammeVideo(done) {
+                console.log('关闭');
+                this.currentSelectedProgrammeId = '';
+                this.selectProgrammeVideoStepIndex = 0;
+                done();
+            },
             confirmLinkProgramme() {
-
+                let programme = this.$refs.selectSingleProgramme.getSelectedProgramme();
+                if (programme.id) {
+                    this.currentSelectedProgrammeId = programme.id;
+                    this.selectProgrammeVideoStepIndex = 1;
+                } else {
+                    this.$message.warning('请选择节目');
+                }
             },
             removeGroup(index) {
                 this.carouselGroup.splice(index, 1);
@@ -1341,8 +1419,9 @@
             },
             // 打开节目-视频列表，设置当前点击的某一行视频
             popAppendProgrammeVideoDialogue(index) {
+                // this.currentProgrammeVideoIndex = index;
                 this.currentVideoIndex = index;
-                this.selectDialogVisible = true;
+                this.selectProgrammeVideoVisible = true;
             },
             // 添加相应的视频
             appendVideo(selectedVideoList) {
@@ -2342,6 +2421,11 @@
 
     .link-programme-btn {
         width: 156px;
+    }
+
+    .el-dropdown-link {
+        color: #1989FA;
+        cursor: pointer;
     }
 
 </style>
