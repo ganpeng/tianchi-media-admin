@@ -21,7 +21,7 @@
                             <span @click="batchRemove">删除选中</span>
                         </el-dropdown-item>
                         <el-dropdown-item>
-                            <span @click="batchRemove">删除全部</span>
+                            <span @click="removeAllFile">删除全部</span>
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>

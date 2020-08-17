@@ -12,6 +12,13 @@ export const getChannelDetail = (id) => {
 };
 
 /**
+ * 获取频道详情
+ */
+export const getCarouselProgrammeList = (channelId) => {
+    return service.get('/v1/live/carousel-video/programme/list?channelId=' + channelId);
+};
+
+/**
  * 获取频道分类
  */
 export const getChannelType = ({category}) => {

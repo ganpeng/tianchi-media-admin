@@ -144,14 +144,14 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    // this.$service.batchDeleteDownloadFile({idList: exportFileIdList}).then(response => {
-                    //     if (response && response.code === 0) {
-                    //         this.$message.success('导出文件批量删除成功!');
-                    //         this.$emit('getExportFileList');
-                    //         this.multipleSelection = [];
-                    //         this.$emit('setBatchDisabledStatus', true);
-                    //     }
-                    // });
+                    this.$service.batchDeleteDownloadFile({idList: null}).then(response => {
+                        if (response && response.code === 0) {
+                            this.$message.success('导出文件全部删除成功!');
+                            this.$emit('getExportFileList');
+                            this.multipleSelection = [];
+                            this.$emit('setBatchDisabledStatus', true);
+                        }
+                    });
                 });
             },
             downloadExportFile(item) {
