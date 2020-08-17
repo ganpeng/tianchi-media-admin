@@ -651,7 +651,7 @@
                 <el-button type="primary" @click="confirmGroup">确 定</el-button>
             </div>
         </el-dialog>
-        <!-- 关联节目 -->
+        <!-- 关联节目内视频两个步骤 -->
         <el-dialog
             :title="selectProgrammeVideoStepIndex === 0 ? '关联节目' : '关联节目内视频'"
             :visible.sync="selectProgrammeVideoVisible"
@@ -664,6 +664,7 @@
             <select-single-programme
                 ref="selectSingleProgramme"
                 :currentSelectedProgrammeId="currentSelectedProgrammeId"
+                v-if="selectProgrammeVideoVisible"
                 v-show="selectProgrammeVideoVisible && (selectProgrammeVideoStepIndex === 0)">
             </select-single-programme>
             <!-- 选择多个节目内视频 -->
@@ -680,26 +681,9 @@
             </span>
             <span slot="footer" class="dialog-footer" v-else>
                 <el-button @click="selectProgrammeVideoStepIndex = 0">上一步</el-button>
-                <el-button type="primary" @click="confirmLinkProgrammeVideo">确定</el-button>
+                <el-button type="primary" @click="confirmLinkProgrammeVideo">确 定</el-button>
             </span>
         </el-dialog>
-        <!-- 关联节目内视频 -->
-        <!--<el-dialog-->
-        <!--title="关联节目内视频"-->
-        <!--:visible.sync="selectProgrammeVideoVisible"-->
-        <!--:close-on-click-modal=false-->
-        <!--custom-class="normal-dialog"-->
-        <!--top="13vh"-->
-        <!--width="80%">-->
-        <!--<select-programme-multiple-video-->
-        <!--v-if="selectProgrammeVideoVisible"-->
-        <!--:currentSelectedProgrammeId="currentSelectedProgrammeId">-->
-        <!--</select-programme-multiple-video>-->
-        <!--<span slot="footer" class="dialog-footer">-->
-        <!--<el-button @click="programmeVideoPreStep">上一步</el-button>-->
-        <!--<el-button type="primary" @click="confirmLinkProgramme">确定</el-button>-->
-        <!--</span>-->
-        <!--</el-dialog>-->
     </div>
 </template>
 
@@ -1077,12 +1061,20 @@
             },
             // 确认关联节目内视频
             confirmLinkProgrammeVideo() {
+                // videoList包含原先选择的视频
                 let videoList = this.$refs.selectMutipleProgrammeVideo.getSelectedMultipleVideo();
-                if (videoList.length > 0) {
+                // 去除选择视频时编写的tag
+                console.log('删除');
+                this.$nextTick(function () {
+                    videoList.map(item => {
+                        item.current = undefined;
+                        item.index = undefined;
+                    });
                     this.appendVideo(videoList);
-                } else {
-                    this.$message.warning('请选择节目内视频');
-                }
+                    this.currentSelectedProgrammeId = '';
+                    this.selectProgrammeVideoStepIndex = 0;
+                    this.selectProgrammeVideoVisible = false;
+                });
             },
             // 关闭选择节目视频弹窗
             closeSelectProgrammeVideo(done) {
@@ -1946,6 +1938,7 @@
                                 justify-content: center;
                                 height: 22px;
                                 width: 50px;
+                                right: -12px;
                                 position: relative;
                                 &:hover {
                                     span {

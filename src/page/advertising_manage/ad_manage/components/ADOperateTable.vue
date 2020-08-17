@@ -61,8 +61,8 @@
             min-width="120px"
             label="有效期">
             <template slot-scope="scope">
-                <div>{{scope.row.applyDateBegin | formatDate('yyyy-MM-DD HH:mm:SS')}}</div>
-                <div>{{scope.row.applyDateEnd | formatDate('yyyy-MM-DD HH:mm:SS')}}</div>
+                <div>起：{{scope.row.applyDateBegin | formatDate('yyyy-MM-DD HH:mm:SS')}}</div>
+                <div>止：{{scope.row.applyDateEnd | formatDate('yyyy-MM-DD HH:mm:SS')}}</div>
             </template>
         </el-table-column>
         <el-table-column

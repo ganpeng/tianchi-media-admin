@@ -12,7 +12,7 @@
             </div>
         </div>
         <div id="select-all">
-            <el-checkbox v-model="checkedAll">选择该节目内的所有视频</el-checkbox>
+            <el-checkbox v-model="checkedAll" @change="selectAllProgrammeVideo">选择该节目内的所有视频</el-checkbox>
         </div>
         <el-table
             ref="selectMultipleVideoTable"
@@ -29,7 +29,7 @@
                 width="55">
             </el-table-column>
             <el-table-column
-                prop="id"
+                prop="code"
                 align="center"
                 width="120px"
                 label="视频编号">
@@ -104,6 +104,7 @@
 
 <script>
     import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
+    import _ from 'lodash';
 
     export default {
         name: 'SelectMultipleVideo',
@@ -139,6 +140,8 @@
                     visible: false
                 },
                 videoList: [],
+                // 当前节目内所有的视频
+                videoListAll: [],
                 selectedMultipleVideo: this.currentSelectedVideoList.slice(0)
             };
         },
@@ -146,23 +149,74 @@
             this.getVideoList();
         },
         methods: {
+            selectAllProgrammeVideo(isSelected) {
+                // 如果选择'全部'
+                if (isSelected) {
+                    this.$service.getProgrammeVideoListById({
+                        programmeId: this.currentSelectedProgrammeId,
+                        typeList: 'FEATURE',
+                        pageNum: 0,
+                        pageSize: 100000
+                    }).then(response => {
+                        if (response && response.code === 0) {
+                            // 对于当前的视频列表做标记，并记录排序
+                            let list = response.data.list;
+                            for (let i = 0; i < list.length; i++) {
+                                list[i].current = true;
+                                list[i].index = parseInt(this.queryParams.pageNum * this.queryParams.pageSize + i);
+                            }
+                            this.videoListAll = list;
+                            // 添加
+                            this.selectedMultipleVideo = this.currentSelectedVideoList.slice(0).concat(this.videoListAll);
+                            // 对于原先选择过，现在又被选择在'全部中'进行去重处理
+                            this.selectedMultipleVideo = _.uniqBy(this.selectedMultipleVideo, 'code');
+                            // 全部勾选
+                            this.videoList.map(video => {
+                                this.$nextTick(function () {
+                                    this.$refs.selectMultipleVideoTable.toggleRowSelection(video, true);
+                                });
+                            });
+                        }
+                    });
+                } else {
+                    // 取消'全部',恢复原有的状态
+                    this.selectedMultipleVideo = this.currentSelectedVideoList.slice(0);
+                }
+            },
             // 获取视频的列表
             getVideoList() {
                 this.$service.getProgrammeVideoListById(this.queryParams).then(response => {
                     if (response && response.code === 0) {
-                        this.videoList = response.data.list;
+                        // 对于当前的视频列表做标记，并记录排序
+                        let list = response.data.list;
+                        for (let i = 0; i < list.length; i++) {
+                            list[i].current = true;
+                            list[i].index = parseInt(this.queryParams.pageNum * this.queryParams.pageSize + i);
+                        }
+                        this.videoList = list;
                         this.total = response.data.total;
-                        // 选中已选中的视频
-                        this.selectedMultipleVideo.map(currentVideo => {
+                        console.log(this.videoList);
+                        // 如果是选中全选，全部勾选
+                        if (this.checkedAll) {
+                            // 全部勾选
                             this.videoList.map(video => {
-                                if (currentVideo.code === video.code) {
-                                    this.$nextTick(function () {
-                                        this.$refs.selectMultipleVideoTable.toggleRowSelection(video);
-                                    });
-                                }
+                                this.$nextTick(function () {
+                                    this.$refs.selectMultipleVideoTable.toggleRowSelection(video, true);
+                                });
                             });
-                        });
-                        // 对原先已选则的视频做标记
+                        } else {
+                            // 选中已选中的视频
+                            this.selectedMultipleVideo.map(currentVideo => {
+                                this.videoList.map(video => {
+                                    if (currentVideo.code === video.code) {
+                                        this.$nextTick(function () {
+                                            this.$refs.selectMultipleVideoTable.toggleRowSelection(video, true);
+                                        });
+                                    }
+                                });
+                            });
+                        }
+                        // 对原先已选择的视频做标记
                         this.currentSelectedVideoList.map(currentVideo => {
                             this.videoList.map(video => {
                                 if (currentVideo.code === video.code) {
@@ -239,6 +293,20 @@
                 this.$emit('closeSelectVideoDialog');
             },
             getSelectedMultipleVideo() {
+                // 剔除原先选中的视频，只对当前选中的视频列表进行排序
+                // let list = [];
+                // this.selectedMultipleVideo.map(item => {
+                //     if (item.current) {
+                //         list.push(item);
+                //     }
+                // });
+                // console.log(list);
+                console.log(this.selectedMultipleVideo);
+                this.selectedMultipleVideo = _.sortBy(this.selectedMultipleVideo, function (o) {
+                    return o.index;
+                });
+                console.log('打印');
+                console.log(this.selectedMultipleVideo);
                 return this.selectedMultipleVideo;
             },
             handleSizeChange(pageSize) {
