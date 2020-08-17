@@ -55,7 +55,7 @@
                         <span @click="batchRemove">删除选中</span>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                        <span @click="batchRemove">删除全部</span>
+                        <span @click="removeAllFile">删除全部</span>
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -117,34 +117,19 @@
                     this.listQueryParams.pageNum = 1;
                 }
                 this.$wsCache.localStorage.set('exportFileFilter', this.listQueryParams);
-                // this.$service.getExportFileList(this.listQueryParams).then(response => {
-                //     if (response && response.code === 0) {
-                //         this.exportFileList = response.data.list;
-                //         this.total = response.data.total;
-                //     }
-                // });
-            },
-            // 批量上架
-            batchShelve() {
-                this.$refs.exportFileOperateTable.batchUpdateStatus(true);
-            },
-            // 批量下架
-            batchUnShelve() {
-                this.$refs.exportFileOperateTable.batchUpdateStatus(false);
+                this.$service.getExportFileList(this.listQueryParams).then(response => {
+                    if (response && response.code === 0) {
+                        this.exportFileList = response.data.list;
+                        this.total = response.data.total;
+                    }
+                });
             },
             // 批量删除
             batchRemove() {
                 this.$refs.exportFileOperateTable.batchRemove();
             },
-            // 创建导出
-            createExportFile(command) {
-                if (!this.$authority.isHasAuthority('content:exportFile:add')) {
-                    return;
-                }
-                let routeData = this.$router.resolve({
-                    name: command === 'PROGRAMME' ? 'CreateProgrammeExportFile' : 'CreateFigureExportFile'
-                });
-                window.open(routeData.href, '_blank');
+            removeAllFile() {
+                this.$refs.exportFileOperateTable.removeAllFile();
             }
         }
     };

@@ -207,9 +207,7 @@ export const editEmptyProgrammeVideo = (id) => {
  * 节目全部导出
  */
 export const exportAllProgramme = () => {
-    return service.post(`/v1/content/programme/export`, null, {
-        responseType: 'blob'
-    });
+    return service.post(`/v1/content/programme/export`);
 };
 
 /**

@@ -842,7 +842,10 @@
                         return;
                     }
                     let res = await this.$service.exportAllProgramme();
-                    this.$util.downloadFile(res, `全部节目.xlsx`);
+                    console.log(res);
+                    if (res && res.code === 0) {
+                        this.$message.success('服务器正在生成excel文件，稍后请到导出列表查看');
+                    }
                 } catch (err) {
                     console.log(err);
                 }

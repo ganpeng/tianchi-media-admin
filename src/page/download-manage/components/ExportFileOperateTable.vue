@@ -12,7 +12,7 @@
         </el-table-column>
         <el-table-column
             align="center"
-            prop="code"
+            prop="name"
             width="150px"
             label="文件名称">
         </el-table-column>
@@ -22,7 +22,9 @@
             prop="status"
             label="状态">
             <template slot-scope="scope">
-                <label>{{scope.row.itemCount}}</label>
+                <span v-if="scope.row.status === 'SUCCESS'" class="status-normal">成功</span>
+                <span v-if="scope.row.status === 'FAILED'" class="status-abnormal">失败</span>
+                <span v-if="scope.row.status === 'ON_GOING'" class="status-on-going">下载中</span>
             </template>
         </el-table-column>
         <el-table-column
@@ -30,7 +32,8 @@
             min-width="140px"
             label="开始时间">
             <template slot-scope="scope">
-                {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                <div>{{scope.row.startTime | formatDate('yyyy-MM-DD')}}</div>
+                <div>{{scope.row.startTime | formatDate('HH:mm:SS')}}</div>
             </template>
         </el-table-column>
         <el-table-column
@@ -38,7 +41,9 @@
             min-width="140px"
             label="完成时间">
             <template slot-scope="scope">
-                {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                <div>{{scope.row.endTime | formatDate('yyyy-MM-DD')}}</div>
+                <div>{{scope.row.endTime | formatDate('HH:mm:SS')}}</div>
+                <div v-if="!scope.row.endTime">/</div>
             </template>
         </el-table-column>
         <el-table-column
@@ -47,8 +52,10 @@
             width="110px">
             <template slot-scope="scope">
                 <div class="operator-btn-wrapper">
-                    <span class="btn-text" @click="downloadExportFile(scope.row)">下载</span>
-                    <span class="btn-text text-danger" @click="removeExportFile(scope.row)">删除</span>
+                    <span class="btn-text" :class="{'disabled':scope.row.status !== 'SUCCESS'}"
+                          @click="downloadExportFile(scope.row)">下载</span>
+                    <span class="btn-text text-danger" :class="{'disabled':scope.row.status === 'ON_GOING'}"
+                          @click="removeExportFile(scope.row)">删除</span>
                 </div>
             </template>
         </el-table-column>
@@ -82,20 +89,16 @@
                     this.$emit('setBatchDisabledStatus', false);
                 }
             },
-            // 删除单个导出,只有下架的导出才能删除
+            // 删除单个导出
             removeExportFile(item) {
-                if (item.visible) {
-                    this.$message.warning('当前导出处于上架状态，请下架之后再进行删除操作');
-                    return;
-                }
-                this.$confirm('此操作将删除' + item.name + '导出, 是否继续?', '提示', {
+                this.$confirm('此操作将删除' + item.name + ', 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$service.deleteExportFile(item.id).then(response => {
+                    this.$service.batchDeleteDownloadFile({idList: [item.id]}).then(response => {
                         if (response && response.code === 0) {
-                            this.$message.success('"' + item.name + '"' + '导出删除成功!');
+                            this.$message.success('"' + item.name + '"' + '删除成功!');
                             this.$emit('getExportFileList');
                             this.multipleSelection = [];
                             this.$emit('setBatchDisabledStatus', true);
@@ -103,15 +106,15 @@
                     });
                 });
             },
-            // 批量删除导出，只有已下架的导出才能删除
+            // 批量删除导出
             batchRemove() {
                 if (!this.multipleSelection || this.multipleSelection.length === 0) {
-                    this.$message.warning('请先选择导出');
+                    this.$message.warning('请先选择导出文件');
                     return;
                 }
                 for (let i = 0; i < this.multipleSelection.length; i++) {
-                    if (this.multipleSelection[i].visible) {
-                        this.$message.warning('当前选中的导出中含有已上架的导出，暂时不能批量删除');
+                    if (this.multipleSelection[i].status === 'ON_GOING') {
+                        this.$message.warning('只有导出成功和失败的才可以删除');
                         return;
                     }
                 }
@@ -124,9 +127,9 @@
                     this.multipleSelection.map(exportFile => {
                         exportFileIdList.push(exportFile.id);
                     });
-                    this.$service.batchDeleteExportFile({idList: exportFileIdList}).then(response => {
+                    this.$service.batchDeleteDownloadFile({idList: exportFileIdList}).then(response => {
                         if (response && response.code === 0) {
-                            this.$message.success('导出批量删除成功!');
+                            this.$message.success('导出文件批量删除成功!');
                             this.$emit('getExportFileList');
                             this.multipleSelection = [];
                             this.$emit('setBatchDisabledStatus', true);
@@ -134,7 +137,32 @@
                     });
                 });
             },
+            // 删除全部
+            removeAllFile() {
+                this.$confirm('此操作将批量删除全部导出文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    // this.$service.batchDeleteDownloadFile({idList: exportFileIdList}).then(response => {
+                    //     if (response && response.code === 0) {
+                    //         this.$message.success('导出文件批量删除成功!');
+                    //         this.$emit('getExportFileList');
+                    //         this.multipleSelection = [];
+                    //         this.$emit('setBatchDisabledStatus', true);
+                    //     }
+                    // });
+                });
+            },
             downloadExportFile(item) {
+                this.$service.getDownloadFile(item.id).then(response => {
+                    let aLink = document.createElement('a');
+                    let blob = new Blob([response], {type: 'application/vnd.ms-excel'});
+                    aLink.href = URL.createObjectURL(blob);
+                    aLink.setAttribute('download', item.name);
+                    aLink.click();
+                    this.$refs.loadElement.appendChild(aLink);
+                });
             }
         }
     };

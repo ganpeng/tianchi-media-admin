@@ -76,52 +76,18 @@
         },
         methods: {
             initFilterParams(params) {
-                this.listQueryParams.category = params.category ? params.category : '';
-                this.listQueryParams.programmeCategoryId = params.programmeCategoryId ? params.programmeCategoryId : '';
-                this.listQueryParams.createdAtBegin = params.createdAtBegin ? params.createdAtBegin : '';
-                this.listQueryParams.createdAtEnd = params.createdAtEnd ? params.createdAtEnd : '';
-                this.createRangeTime = params.createdAtBegin ? [params.createdAtBegin, params.createdAtEnd] : [];
                 this.listQueryParams.keyword = params.keyword ? params.keyword : '';
-                this.listQueryParams.refCount = params.refCount ? params.refCount : '';
-                this.listQueryParams.visible = params.visible !== '' ? params.visible : '';
+                this.listQueryParams.status = params.status ? params.status : '';
             },
             init() {
-                this.$service.getProgrammeCategory().then(response => {
-                    if (response && response.code === 0) {
-                        this.programmeCategoryOptions = response.data;
-                    }
-                });
             },
             getExportFileList(isReset) {
-                if (!this.$authority.isHasAuthority('content:exportFile:page')) {
-                    for (let key in this.listQueryParams) {
-                        if (Array.isArray(this.listQueryParams[key])) {
-                            this.listQueryParams[key] = [];
-                        } else {
-                            this.listQueryParams[key] = '';
-                        }
-                    }
-                    this.createRangeTime = [];
-                    return;
-                }
-                if (this.createRangeTime && this.createRangeTime.length === 2) {
-                    this.listQueryParams.createdAtBegin = this.createRangeTime[0];
-                    this.listQueryParams.createdAtEnd = this.createRangeTime[1];
-                } else {
-                    this.listQueryParams.createdAtBegin = '';
-                    this.listQueryParams.createdAtEnd = '';
-                }
                 this.$emit('getExportFileList', this.listQueryParams, isReset);
             },
             clearFilters() {
                 for (let key in this.listQueryParams) {
-                    if (Array.isArray(this.listQueryParams[key])) {
-                        this.listQueryParams[key] = [];
-                    } else {
-                        this.listQueryParams[key] = '';
-                    }
+                    this.listQueryParams[key] = '';
                 }
-                this.createRangeTime = [];
                 this.getExportFileList(true);
             }
         }

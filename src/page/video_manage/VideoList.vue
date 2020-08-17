@@ -455,18 +455,15 @@
                     this.$message.warning('不存在可以重新拉取的视频');
                 }
             },
-            // 后端导出全部视频的EXCEL列表
+            // 后端导出全部视频的EXCEL列表到下载列表
             exportAllVideoHandler() {
                 if (!this.$authority.isHasAuthority('storage:video:export')) {
                     return;
                 }
                 this.$service.exportAllVideoListExcel().then(response => {
-                    let aLink = document.createElement('a');
-                    let blob = new Blob([response], {type: 'application/vnd.ms-excel'});
-                    aLink.href = URL.createObjectURL(blob);
-                    aLink.setAttribute('download', '所有视频表_' + new Date() + '.xlsx');
-                    aLink.click();
-                    this.$refs.loadElement.appendChild(aLink);
+                    if (response && response.code === 0) {
+                        this.$message.success('服务器正在生成excel文件，稍后请到导出列表查看');
+                    }
                 });
             },
             // 注入失败视频----批量重试

@@ -120,8 +120,7 @@ export const bacthCancelPullVideoFromMainSite = ({storageVideoIdList}) => {
  */
 export const exportAllVideoListExcel = () => {
     return service.post('/v1/storage/video/export/excel', 0, {
-        baseURL: '/storage',
-        responseType: 'blob'
+        baseURL: '/storage'
     });
 };
 
