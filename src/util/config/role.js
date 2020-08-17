@@ -571,6 +571,11 @@ const ASIDE_LIST = [
             text: '存储空间',
             uri: '/server/space',
             icon: 'aside_server'
+        },
+        {
+            text: '导出列表',
+            uri: '/download-manage/list',
+            icon: 'aside_server'
         }
     ],
     [

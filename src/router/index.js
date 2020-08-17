@@ -161,6 +161,8 @@ import NetworkPassword from 'sysPage/network_password/NetworkPassword';
 import ActivationCodeList from 'sysPage/activation_code_manage/ActivationCodeList';
 // 激活码开关
 import ActivationCodeSwitch from 'sysPage/activation_code_switch_manage/ActivationCodeSwitch';
+// 导出管理-导出列表
+import DownloadFileList from 'sysPage/download-manage/DownloadFileList';
 
 Vue.use(Router);
 
@@ -241,6 +243,12 @@ export const routes = [
                 path: '/home',
                 name: 'Home',
                 component: Home
+            },
+            // 导出管理-导出文件列表
+            {
+                path: '/download-manage/list',
+                name: 'DownloadFileList',
+                component: DownloadFileList
             },
             // 版本设备-激活码开关
             {
