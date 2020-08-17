@@ -475,7 +475,7 @@
                                 this.channelInfo.onPlayGroupName = this.carouselGroup[i].name;
                                 this.carouselGroup[i].carouselVideoList.map(video => {
                                     if (video.onPlay) {
-                                        this.channelInfo.onPlayVideoName = video.originName;
+                                        this.channelInfo.onPlayVideoName = video.name;
                                         // 设置播放时段
                                         this.channelInfo.onPlayDurationStart = video.lastPlayTime;
                                         this.channelInfo.onPlayDurationEnd = video.lastPlayTime + video.takeTimeInSec * 1000;
