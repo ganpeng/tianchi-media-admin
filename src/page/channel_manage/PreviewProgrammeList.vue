@@ -178,7 +178,12 @@
                 this.$refs.displayVideoDialog.showDialog();
             },
             switchLookBack(programme, lookBack) {
-
+                this.$service.switchLiveChannelLookbBack({id: programme.id, enable: lookBack}).then(res => {
+                    if (res && res.code === 0) {
+                        this.$message.success('设置回看成功');
+                        this.getChannelProgramme(this.currentChannel.id);
+                    }
+                });
             },
             downloadProgramme(item) {
                 this.getChannelPageById(item.id).then((res) => {

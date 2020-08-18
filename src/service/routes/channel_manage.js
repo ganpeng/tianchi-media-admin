@@ -223,3 +223,19 @@ export const updateThumbnailStatus = (params) => {
     }));
     return service.patch(`/v1/sys/system-config/thumbnail-status?${paramsStr}`);
 };
+
+/**
+ * 根据id的开启或关闭直播回看
+ */
+export const switchLiveChannelLookbBack = ({id, enable}) => {
+    const params = {
+        id,
+        enable
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.patch(`/v1/live/channel-programme/enable-lookback?${paramsStr}`);
+};
