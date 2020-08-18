@@ -44,6 +44,13 @@ export const getChannelCount = (id) => {
 };
 
 /**
+ *  获取频道直播和回看服务器组的列表
+ */
+export const getChannelServerGroupList = () => {
+    return service.get(`/v1/sys/system-config/server-group/list`);
+};
+
+/**
  * 新增频道
  */
 export const createChannels = (channelList) => {

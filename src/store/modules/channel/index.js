@@ -52,7 +52,8 @@ let defaultLiveChannel = {
     multicastIp: '', // ip地址
     multicastPort: '', // 端口
     pushServer: '', // 所属服务器
-    serverGroup: '', // 服务器组
+    serverGroup: '', // 直播服务器组
+    recordServerGroup: '', // 回看服务器组
     releaseStatus: '', // 直播频道的发布状态
     status: '', // 直播频道状态`
     record: '', // 是否支持直播回看
@@ -60,6 +61,8 @@ let defaultLiveChannel = {
     recordPort: '', // 回看端口
     audioPid: '',
     videoPid: '',
+    liveAudioPid: '',
+    liveVideoPid: '',
     //  直播频道的类型列表
     typeList: [],
     companyList: [],
@@ -74,7 +77,11 @@ let defaultLiveChannel = {
     pullAddress: '',
     //  红河新增
     transcode: false,
-    volume: ''
+    volume: '',
+    //  2.8增加
+    audioTranscode: false,
+    videoTranscode: false,
+    useLiveConfig: false
 };
 
 const defaultState = {
@@ -186,9 +193,28 @@ const mutations = {
         if (key === 'protocolList' && value.indexOf('HLS') === -1) {
             state.liveChannel.transcode = false;
             state.liveChannel.volume = '';
+            // 2.8
+            state.liveChannel.audioTranscode = false;
+            state.liveChannel.videoTranscode = false;
         }
-        if (key === 'transcode' && !value) {
+        // if (key === 'transcode' && !value) {
+        //     state.liveChannel.volume = '';
+        // }
+        if (key === 'audioTranscode' && !value) {
             state.liveChannel.volume = '';
+        }
+        if (key === 'record' && !value) {
+            state.liveChannel.useLiveConfig = false;
+        }
+        if (key === 'useLiveConfig' && value) {
+            this.liveChannel.multicastIp = this.liveChannel.recordIp;
+            this.liveChannel.multicastPort = this.liveChannel.recordPort;
+            if (this.liveChannel.liveVideoPid) {
+                this.liveChannel.liveVideoPid = this.liveChannel.videoPid;
+            }
+            if (this.liveChannel.liveAudioPid) {
+                this.liveChannel.liveAudioPid = this.liveChannel.audioPid;
+            }
         }
     },
     resetLiveChannel(state) {
@@ -349,18 +375,24 @@ const actions = {
                 if (_.isNull(res.data.protocolList)) {
                     res.data.protocolList = [];
                 }
-                commit('setLiveChannel', {liveChannel: Object.assign({},
-                    state.liveChannel, {
-                        record: null,
-                        protocolList: [],
-                        companyList: [],
-                        applicableClientList: ['TV'],
-                        cdnPush: false,
-                        pullAddress: '',
-                        pushAddress: '',
-                        transcode: false,
-                        volume: ''
-                    }, res.data)});
+                commit('setLiveChannel', {
+                    liveChannel: Object.assign({},
+                        state.liveChannel, {
+                            record: null,
+                            protocolList: [],
+                            companyList: [],
+                            applicableClientList: ['TV'],
+                            cdnPush: false,
+                            pullAddress: '',
+                            pushAddress: '',
+                            transcode: false,
+                            volume: '',
+                            // 2.8
+                            audioTranscode: false,
+                            videoTranscode: false,
+                            useLiveConfig: false
+                        }, res.data)
+                });
                 return res;
             }
         } catch (err) {
@@ -393,7 +425,8 @@ const actions = {
         try {
             let res = await service.deleteChannelById(id);
             return res;
-        } catch (err) {}
+        } catch (err) {
+        }
     },
     /**
      * 获取频道的列表
