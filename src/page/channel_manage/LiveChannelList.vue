@@ -74,14 +74,14 @@
                     重置
                 </el-button>
                 <span @click="toggleSearchField"
-                    :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
+                      :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
                     更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i>
                     <i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
                 </span>
             </div>
             <div v-show="searchFieldVisible" class="field-row">
                 <div class="search-field-item">
-                    <label class="search-field-item-label">cdn拉流</label>
+                    <label class="search-field-item-label">拉流</label>
                     <el-select
                         :value="searchFields.cdnPush"
                         clearable
@@ -130,7 +130,7 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div class="search-field-item">
+                <div class="search-field-item" v-if="false">
                     <label class="search-field-item-label">区域</label>
                     <el-select
                         :value="searchFields.companyCode"
@@ -294,14 +294,29 @@
                         <span>{{scope.row.paymentType === 'VIP' ? '是' : '否'}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="multicastIp" min-width="120px" align="center" label="IP"></el-table-column>
-                <el-table-column prop="multicastPort" width="100px" align="center" label="端口"></el-table-column>
+                <el-table-column prop="multicastIp" min-width="120px" align="center" label="直播地址列">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.multicastIp}}:{{scope.row.multicastPort}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="serverGroup" align="center" min-width="120px" label="服务器组"></el-table-column>
-                <el-table-column align="center" width="60px" label="回看">
+                <el-table-column align="center" width="100px" label="回看录制">
                     <template slot-scope="scope">
                         <span :class="[scope.row.record ? 'yes' : 'no']">
                             {{scope.row.record ? '是' : '否'}}
                         </span>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" width="150px" label="回看地址">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.record">{{scope.row.recordIp}}:{{scope.row.recordPort}}</span>
+                        <span v-else>/</span>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="回看组">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.record">{{scope.row.recordServerGroup}}</span>
+                        <span v-else>/</span>
                     </template>
                 </el-table-column>
                 <!--
@@ -318,9 +333,19 @@
                         {{scope.row.protocolList ? scope.row.protocolList.join(', ') : ''}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" width="120px" label="适用客户端">
+                <el-table-column align="center" width="120px" label="适用">
                     <template slot-scope="scope">
                         {{scope.row.applicableClientList ? scope.row.applicableClientList.join(', ') : ''}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" width="120px" label="节目单">
+                    <template slot-scope="scope">
+                        <span
+                            v-if="scope.row.hasChannelProgramme"
+                            class="btn-text"
+                            @click="previewChannelPage(scope.row.id)">查看</span>
+                        <span v-else>/</span>
+                        <div @click="previewChannelPage(scope.row.id)">查看</div>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" width="120px" label="cdn拉流">
@@ -347,24 +372,24 @@
                         <i v-else class="off-the-shelf">禁播</i>
                     </template>
                 </el-table-column>
-                <el-table-column width="220px" align="center" label="操作">
+                <el-table-column width="112px" align="center" label="操作">
                     <template slot-scope="scope">
                         <div id="channel-operator" class="operator-btn-wrapper">
-                            <el-dropdown
-                                trigger="click"
-                                class="my-other-dropdown">
-                                <span class="el-dropdown-link">
-                                    节目单<i class="el-icon-arrow-down el-icon--right"></i>
-                                </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item>
-                                        <span @click="previewChannelPage(scope.row.id, scope.row.name, true)">下载</span>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item>
-                                        <span @click="previewChannelPage(scope.row.id)">预览</span>
-                                    </el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
+                            <!--<el-dropdown-->
+                            <!--trigger="click"-->
+                            <!--class="my-other-dropdown">-->
+                            <!--<span class="el-dropdown-link">-->
+                            <!--节目单<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>-->
+                            <!--</span>-->
+                            <!--<el-dropdown-menu slot="dropdown">-->
+                            <!--<el-dropdown-item>-->
+                            <!--<span @click="previewChannelPage(scope.row.id, scope.row.name, true)">下载</span>-->
+                            <!--</el-dropdown-item>-->
+                            <!--<el-dropdown-item>-->
+                            <!--<span @click="previewChannelPage(scope.row.id)">预览</span>-->
+                            <!--</el-dropdown-item>-->
+                            <!--</el-dropdown-menu>-->
+                            <!--</el-dropdown>-->
                             <!-- <span class="btn-text" @click="displayVideoPlayer(scope.row)">直播</span> -->
                             <span class="btn-text" @click="editLiveChannel(scope.row.id)">编辑</span>
                             <span class="btn-text text-danger" @click="_deleteLiveChannel(scope.row)">删除</span>
@@ -398,8 +423,8 @@
     import role from '@/util/config/role';
 
     const ClipboardJS = require('clipboard');
-    const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
-    const x2js = new X2JS();
+    // const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
+    // const x2js = new X2JS();
     export default {
         name: 'LiveChannelList',
         components: {
@@ -534,35 +559,35 @@
                 if (!this.$authority.isHasAuthority('content:channel:put')) {
                     return;
                 }
-                let routeData = this.$router.resolve({ name: 'EditLiveChannelByImportExcel' });
+                let routeData = this.$router.resolve({name: 'EditLiveChannelByImportExcel'});
                 window.open(routeData.href, '_blank');
             },
             previewChannelPage(id, name, flag) {
                 if (!this.$authority.isHasAuthority('content:programme:liveProgrammeList')) {
                     return;
                 }
-                this.getChannelPageById(id)
-                    .then((res) => {
-                        if (res && res.code === 0) {
-                            let data = res.data.map((item) => {
-                                item.startTime = this.timeStampFormat(item.startTime);
-                                item.endTime = this.timeStampFormat(item.endTime);
-                                return item;
-                            });
-                            let xml = x2js.json2xml_str({'频道': {'节目': data}});
-                            let blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>', xml], {type: 'application/xml'});
-                            if (flag) {
-                                this.openDownloadDialog(blob, `${name}.xml`);
-                            } else {
-                                if (res.data.length > 0) {
-                                    this.$router.push({name: 'PreviewProgrammeList', params: {id}});
-                                } else {
-                                    this.$message.error('当前频道下没有节目单');
-                                    return false;
-                                }
-                            }
-                        }
-                    });
+                this.$router.push({name: 'PreviewProgrammeList', params: {id}});
+                // this.getChannelPageById(id).then((res) => {
+                //     if (res && res.code === 0) {
+                //         let data = res.data.map((item) => {
+                //             item.startTime = this.timeStampFormat(item.startTime);
+                //             item.endTime = this.timeStampFormat(item.endTime);
+                //             return item;
+                //         });
+                //         let xml = x2js.json2xml_str({'频道': {'节目': data}});
+                //         let blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>', xml], {type: 'application/xml'});
+                //         if (flag) {
+                //             this.openDownloadDialog(blob, `${name}.xml`);
+                //         } else {
+                //             if (res.data.length > 0) {
+                //                 this.$router.push({name: 'PreviewProgrammeList', params: {id}});
+                //             } else {
+                //                 this.$message.error('当前频道下没有节目单');
+                //                 return false;
+                //             }
+                //         }
+                //     }
+                // });
             },
             openDownloadDialog(url, saveName) {
                 if (typeof url === 'object' && url instanceof Blob) {
@@ -661,7 +686,7 @@
                 if (!this.$authority.isHasAuthority('content:channel:add')) {
                     return;
                 }
-                let routeData = this.$router.resolve({ name: 'CreateChannelByImportExcel', params: {category: 'LIVE'} });
+                let routeData = this.$router.resolve({name: 'CreateChannelByImportExcel', params: {category: 'LIVE'}});
                 window.open(routeData.href, '_blank');
             },
             searchHandler() {
@@ -836,4 +861,12 @@
             height: 34px !important;
         }
     }
+
+    .btn-text {
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(25, 137, 250, 1);
+    }
+
 </style>

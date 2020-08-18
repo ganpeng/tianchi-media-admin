@@ -1,100 +1,93 @@
-<!--预览节目列表组件-->
+<!-- 直播节目列表组件 -->
 <template>
-    <div class="preview-channel-programme-list-container">
-        <h2 class="content-title">{{channelName}}</h2>
-        <div class="seperator-line"></div>
-        <div class="content">
-            <el-row>
-                <el-col class="float-left" :span="11">
-                    <el-collapse id="prevContainer" @change="prevHandleChange" accordion>
-                        <el-collapse-item v-for="(item, key, index) in prevObj" :key="index" :name="index">
-                            <template slot="title">
-                                <span class="title">{{key}}</span>
-                            </template>
-                            <ul class="item-list">
-                                <li v-for="(ele, index) in item" :key="index" class="item-li">
-                                    <div class="wrapper">
-                                        <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
-                                        <div class="btn-wrapper">
-                                            <div v-if="ele.m3u8Uri" class="url-wrapper">
-                                                <span class="text-primary url"
-                                                      @click="displayVideoPlayer(ele, 'm3u8Uri')">回看</span>
-                                                <svg-icon
-                                                    v-if="ele.m3u8Uri"
-                                                    icon-class="copy_btn"
-                                                    class-name="copy-btn pointer"
-                                                    :data-clipboard-text="getVideoUrl(ele.m3u8Uri, 'm3u8Uri')">
-                                                </svg-icon>
-                                            </div>
-                                            <div v-if="ele.playUri" class="url-wrapper">
-                                                <span class="text-primary url"
-                                                      @click="displayVideoPlayer(ele, 'playUri')">模拟源</span>
-                                                <svg-icon
-                                                    v-if="ele.playUri"
-                                                    icon-class="copy_btn"
-                                                    class-name="copy-btn pointer"
-                                                    :data-clipboard-text="getVideoUrl(ele.playUri, 'playUri')">
-                                                </svg-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </el-collapse-item>
-                    </el-collapse>
-                </el-col>
-                <el-col class="float-right" :span="11">
-                    <el-collapse id="afterContainer" @change="afterHandleChange" accordion>
-                        <el-collapse-item v-for="(item, key, index) in afterObj" :key="index" :name="index">
-                            <template slot="title">
-                                <span class="title">{{key}}</span>
-                            </template>
-                            <ul class="item-list">
-                                <li v-for="(ele, index) in item" :key="index" class="item-li">
-                                    <div class="wrapper">
-                                        <span class="time-name">{{ele.startTime}} - {{ele.endTime}} {{ele.name}}</span>
-                                        <div class="btn-wrapper">
-                                            <div v-if="ele.m3u8Uri" class="url-wrapper">
-                                                <span class="text-primary url"
-                                                      @click="displayVideoPlayer(ele, 'm3u8Uri')">回看</span>
-                                                <svg-icon
-                                                    v-if="ele.m3u8Uri"
-                                                    icon-class="copy_btn"
-                                                    class-name="copy-btn pointer"
-                                                    :data-clipboard-text="getVideoUrl(ele.m3u8Uri, 'm3u8Uri')">
-                                                </svg-icon>
-                                            </div>
-                                            <div v-if="ele.playUri" class="url-wrapper">
-                                                <span class="text-primary url"
-                                                      @click="displayVideoPlayer(ele, 'playUri')">模拟源</span>
-                                                <svg-icon
-                                                    v-if="ele.playUri"
-                                                    icon-class="copy_btn"
-                                                    class-name="copy-btn pointer"
-                                                    :data-clipboard-text="getVideoUrl(ele.playUri, 'playUri')">
-                                                </svg-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </el-collapse-item>
-                    </el-collapse>
-                </el-col>
-            </el-row>
+    <div id="page-container">
+        <div id="title-block">
+            <label>直播节目单</label>
+            <el-button
+                @click="gotoBlankPage('LiveChannelImport')"
+                class="btn-style-two contain-svg-icon">
+                <svg-icon icon-class="upload_playbill"></svg-icon>
+                节目单
+            </el-button>
         </div>
-        <div class="fixed-btn-container">
-            <el-button class="btn-style-three" @click="goBack" plain>返回列表</el-button>
+        <div id="programme-container">
+            <!-- 频道 -->
+            <div id="channel-block">
+                <div id="current-channel">{{currentChannel.index + 1 | fixNumber}} {{currentChannel.name}}</div>
+                <div id="channel-list">
+                    <div v-for="(item, index) in channelList" :key="index"
+                         :class="{'active':item.id === currentChannel.id}"
+                         @click="selectChannel(item, index)">
+                        <span>{{index + 1 | fixNumber}} {{item.name}}</span>
+                        <label v-if="item.hasChannelProgramme" @click="downloadProgramme(item)">
+                            <svg-icon icon-class="download_video"></svg-icon>
+                            <i>节目单</i>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- 节目单 -->
+            <div id="programme-block">
+                <div id="empty-notice" v-if="!currentChannel.hasChannelProgramme">暂无节目单</div>
+                <div id="date-list" v-if="currentChannel.hasChannelProgramme">
+                    <div :class="{'active':currentProgrammeIndex === index}"
+                         v-for="(item, index) in programmeList"
+                         :key="item.date"
+                         v-if="item.programmeList.length > 0"
+                         @click="currentProgrammeIndex = index">
+                        <label>{{item.name}}</label>
+                        <label>{{item.date}}</label>
+                    </div>
+                </div>
+                <div id="programme-list" v-if="currentChannel.hasChannelProgramme">
+                    <div class="programme-item"
+                         v-for="programme in programmeList[currentProgrammeIndex].programmeList"
+                         :key="programme.id">
+                        <label class="time">{{programme.startTime | formatDate('HH:mm:SS')}}-{{programme.endTime |
+                            formatDate('HH:mm:SS')}}</label>
+                        <span class="name">{{programme.name}}</span>
+                        <i class="living" v-if="programme.onPlay">直播中</i>
+                        <i class="delay" v-if="programme.startTime > new Date().getTime()">未开始</i>
+                        <div class="record-block">
+                            <label>回看</label>
+                            <div class="operate-block">
+                                <!-- 预览 -->
+                                <i @click="previewChannel(programme)">
+                                    <svg-icon icon-class="channel_video_play"></svg-icon>
+                                </i>
+                                <!-- 复制 -->
+                                <i>
+                                    <svg-icon icon-class="copy_btn"></svg-icon>
+                                </i>
+                                <!-- 显示 -->
+                                <i v-if="!programme.enableLookBack" @click="switchLookBack(programme, true)">
+                                    <svg-icon icon-class="eyeclose"></svg-icon>
+                                </i>
+                                <!-- 隐藏 -->
+                                <i v-else @click="switchLookBack(programme, false)">
+                                    <svg-icon icon-class="alipay"></svg-icon>
+                                </i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <display-video-dialog ref="displayVideoDialog" :url="url" :title="title"></display-video-dialog>
+        <display-video-dialog
+            :url="previewVideoInfo.url"
+            :title="previewVideoInfo.title"
+            ref="displayVideoDialog"
+            :displayVideoDialogVisible="previewVideoInfo.visible"
+            v-on:changeDisplayVideoDialogStatus="closeDisplayVideoDialog($event)">
+        </display-video-dialog>
     </div>
 </template>
-<script>
-    import {mapActions} from 'vuex';
-    import _ from 'lodash';
-    import DisplayVideoDialog from '../../components/custom_components/custom/DisplayVideoDialog';
 
-    const ClipboardJS = require('clipboard');
+<script>
+    import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
+
+    const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
+    const x2js = new X2JS();
 
     export default {
         name: 'PreviewProgrammeList',
@@ -103,262 +96,323 @@
         },
         data() {
             return {
-                prevList: [],
-                afterList: [],
-                prevObj: {},
-                afterObj: {},
-                url: '',
-                title: '',
-                pushServer: '',
-                serverGroup: '',
-                urlPrefix: ''
+                currentChannel: {},
+                channelList: [],
+                programmeList: [{programmeList: []}],
+                currentProgrammeIndex: 0,
+                previewVideoInfo: {
+                    url: '',
+                    title: '',
+                    visible: false
+                }
             };
         },
-        mounted() {
-            this.initClipboard();
+        filters: {
+            fixNumber(index) {
+                if (index < 10) {
+                    return '00' + index;
+                } else if (index < 100) {
+                    return '0' + index;
+                } else {
+                    return index;
+                }
+            }
         },
-        created() {
-            let {id} = this.$route.params;
-            this.getChannelPageById(id)
-                .then((res) => {
-                    if (res && res.code === 0) {
-                        let prevList = [];
-                        let afterList = [];
-                        let today = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' 00:00:00';
-                        let timeStamp = new Date(today).getTime();
-                        res.data.forEach((item) => {
-                            if (item.startTime < timeStamp) {
-                                prevList.push(item);
-                            } else {
-                                afterList.push(item);
-                            }
-                        });
-                        let prevObj = this.serializeDataByDate(prevList);
-                        let afterObj = this.serializeDataByDate(afterList);
-                        this.prevList = prevList;
-                        this.afterList = afterList;
-                        this.prevObj = prevObj;
-                        this.afterObj = afterObj;
-
-                        let allList = [...this.prevList, ...afterList];
-                        if (allList.length > 0) {
-                            let channelId = _.get(allList, '0.channelId');
-                            if (channelId) {
-                                this.getLiveChannelById(channelId)
-                                    .then((channelRes) => {
-                                        if (channelRes && channelRes.code === 0) {
-                                            let {pushServer, serverGroup} = channelRes.data;
-                                            this.pushServer = `http://${pushServer}`;
-                                            this.serverGroup = serverGroup;
-
-                                            this.$service.getLiveUrlPrefix()
-                                                .then((urlRes) => {
-                                                    if (urlRes && urlRes.code === 0) {
-                                                        // console.log(urlRes.data);
-                                                        this.urlPrefix = urlRes.data;
-                                                    }
-                                                });
-                                        }
-                                    });
+        mounted() {
+            this.init();
+        },
+        methods: {
+            init() {
+                this.getChannelProgramme(this.$route.params.id);
+                this.$service.getChannelList({
+                    pageNum: 0,
+                    pageSize: 10000,
+                    category: 'LIVE'
+                }).then(response => {
+                    if (response && response.code === 0) {
+                        this.channelList = response.data.list;
+                        for (let i = 0; i < this.channelList.length; i++) {
+                            if (this.channelList[i].id === this.$route.params.id) {
+                                this.currentChannel = this.channelList[i];
+                                this.currentChannel.index = i;
                             }
                         }
                     }
                 });
-        },
-        computed: {
-            channelName() {
-                let obj = this.prevList[0] || this.afterList[0];
-                return obj ? obj.channelName : '';
             },
-            getVideoUrl() {
-                return (uri, uriKey) => {
-                    return `${this.urlPrefix}${uri}`;
-                };
-            }
-        },
-        methods: {
-            ...mapActions({
-                getChannelPageById: 'channel/getChannelPageById',
-                getLiveChannelById: 'channel/getLiveChannelById'
-            }),
-            initClipboard() {
-                let that = this;
-                let clipboard = new ClipboardJS('.copy-btn');
-                clipboard.on('success', function (e) {
-                    that.$message.success('视频链接复制成功');
-                    e.clearSelection();
-                });
-                clipboard.on('error', function (e) {
-                    that.$message.error('视频链接复制失败');
+            gotoBlankPage(name) {
+                let routeData = this.$router.resolve({name});
+                window.open(routeData.href, '_blank');
+            },
+            getChannelProgramme(id) {
+                this.$service.getChannelPageById(id).then((res) => {
+                    if (res && res.code === 0) {
+                        this.programmeList = res.data;
+                    }
                 });
             },
-            timeStampFormat(seconds) {
-                let date = new Date(seconds);
-                let year = date.getFullYear();
-                let month = date.getMonth() + 1;
-                let day = date.getDate();
-                let hour = date.getHours();
-                let minute = date.getMinutes();
-                let second = date.getSeconds();
-                return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+            // 选择频道
+            selectChannel(channel, index) {
+                this.currentChannel = channel;
+                this.currentChannel.index = index;
+                this.currentProgrammeIndex = 0;
+                this.getChannelProgramme(this.currentChannel.id);
             },
-            goBack() {
-                this.$router.push({name: 'LiveChannelList'});
-            },
-            prevHandleChange(activeName) {
-                let prevArrowList = document.querySelectorAll('#prevContainer .el-collapse-item__arrow.el-icon-arrow-right');
-                let prevItemHeader = document.querySelectorAll('#prevContainer .el-collapse-item__header');
-                let prevTitleList = document.querySelectorAll('#prevContainer .title');
-                for (let i = 0; i < prevArrowList.length; i++) {
-                    if (activeName === i) {
-                        prevArrowList[i].style.color = '#1989FA';
-                        prevItemHeader[i].style.borderBottom = '1px solid #3E495E';
-                        prevTitleList[i].style.color = '#1989FA';
-                    } else {
-                        prevArrowList[i].style.color = '#A8ABB3';
-                        prevItemHeader[i].style.borderBottom = 'none';
-                        prevTitleList[i].style.color = '#A8ABB3';
-                    }
-                }
-            },
-            afterHandleChange(activeName) {
-                let afterArrowList = document.querySelectorAll('#afterContainer .el-collapse-item__arrow.el-icon-arrow-right');
-                let afterItemHeader = document.querySelectorAll('#afterContainer .el-collapse-item__header');
-                let afterTitleList = document.querySelectorAll('#afterContainer .title');
-                for (let i = 0; i < afterArrowList.length; i++) {
-                    if (activeName === i) {
-                        afterArrowList[i].style.color = '#1989FA';
-                        afterItemHeader[i].style.borderBottom = '1px solid #3E495E';
-                        afterTitleList[i].style.color = '#1989FA';
-                    } else {
-                        afterArrowList[i].style.color = '#A8ABB3';
-                        afterItemHeader[i].style.borderBottom = 'none';
-                        afterTitleList[i].style.color = '#A8ABB3';
-                    }
-                }
-            },
-            serializeDataByDate(list) {
-                return list.map((item) => {
-                    item.startTime = this.timeStampFormat(item.startTime);
-                    item.endTime = this.timeStampFormat(item.endTime);
-                    return item;
-                }).reduce((res, curr) => {
-                    let timeKey = curr.startTime.split(' ')[0];
-                    if (res[timeKey]) {
-                        res[timeKey].push(curr);
-                    } else {
-                        res[timeKey] = [];
-                        res[timeKey].push(curr);
-                    }
-                    return res;
-                }, {});
-            },
-            displayVideoPlayer(ele, uriKey) {
-                let {m3u8Uri, name, playUri} = ele;
-                if (uriKey === 'm3u8Uri') {
-                    this.url = `${this.urlPrefix}${m3u8Uri}`;
-                } else {
-                    this.url = `${playUri}`;
-                }
-                this.title = name;
+            previewChannel(programme) {
+                this.previewVideoInfo.url = programme.m3u8Uri;
+                this.previewVideoInfo.title = programme.name;
+                this.previewVideoInfo.visible = true;
                 this.$refs.displayVideoDialog.showDialog();
+            },
+            switchLookBack(programme, lookBack) {
+
+            },
+            downloadProgramme(item) {
+                this.getChannelPageById(item.id).then((res) => {
+                    if (res && res.code === 0) {
+                        let data = res.data.map((item) => {
+                            item.startTime = this.timeStampFormat(item.startTime);
+                            item.endTime = this.timeStampFormat(item.endTime);
+                            return item;
+                        });
+                        let xml = x2js.json2xml_str({'频道': {'节目': data}});
+                        let blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>', xml], {type: 'application/xml'});
+                        this.openDownloadDialog(blob, `${name}.xml`);
+                    }
+                });
             }
         }
     };
 </script>
+
 <style scoped lang="scss">
-    .content {
-        margin-top: 20px;
-    }
 
-    .title, .time-name, .url {
-        display: block;
-        text-align: left;
-    }
-
-    .title {
-        font-size: 18px;
-        color: #A8ABB3;
-        padding-left: 20px;
-    }
-
-    .time-name {
-        font-size: 14px;
-        line-height: 14px;
-        padding: 10px 0 0 0;
-        color: #A8ABB3;
-    }
-
-    .btn-wrapper {
+    #page-container {
         display: flex;
-        padding: 10px 0;
-        .url-wrapper {
-            display: flex;
-            align-content: center;
-            margin-right: 20px;
-            .url {
-                font-size: 14px;
-                line-height: 14px;
-                cursor: pointer;
-                margin-right: 5px;
-            }
-            .svg-icon {
-                width: 14px;
-                height: 14px;
-            }
+        flex-direction: column;
+        padding-bottom: 40px;
+        height: 100%;
+    }
+
+    #title-block {
+        flex-shrink: 0;
+        flex-grow: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #252D3F;
+        label {
+            font-size: 20px;
+            font-weight: 400;
+            color: rgba(168, 171, 179, 1);
         }
     }
-</style>
-<style lang="scss">
-    #prevContainer,
-    #afterContainer {
-        border-top: none;
-        border-bottom: none;
-        border-radius: 8px;
-        overflow: hidden;
-        .item-list {
-            background: #2A3040;
-            .item-li {
-                padding: 0 20px 0 20px;
-                .wrapper {
-                    position: relative;
-                    border-bottom: 1px solid #3E495E;
-                    .play-btn {
-                        position: absolute;
-                        top: 50%;
-                        transform: translateY(-50%);
-                        right: 10px;
-                        color: $mainColor;
+
+    #programme-container {
+        display: flex;
+        flex-direction: row;
+        flex-shrink: 1;
+        flex-grow: 1;
+    }
+
+    #channel-block {
+        display: flex;
+        flex-direction: column;
+        width: 310px;
+        flex-shrink: 0;
+        flex-grow: 0;
+    }
+
+    #programme-block {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 1;
+        flex-grow: 1;
+    }
+
+    /* 节目单 */
+    #programme-list {
+        margin-left: 24px;
+        display: flex;
+        flex-direction: column;
+        .programme-item {
+            display: flex;
+            align-items: center;
+            height: 50px;
+            border-bottom: 1px solid #252D3F;
+            .time {
+                margin-right: 112px;
+                margin-left: 18px;
+                font-size: 14px;
+                font-weight: 400;
+                color: rgba(111, 116, 128, 1);
+            }
+            .name {
+                width: 310px;
+                font-size: 14px;
+                font-weight: 400;
+                color: rgba(111, 116, 128, 1);
+            }
+            .living {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-left: 30px;
+                width: 48px;
+                height: 20px;
+                background: rgba(103, 194, 58, 1);
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: 400;
+                color: rgba(255, 255, 255, 1);
+            }
+            .delay {
+                margin-left: 30px;
+                font-size: 12px;
+                font-weight: 400;
+                color: rgba(111, 116, 128, 1);
+            }
+            .record-block {
+                display: flex;
+                align-items: center;
+                label {
+                    margin-right: 6px;
+                    font-size: 12px;
+                    font-weight: 400;
+                    color: rgba(25, 137, 250, 1);
+                }
+                .operate-block {
+                    padding: 0 16px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 94px;
+                    height: 20px;
+                    background: rgba(41, 53, 80, 1);
+                    border-radius: 4px;
+                    i {
                         cursor: pointer;
                     }
                 }
-                &:last-child {
-                    .wrapper {
-                        border-bottom: none;
-                    }
-                }
             }
         }
-        .el-collapse-item {
-            border-bottom: 1px solid #3E495E;
-            &:last-child {
-                border-bottom: none;
+    }
+
+    /* 时间 */
+    #date-list {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        height: 60px;
+        div {
+            margin: 10px 23px 7px 0;
+            padding-bottom: 5px;
+            width: 80px;
+            height: 43px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparent;
+            cursor: pointer;
+            &:first-child {
+                margin-left: 10px;
             }
-            .el-collapse-item__header {
-                background: #2A3040;
-                border: none;
-                .el-collapse-item__arrow {
-                    color: rgb(168, 171, 179);
+            &.active {
+                border-bottom: 1px solid #1989FA;
+                label {
+                    color: white;
+                }
+            }
+            &:hover {
+                label {
+                    color: white;
+                }
+            }
+            label {
+                font-size: 12px;
+                font-weight: 400;
+                color: rgba(168, 171, 179, 1);
+                cursor: pointer;
+            }
+        }
+    }
+
+    /* 当前频道 */
+    #current-channel {
+        padding-left: 10px;
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        height: 40px;
+        border-right: 1px solid #252D3F;
+        font-size: 18px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+        flex-grow: 0;
+        flex-shrink: 0;
+    }
+
+    /* 频道列表 */
+    #channel-list {
+        flex-grow: 1;
+        flex-shrink: 1;
+        overflow: scroll;
+        border-right: 1px solid #252D3F;
+        div {
+            margin-right: 24px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            border-bottom: 1px solid #252D3F;
+            &.active {
+                border-bottom: 1px solid #1989FA;
+                span {
+                    color: rgba(255, 255, 255, 1);
+                }
+                label {
+                    visibility: visible;
+                }
+            }
+            &:hover {
+                span {
+                    color: rgba(255, 255, 255, 1);
+                }
+                label {
+                    visibility: visible;
+                }
+            }
+            span {
+                font-size: 14px;
+                font-weight: 400;
+                color: rgba(111, 116, 128, 1);
+            }
+            label {
+                visibility: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 61px;
+                height: 20px;
+                background: rgba(0, 98, 196, 1);
+                border-radius: 10px;
+                cursor: pointer;
+                i {
+                    font-size: 12px;
+                    font-weight: 400;
+                    color: rgba(163, 208, 253, 1);
+                }
+                .svg-icon {
+                    height: 10px;
+                    width: 10px;
+                    margin-right: 2px;
                 }
             }
         }
     }
 
-    .el-collapse-item__content {
-        padding-bottom: 0;
-    }
-
-    .el-collapse-item__wrap {
-        border-bottom: none;
-    }
 </style>
