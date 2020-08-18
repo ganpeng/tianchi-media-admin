@@ -46,9 +46,9 @@
                         <label class="time">{{programme.startTime | formatDate('HH:mm:SS')}}-{{programme.endTime |
                             formatDate('HH:mm:SS')}}</label>
                         <span class="name">{{programme.name}}</span>
-                        <i class="living" v-if="programme.onPlay">直播中</i>
+                        <i class="living" v-if="isOnPlay(programme)">直播中</i>
                         <i class="delay" v-if="programme.startTime > new Date().getTime()">未开始</i>
-                        <div class="record-block">
+                        <div class="record-block" v-if="programme.endTime < new Date().getTime()">
                             <label>回看</label>
                             <div class="operate-block">
                                 <!-- 预览 -->
@@ -56,7 +56,7 @@
                                     <svg-icon icon-class="channel_video_play"></svg-icon>
                                 </i>
                                 <!-- 复制 -->
-                                <i>
+                                <i @click="copyUrl(programme.m3u8Uri)">
                                     <svg-icon icon-class="copy_btn"></svg-icon>
                                 </i>
                                 <!-- 显示 -->
@@ -139,6 +139,19 @@
                         }
                     }
                 });
+            },
+            isOnPlay(programme) {
+                let time = new Date().getTime();
+                return (time > programme.startTime) && (time < programme.endTime);
+            },
+            copyUrl(url) {
+                try {
+                    this.$util.clipboardCopy(url);
+                    this.$message.success('复制成功');
+                } catch (err) {
+                    console.log(err);
+                    this.$message.error('复制失败');
+                }
             },
             gotoBlankPage(name) {
                 let routeData = this.$router.resolve({name});

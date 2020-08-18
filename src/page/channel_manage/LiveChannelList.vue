@@ -345,7 +345,7 @@
                             class="btn-text"
                             @click="previewChannelPage(scope.row.id)">查看</span>
                         <span v-else>/</span>
-                        <div @click="previewChannelPage(scope.row.id)">查看</div>
+                        <!--<div @click="previewChannelPage(scope.row.id)">查看</div>-->
                     </template>
                 </el-table-column>
                 <el-table-column align="center" width="120px" label="cdn拉流">
