@@ -28,7 +28,13 @@
             </div>
             <!-- 节目单 -->
             <div id="programme-block">
-                <div id="empty-notice" v-if="!currentChannel.hasChannelProgramme">暂无节目单</div>
+                <div id="empty-notice" v-if="!currentChannel.hasChannelProgramme">
+                    <div class="no-date">暂无日期</div>
+                    <div class="no-programme">
+                        <svg-icon icon-class="no_programme"></svg-icon>
+                        <label>暂无节目单</label>
+                    </div>
+                </div>
                 <div id="date-list" v-if="currentChannel.hasChannelProgramme">
                     <div :class="{'active':currentProgrammeIndex === index}"
                          v-for="(item, index) in programmeList"
@@ -65,7 +71,7 @@
                                 </i>
                                 <!-- 隐藏 -->
                                 <i v-else @click="switchLookBack(programme, false)">
-                                    <svg-icon icon-class="alipay"></svg-icon>
+                                    <svg-icon icon-class="eyeopen"></svg-icon>
                                 </i>
                             </div>
                         </div>
@@ -178,15 +184,53 @@
                 this.$refs.displayVideoDialog.showDialog();
             },
             switchLookBack(programme, lookBack) {
-                this.$service.switchLiveChannelLookbBack({id: programme.id, enable: lookBack}).then(res => {
-                    if (res && res.code === 0) {
-                        this.$message.success('设置回看成功');
-                        this.getChannelProgramme(this.currentChannel.id);
-                    }
+                let message = '';
+                if (lookBack) {
+                    message = '取消隐藏后 TV 端将恢复该回看内容。\n' + '确定要取消隐藏《' + programme.name + '》的回看内容吗？';
+                } else {
+                    message = '隐藏后 TV 端将无法观看该回看内容。\n' + '确定要隐藏《' + programme.name + '》的回看内容吗？';
+                }
+                this.$confirm(message, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$service.switchLiveChannelLookbBack({id: programme.id, enable: lookBack}).then(res => {
+                        if (res && res.code === 0) {
+                            this.$message.success('设置回看成功');
+                            this.getChannelProgramme(this.currentChannel.id);
+                        }
+                    });
                 });
             },
+            timeStampFormat(seconds) {
+                let date = new Date(seconds);
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1;
+                let day = date.getDate();
+                let hour = date.getHours();
+                let minute = date.getMinutes();
+                let second = date.getSeconds();
+                return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+            },
+            openDownloadDialog(url, saveName) {
+                if (typeof url === 'object' && url instanceof Blob) {
+                    url = URL.createObjectURL(url); // 创建blob地址
+                }
+                let aLink = document.createElement('a');
+                aLink.href = url;
+                aLink.download = saveName || ''; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+                let event;
+                if (window.MouseEvent) {
+                    event = new MouseEvent('click');
+                } else {
+                    event = document.createEvent('MouseEvents');
+                    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                }
+                aLink.dispatchEvent(event);
+            },
             downloadProgramme(item) {
-                this.getChannelPageById(item.id).then((res) => {
+                this.$service.getChannelPageById(item.id).then((res) => {
                     if (res && res.code === 0) {
                         let data = res.data.map((item) => {
                             item.startTime = this.timeStampFormat(item.startTime);
@@ -195,7 +239,7 @@
                         });
                         let xml = x2js.json2xml_str({'频道': {'节目': data}});
                         let blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>', xml], {type: 'application/xml'});
-                        this.openDownloadDialog(blob, `${name}.xml`);
+                        this.openDownloadDialog(blob, item.name + `直播频道节目单.xml`);
                     }
                 });
             }
@@ -209,7 +253,7 @@
         display: flex;
         flex-direction: column;
         padding-bottom: 40px;
-        height: 100%;
+        max-height: 100%;
     }
 
     #title-block {
@@ -255,6 +299,9 @@
         margin-left: 24px;
         display: flex;
         flex-direction: column;
+        flex-shrink: 1;
+        flex-grow: 1;
+        overflow: scroll;
         .programme-item {
             display: flex;
             align-items: center;
@@ -268,6 +315,7 @@
                 color: rgba(111, 116, 128, 1);
             }
             .name {
+                text-align: left;
                 width: 310px;
                 font-size: 14px;
                 font-weight: 400;
@@ -323,7 +371,10 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        flex-shrink: 0;
+        flex-grow: 0;
         height: 60px;
+        border-bottom: 1px solid #252D3F;
         div {
             margin: 10px 23px 7px 0;
             padding-bottom: 5px;
@@ -429,6 +480,40 @@
                     width: 10px;
                     margin-right: 2px;
                 }
+            }
+        }
+    }
+
+    #empty-notice {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .no-date {
+            width: 100%;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(111, 116, 128, 1);
+            border-bottom: 1px solid #252D3F;
+        }
+        .no-programme {
+            margin-top: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            .svg-icon {
+                margin-bottom: 16px;
+                width: 118px;
+                height: 150px;
+            }
+            label {
+                font-size: 12px;
+                font-weight: 400;
+                color: rgba(111, 116, 128, 1);
             }
         }
     }

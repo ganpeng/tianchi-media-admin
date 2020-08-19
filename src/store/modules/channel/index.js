@@ -207,13 +207,13 @@ const mutations = {
             state.liveChannel.useLiveConfig = false;
         }
         if (key === 'useLiveConfig' && value) {
-            this.liveChannel.multicastIp = this.liveChannel.recordIp;
-            this.liveChannel.multicastPort = this.liveChannel.recordPort;
-            if (this.liveChannel.liveVideoPid) {
-                this.liveChannel.liveVideoPid = this.liveChannel.videoPid;
+            state.liveChannel.multicastIp = state.liveChannel.recordIp;
+            state.liveChannel.multicastPort = state.liveChannel.recordPort;
+            if (state.liveChannel.liveVideoPid) {
+                state.liveChannel.liveVideoPid = state.liveChannel.videoPid;
             }
-            if (this.liveChannel.liveAudioPid) {
-                this.liveChannel.liveAudioPid = this.liveChannel.audioPid;
+            if (state.liveChannel.liveAudioPid) {
+                state.liveChannel.liveAudioPid = state.liveChannel.audioPid;
             }
         }
     },

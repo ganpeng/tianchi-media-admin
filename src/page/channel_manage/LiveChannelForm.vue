@@ -175,7 +175,7 @@
                 </el-form-item>
                 <!-- 回看选择是的时候，显示 使用直播配置 -->
                 <el-form-item v-if="liveChannel.record" label="使用直播配置" prop="useLiveConfig"
-                              required="liveChannel.record">
+                              :required="liveChannel.record">
                     <el-radio @input="inputHandler(true, 'useLiveConfig')" :value="liveChannel.useLiveConfig"
                               :label="true">是
                     </el-radio>
@@ -473,14 +473,16 @@
                 //  回看 audioPid 填充直播 audioPid 中的数值。
                 //  如对应的直播字段数值为空，则不填充。
                 // 展示直播配置选项时，选择否，则需手动输入；如已填充数值，则不清空。
-                this.liveChannel.multicastIp = this.liveChannel.recordIp;
-                this.liveChannel.multicastPort = this.liveChannel.recordPort;
-                if (this.liveChannel.liveVideoPid) {
-                    this.liveChannel.liveVideoPid = this.liveChannel.videoPid;
-                }
-                if (this.liveChannel.liveAudioPid) {
-                    this.liveChannel.liveAudioPid = this.liveChannel.audioPid;
-                }
+                // if (key === 'useLiveConfig' && value) {
+                //     this.liveChannel.multicastIp = this.liveChannel.recordIp;
+                //     this.liveChannel.multicastPort = this.liveChannel.recordPort;
+                //     if (this.liveChannel.liveVideoPid) {
+                //         this.liveChannel.liveVideoPid = this.liveChannel.videoPid;
+                //     }
+                //     if (this.liveChannel.liveAudioPid) {
+                //         this.liveChannel.liveAudioPid = this.liveChannel.audioPid;
+                //     }
+                // }
             },
             methodsHandler(value, key) {
                 let protocolList = _.cloneDeep(this.liveChannel.protocolList);

@@ -44,8 +44,7 @@
                         :value="searchFields.record"
                         clearable
                         placeholder="全部"
-                        @input="inputHandler($event, 'record')"
-                    >
+                        @input="inputHandler($event, 'record')">
                         <el-option
                             v-for="(item, index) in recordOptinos"
                             :key="index"
@@ -79,7 +78,7 @@
                     <i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
                 </span>
             </div>
-            <div v-show="searchFieldVisible" class="field-row">
+            <div v-show="searchFieldVisible" class="field-row second-row-block">
                 <div class="search-field-item">
                     <label class="search-field-item-label">拉流</label>
                     <el-select
@@ -186,6 +185,23 @@
                         @input="inputHandler($event, 'paymentType')">
                         <el-option
                             v-for="(item, index) in [{name: '是', value: 'VIP'}, {name: '否', value: 'FREE'}]"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="search-field-item">
+                    <label class="search-field-item-label">
+                        节目单
+                    </label>
+                    <el-select
+                        :value="searchFields.hasChannelProgramme"
+                        clearable
+                        placeholder="全部"
+                        @input="inputHandler($event, 'hasChannelProgramme')">
+                        <el-option
+                            v-for="(item, index) in hasChannelProgrammeOptinos"
                             :key="index"
                             :label="item.name"
                             :value="item.value">
@@ -444,6 +460,16 @@
                 uploadHeaders: this.$util.getUploadHeaders(this.$store.state.user.token),
                 applicableClientListOption: role.APPLICABLE_CLIENT_LIST_OPTION,
                 recordOptinos: [
+                    {
+                        name: '是',
+                        value: true
+                    },
+                    {
+                        name: '否',
+                        value: false
+                    }
+                ],
+                hasChannelProgrammeOptinos: [
                     {
                         name: '是',
                         value: true
@@ -867,6 +893,19 @@
         font-size: 12px;
         font-weight: 400;
         color: rgba(25, 137, 250, 1);
+    }
+
+    .search-field .field-row {
+        &.second-row-block {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            > div.search-field-item {
+                margin-right: 10px;
+                flex-grow: 0;
+                flex-shrink: 1;
+            }
+        }
     }
 
 </style>
