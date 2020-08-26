@@ -114,7 +114,8 @@
                 adminOptions: [],
                 infoRules: {
                     name: [
-                        {validator: checkName, trigger: 'blur'}
+                        {validator: checkName, trigger: 'blur'},
+                        {validator: checkName, trigger: 'change'}
                     ],
                     remark: [
                         {validator: checkDesc, trigger: 'blur'}

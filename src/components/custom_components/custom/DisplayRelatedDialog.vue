@@ -71,7 +71,7 @@
                 </li>
                 <li v-for="(item,index) in currentItemInfo.refObjList" :key="index">
                     <span v-html="getRelatedType(item)"></span>
-                    <label @click="toRelatedRoute(item)">{{item.name ? item.name : '点击跳转'}}</label>
+                    <label @click="toRelatedRoute(item)"><i class="ellipsis one">{{item.name ? item.name : '点击跳转'}}</i></label>
                 </li>
             </ul>
         </div>
@@ -205,7 +205,11 @@
                         }
 
                         if (parseInt(sort) === 0) {
-                            this.$router.push({name: 'EditFixedModule', params: {navbarId: navBarId, index: sort}, query: {id: refItem.refId}});
+                            this.$router.push({
+                                name: 'EditFixedModule',
+                                params: {navbarId: navBarId, index: sort},
+                                query: {id: refItem.refId}
+                            });
                         } else {
                             switch (renderType) {
                                 case 'FIGURE':
@@ -325,6 +329,8 @@
             .relate-list {
                 margin-top: 20px;
                 li {
+                    display: flex;
+                    align-items: center;
                     height: 60px;
                     line-height: 60px;
                     border-bottom: 1px solid #252D3F;
