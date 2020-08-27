@@ -992,7 +992,8 @@
                 },
                 groupInfoRules: {
                     name: [
-                        {validator: checkGroupName, trigger: 'blur'}
+                        {validator: checkGroupName, trigger: 'blur'},
+                        {validator: checkGroupName, trigger: 'change'}
                     ],
                     visible: [
                         {validator: checkGroupVisible, trigger: 'change'}
