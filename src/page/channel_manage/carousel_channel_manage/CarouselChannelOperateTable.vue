@@ -122,6 +122,7 @@
                           class="status-deleting">未生效</span>
                     <span v-if="scope.row.applyStatus === 'EXPIRED'"
                           class="status-abnormal">已失效</span>
+                    <span v-if="!scope.row.applyStatus">无</span>
                 </template>
             </el-table-column>
             <el-table-column

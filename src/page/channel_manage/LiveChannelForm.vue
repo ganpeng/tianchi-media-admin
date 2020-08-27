@@ -143,7 +143,8 @@
                         @input="inputHandler($event, 'volume')">
                     </el-input>
                 </el-form-item>
-                <el-form-item v-if="withHls" label="服务器转码" prop="transcode">
+                <!-- 2.8 去掉 -->
+                <el-form-item v-if="withHls" label="服务器转码" prop="transcode" v-show="false">
                     <el-radio @input="inputHandler(true, 'transcode')" :value="liveChannel.transcode" :label="true">是
                     </el-radio>
                     <el-radio @input="inputHandler(false, 'transcode')" :value="liveChannel.transcode" :label="false">
