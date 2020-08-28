@@ -73,7 +73,7 @@
                                 <span class="value">{{liveChannel.multicastIp}}</span>
                             </div>
                         </li>
-                        <li class="text-info-item">
+                        <li class="text-info-item" v-if="false">
                             <div class="text-info-item-wrapper">
                                 <span class="label">公共频道：</span>
                                 <span class="value">{{liveChannel.common ? '是' : '否'}}</span>

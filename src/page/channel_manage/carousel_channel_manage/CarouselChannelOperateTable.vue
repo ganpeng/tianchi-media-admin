@@ -56,7 +56,7 @@
                 align="center"
                 label="关联">
                 <template slot-scope="scope">
-                    <span @click="openRelateDialog(scope.row)" class="name">{{scope.row.refCount ? scope.row.refCount : '/'}}</span>
+                    <span @click="openRelateDialog(scope.row)" class="name">{{scope.row.refCount ? scope.row.refCount : '无'}}</span>
                 </template>
             </el-table-column>
             <el-table-column
