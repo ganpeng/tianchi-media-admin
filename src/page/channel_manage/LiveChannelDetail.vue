@@ -57,8 +57,14 @@
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">
-                                <span class="label">所属组：</span>
+                                <span class="label">直播服务器组：</span>
                                 <span class="value">{{liveChannel.serverGroup}}</span>
+                            </div>
+                        </li>
+                        <li class="text-info-item">
+                            <div class="text-info-item-wrapper">
+                                <span class="label">回看服务器组：</span>
+                                <span class="value">{{liveChannel.recordServerGroup}}</span>
                             </div>
                         </li>
                         <li class="text-info-item">
@@ -125,8 +131,8 @@
                             <div class="text-info-item-wrapper">
                                 <span class="label">适用客户端：</span>
                                 <span class="value">{{liveChannel.applicableClientList ? liveChannel.applicableClientList.join(', ') : ''}}</span>
-                                <span class="label">服务器转码：</span>
-                                <span class="value">{{liveChannel.transcode ? '是' : '否'}}</span></div>
+                                <span class="label" v-if="false">服务器转码：</span>
+                                <span class="value" v-if="false">{{liveChannel.transcode ? '是' : '否'}}</span></div>
                         </li>
                         <li class="text-info-item">
                             <div class="text-info-item-wrapper">

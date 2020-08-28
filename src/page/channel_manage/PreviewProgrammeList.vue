@@ -13,12 +13,12 @@
         <div id="programme-container">
             <!-- 频道 -->
             <div id="channel-block">
-                <div id="current-channel">{{currentChannel.index + 1 | fixNumber}} {{currentChannel.name}}</div>
+                <div id="current-channel">{{currentChannel.no}} {{currentChannel.name}}</div>
                 <div id="channel-list">
                     <div v-for="(item, index) in channelList" :key="index"
                          :class="{'active':item.id === currentChannel.id}"
                          @click="selectChannel(item, index)">
-                        <span>{{index + 1 | fixNumber}} {{item.name}}</span>
+                        <span>{{item.no}} {{item.name}}</span>
                         <label v-if="item.hasChannelProgramme" @click="downloadProgramme(item)">
                             <svg-icon icon-class="download_video"></svg-icon>
                             <i>节目单</i>
@@ -254,6 +254,7 @@
         flex-direction: column;
         padding-bottom: 40px;
         max-height: 100%;
+        width: 100%;
     }
 
     #title-block {
@@ -277,6 +278,7 @@
         flex-direction: row;
         flex-shrink: 1;
         flex-grow: 1;
+        width: 100%;
     }
 
     #channel-block {
@@ -292,6 +294,7 @@
         flex-direction: column;
         flex-shrink: 1;
         flex-grow: 1;
+        overflow: hidden;
     }
 
     /* 节目单 */
@@ -347,7 +350,7 @@
                     margin-right: 6px;
                     font-size: 12px;
                     font-weight: 400;
-                    color: rgba(25, 137, 250, 1);
+                    color: #6F7480;
                 }
                 .operate-block {
                     padding: 0 16px;
@@ -368,15 +371,19 @@
 
     /* 时间 */
     #date-list {
-        display: flex;
+        display: inline-flex;
         flex-direction: row;
         align-items: center;
         flex-shrink: 0;
         flex-grow: 0;
-        height: 60px;
+        height: 72px;
+        width: 100%;
         border-bottom: 1px solid #252D3F;
+        overflow-x: scroll;
         div {
             margin: 10px 23px 7px 0;
+            flex-shrink: 0;
+            flex-grow: 0;
             padding-bottom: 5px;
             width: 80px;
             height: 43px;
