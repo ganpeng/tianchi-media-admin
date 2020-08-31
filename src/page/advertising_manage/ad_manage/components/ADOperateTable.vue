@@ -69,13 +69,12 @@
             align="center"
             label="有效性">
             <template slot-scope="scope">
-                <span v-if="scope.row.adStatus === 'ACTIVE' && scope.row.visible"
+                <span v-if="scope.row.adStatus === 'ACTIVE'"
                       class="status-normal">生效中</span>
-                <span v-if="scope.row.adStatus === 'WAITING' && scope.row.visible"
+                <span v-if="scope.row.adStatus === 'WAITING'"
                       class="status-deleting">未生效</span>
                 <span v-if="scope.row.adStatus === 'EXPIRED'"
                       class="status-abnormal">已失效</span>
-                <span v-if="!scope.row.visible && scope.row.adStatus !== 'EXPIRED'">/</span>
             </template>
         </el-table-column>
         <el-table-column
