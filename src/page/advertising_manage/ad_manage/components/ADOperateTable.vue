@@ -255,15 +255,11 @@
                 if (!this.$authority.isHasAuthority('ad:generalAd:visible')) {
                     return;
                 }
-                if (!item.visible) {
-                    this.$message.warning('已下架的广告不能再次上架');
-                    return;
-                }
                 if (item.adStatus === 'EXPIRED') {
                     this.$message.warning('已失效的广告不能进行下架操作');
                     return;
                 }
-                this.$confirm('此操作将' + (item.visible ? '下架该广告' : '上架该广告') + ', 下架的广告不能再次上架，是否继续?', '提示', {
+                this.$confirm('此操作将' + (item.visible ? '下架该广告' : '上架该广告') + ', 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
