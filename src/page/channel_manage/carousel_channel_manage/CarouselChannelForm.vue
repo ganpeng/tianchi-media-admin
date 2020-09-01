@@ -292,7 +292,8 @@
             </div>
             <div>
                 <el-button @click="popAppendProgrammeVideoDialogue(0)"
-                           class="contain-svg-icon btn-style-four link-programme-btn">
+                           id="link-programme-btn"
+                           class="contain-svg-icon btn-style-four">
                     <svg-icon icon-class="video"></svg-icon>
                     关联节目内视频
                 </el-button>
@@ -2432,7 +2433,7 @@
         }
     }
 
-    .link-programme-btn {
+    #link-programme-btn {
         width: 156px;
     }
 

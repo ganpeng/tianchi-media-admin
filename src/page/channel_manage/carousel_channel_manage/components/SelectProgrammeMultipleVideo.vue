@@ -294,19 +294,15 @@
             },
             getSelectedMultipleVideo() {
                 // 剔除原先选中的视频，只对当前选中的视频列表进行排序
-                // let list = [];
-                // this.selectedMultipleVideo.map(item => {
-                //     if (item.current) {
-                //         list.push(item);
-                //     }
-                // });
-                // console.log(list);
-                console.log(this.selectedMultipleVideo);
                 this.selectedMultipleVideo = _.sortBy(this.selectedMultipleVideo, function (o) {
                     return o.index;
                 });
-                console.log('打印');
-                console.log(this.selectedMultipleVideo);
+                // 对当前节目选择的视频的name进行处理，防止为空的情况
+                this.selectedMultipleVideo.map(item => {
+                    if (item.index !== undefined) {
+                        item.name = item.name || item.originName;
+                    }
+                });
                 return this.selectedMultipleVideo;
             },
             handleSizeChange(pageSize) {
