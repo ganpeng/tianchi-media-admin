@@ -310,8 +310,9 @@
         <!-- 节目单 -->
         <div v-if="currentIndex === 0" class="programme-section">
             <div class="date-list">
-                <div v-for="(item, index) in programmeList" :key="item.date"
+                <div v-for="(item, index) in programmeList" :key="item.dateStr"
                      v-if="item.programmeList.length !== 0"
+                     :class="{'active':(currentProgrammeIndex === index)}"
                      @click="currentProgrammeIndex = index">
                     <label>{{item.name}}</label>
                     <label>{{item.date}}</label>
@@ -354,7 +355,7 @@
         data() {
             return {
                 programmeList: [],
-                currentProgrammeIndex: 0,
+                currentProgrammeIndex: -1,
                 currentIndex: 0,
                 showCompanyList: true,
                 channelInfo: {
@@ -446,7 +447,9 @@
                         this.programmeList = response.data;
                         for (let i = 0; i < this.programmeList.length; i++) {
                             if (this.programmeList[i].programmeList.length !== 0) {
-                                this.currentProgrammeIndex = i;
+                                if (this.currentProgrammeIndex === -1) {
+                                    this.currentProgrammeIndex = i;
+                                }
                             }
                         }
                     }
@@ -550,6 +553,11 @@
                 cursor: pointer;
                 &.active {
                     border-bottom: 1px solid #1989FA;
+                    label {
+                        color: white;
+                    }
+                }
+                &:hover {
                     label {
                         color: white;
                     }

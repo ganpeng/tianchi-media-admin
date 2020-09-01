@@ -101,12 +101,27 @@
                 </el-input>
             </el-form-item>
             <!--  新加选项  -->
-            <el-form-item label="服务器组" prop="serverGroup">
-                <el-input
-                    v-model="channelInfo.serverGroup"
+            <el-form-item label="服务器组" prop="serverGroup" required>
+                <el-select
+                    clearable
+                    filterable
                     size="medium"
-                    placeholder="请填写所属服务器组">
-                </el-input>
+                    v-model="channelInfo.serverGroup"
+                    placeholder="请选择服务器组">
+                    <el-option
+                        v-for="(item, index) in serverGroupOptions"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.name">
+                        <span style="float: left">{{ item.name }}</span>
+                        <span style="float: right">{{item.currentCount}}/{{item.totalCount}}</span>
+                    </el-option>
+                </el-select>
+                <!--<el-input-->
+                <!--v-model="channelInfo.serverGroup"-->
+                <!--size="medium"-->
+                <!--placeholder="请填写所属服务器组">-->
+                <!--</el-input>-->
             </el-form-item>
             <el-form-item label="会员" prop="paymentType" required>
                 <el-radio-group v-model="channelInfo.paymentType">
@@ -864,6 +879,7 @@
                 }
             };
             return {
+                serverGroupOptions: [],
                 // 关联节目内视频变量
                 selectProgrammeVideoStepIndex: 0,
                 selectProgrammeVideoVisible: false,
@@ -981,7 +997,7 @@
                         {validator: checkPaymentType, trigger: 'change'}
                     ],
                     serverGroup: [ // 新加校验
-                        {required: true, message: '请输入所属服务器组'}
+                        {required: true, message: '请选择服务器组'}
                     ],
                     logoUri: [
                         {validator: checkLogoUri, trigger: 'blur'}
@@ -1065,7 +1081,6 @@
                 // videoList包含原先选择的视频
                 let videoList = this.$refs.selectMutipleProgrammeVideo.getSelectedMultipleVideo();
                 // 去除选择视频时编写的tag
-                console.log('删除');
                 this.$nextTick(function () {
                     videoList.map(item => {
                         item.current = undefined;
@@ -1079,7 +1094,6 @@
             },
             // 关闭选择节目视频弹窗
             closeSelectProgrammeVideo(done) {
-                console.log('关闭');
                 this.currentSelectedProgrammeId = '';
                 this.selectProgrammeVideoStepIndex = 0;
                 done();
@@ -1146,6 +1160,11 @@
                 this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
                     if (response && response.code === 0) {
                         this.typeOptions = response.data;
+                    }
+                });
+                this.$service.getChannelServerGroupList().then(res => {
+                    if (res && res.code === 0) {
+                        this.serverGroupOptions = res.data;
                     }
                 });
                 // 获取所属区域的数据
