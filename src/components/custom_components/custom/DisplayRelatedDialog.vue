@@ -187,7 +187,7 @@
             layoutRouter(refItem) {
                 if (refItem.refType === 'LAYOUT' && refItem.params) {
                     let params = JSON.parse(refItem.params);
-                    let {renderType, navBarId} = params;
+                    let {renderType, navBarId, layoutBlockId} = params;
                     if (refItem.refId && navBarId && _.get(this.layout, `${navBarId}.data`)) {
                         let sort = _.get(this.layout, `${navBarId}.data`).findIndex((item) => {
                             return item.id === refItem.refId;
@@ -215,31 +215,36 @@
                                 case 'FIGURE':
                                     this.$router.push({
                                         name: 'PersonModule',
-                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'},
+                                        query: {id: layoutBlockId}
                                     });
                                     break;
                                 case 'SPECIAL':
                                     this.$router.push({
                                         name: 'EditSpecialModule',
-                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'},
+                                        query: {id: layoutBlockId}
                                     });
                                     break;
                                 case 'PROGRAMME_SUBJECT':
                                     this.$router.push({
                                         name: 'ProgrammeSubjectModule',
-                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'},
+                                        query: {id: layoutBlockId}
                                     });
                                     break;
                                 case 'FIGURE_SUBJECT':
                                     this.$router.push({
                                         name: 'PersonSubjectModule',
-                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'},
+                                        query: {id: layoutBlockId}
                                     });
                                     break;
                                 case 'SHUFFLE':
                                     this.$router.push({
                                         name: 'ShuffleModule',
-                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'},
+                                        query: {id: layoutBlockId}
                                     });
                                     break;
                             }
