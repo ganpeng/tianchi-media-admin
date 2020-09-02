@@ -959,13 +959,16 @@
                 },
                 infoRules: {
                     name: [
-                        {validator: checkName, trigger: 'blur'}
+                        {validator: checkName, trigger: 'blur'},
+                        {validator: checkName, trigger: 'change'}
                     ],
                     innerName: [
-                        {validator: checkInnerName, trigger: 'blur'}
+                        {validator: checkInnerName, trigger: 'blur'},
+                        {validator: checkInnerName, trigger: 'change'}
                     ],
                     no: [
-                        {validator: checkNo, trigger: 'blur'}
+                        {validator: checkNo, trigger: 'blur'},
+                        {validator: checkNo, trigger: 'change'}
                     ],
                     typeIdList: [
                         {validator: checkTypeIdList, trigger: 'change'}
@@ -977,22 +980,27 @@
                         {validator: checkStartTime, trigger: 'change'}
                     ],
                     multicastIp: [
-                        {validator: checkMulticastIp, trigger: 'blur'}
+                        {validator: checkMulticastIp, trigger: 'blur'},
+                        {validator: checkMulticastIp, trigger: 'change'}
                     ],
                     multicastPort: [
-                        {validator: checkMulticastPort, trigger: 'blur'}
+                        {validator: checkMulticastPort, trigger: 'blur'},
+                        {validator: checkMulticastPort, trigger: 'change'}
                     ],
                     protocolList: [
                         {validator: checkProtocolList, trigger: 'change'}
                     ],
                     tsId: [
-                        {validator: checkTsId, trigger: 'blur'}
+                        {validator: checkTsId, trigger: 'blur'},
+                        {validator: checkTsId, trigger: 'change'}
                     ],
                     serviceId: [
-                        {validator: checkServiceId, trigger: 'blur'}
+                        {validator: checkServiceId, trigger: 'blur'},
+                        {validator: checkServiceId, trigger: 'change'}
                     ],
                     pushServer: [
-                        {validator: checkPushServer, trigger: 'blur'}
+                        {validator: checkPushServer, trigger: 'blur'},
+                        {validator: checkPushServer, trigger: 'change'}
                     ],
                     paymentType: [
                         {validator: checkPaymentType, trigger: 'change'}
