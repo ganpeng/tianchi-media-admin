@@ -207,13 +207,17 @@ const mutations = {
             state.liveChannel.useLiveConfig = false;
         }
         if (key === 'useLiveConfig' && value) {
-            state.liveChannel.multicastIp = state.liveChannel.recordIp;
-            state.liveChannel.multicastPort = state.liveChannel.recordPort;
+            if (state.liveChannel.multicastIp) {
+                state.liveChannel.recordIp = state.liveChannel.multicastIp;
+            }
+            if (state.liveChannel.multicastPort) {
+                state.liveChannel.recordPort = state.liveChannel.multicastPort;
+            }
             if (state.liveChannel.liveVideoPid) {
-                state.liveChannel.liveVideoPid = state.liveChannel.videoPid;
+                state.liveChannel.videoPid = state.liveChannel.liveVideoPid;
             }
             if (state.liveChannel.liveAudioPid) {
-                state.liveChannel.liveAudioPid = state.liveChannel.audioPid;
+                state.liveChannel.audioPid = state.liveChannel.liveAudioPid;
             }
         }
     },

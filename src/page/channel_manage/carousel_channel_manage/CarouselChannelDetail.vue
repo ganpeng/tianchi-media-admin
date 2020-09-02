@@ -318,7 +318,7 @@
                     <label>{{item.date}}</label>
                 </div>
             </div>
-            <div class="programme-list">
+            <div class="programme-list" v-if="programmeList.length !== 0">
                 <div v-for="item in programmeList[currentProgrammeIndex].programmeList" :key="item"
                      :class="{'active':item.onPlay}">
                     <label>{{item.startTime | formatDate('HH:mm:SS')}}-{{item.endTime |
@@ -504,9 +504,11 @@
                 for (let i = 0; i < this.carouselGroup.length; i++) {
                     this.carouselGroup[i].current = false;
                 }
-                this.carouselGroup[index].current = true;
-                this.currentCarouselGroup = this.carouselGroup[index];
-                this.currentCarouselGroup.index = index;
+                if (this.carouselGroup[index]) {
+                    this.carouselGroup[index].current = true;
+                    this.currentCarouselGroup = this.carouselGroup[index];
+                    this.currentCarouselGroup.index = index;
+                }
             },
             // 预览视频
             displayVideo(url, title) {
