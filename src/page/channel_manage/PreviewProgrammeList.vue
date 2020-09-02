@@ -36,13 +36,38 @@
                     </div>
                 </div>
                 <div id="date-list" v-if="currentChannel.hasChannelProgramme">
-                    <div :class="{'active':currentProgrammeIndex === index}"
-                         v-for="(item, index) in programmeList"
-                         :key="item.date"
-                         v-if="item.programmeList.length > 0"
-                         @click="currentProgrammeIndex = index">
-                        <label>{{item.name}}</label>
-                        <label>{{item.date}}</label>
+                    <!--<div :class="{'active':currentProgrammeIndex === index}"-->
+                    <!--class="date-block"-->
+                    <!--v-for="(item, index) in programmeList"-->
+                    <!--:key="item.date"-->
+                    <!--v-if="item.programmeList.length > 0"-->
+                    <!--@click="currentProgrammeIndex = index">-->
+                    <!--<label>{{item.name}}</label>-->
+                    <!--<label>{{item.date}}</label>-->
+                    <!--</div>-->
+                    <div id="carousel-block">
+                        <div class="device-pre" @click="clickPreButton">
+                            <svg-icon icon-class="device_pre"></svg-icon>
+                            <svg-icon icon-class="device_pre_active"></svg-icon>
+                        </div>
+                        <carousel :per-page="10"
+                                  navigationPrevLabel="navigationPrevLabel"
+                                  :paginationEnabled="false"
+                                  :navigationEnabled="true">
+                            <slide :class="{'active':currentProgrammeIndex === index}"
+                                   v-for="(item, index) in programmeList"
+                                   :key="item.date"
+                                   v-if="item.programmeList.length > 0">
+                                <div class="slide-content" @click="currentProgrammeIndex = index">
+                                    <label>{{item.name}}</label>
+                                    <label>{{item.date}}</label>
+                                </div>
+                            </slide>
+                        </carousel>
+                        <div class="device-next" @click="clickNextButton">
+                            <svg-icon icon-class="device_next"></svg-icon>
+                            <svg-icon icon-class="device_next_active"></svg-icon>
+                        </div>
                     </div>
                 </div>
                 <div id="programme-list" v-if="currentChannel.hasChannelProgramme">
@@ -91,6 +116,7 @@
 
 <script>
     import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
+    import {Carousel, Slide} from 'vue-carousel';
 
     const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
     const x2js = new X2JS();
@@ -98,7 +124,9 @@
     export default {
         name: 'PreviewProgrammeList',
         components: {
-            DisplayVideoDialog
+            DisplayVideoDialog,
+            Carousel,
+            Slide
         },
         data() {
             return {
@@ -128,6 +156,12 @@
             this.init();
         },
         methods: {
+            clickPreButton() {
+                this.$el.querySelector('#carousel-block .VueCarousel-navigation-prev').click();
+            },
+            clickNextButton() {
+                this.$el.querySelector('#carousel-block .VueCarousel-navigation-next').click();
+            },
             init() {
                 this.getChannelProgramme(this.$route.params.id);
                 this.$service.getChannelList({
@@ -246,6 +280,101 @@
         }
     };
 </script>
+
+<style lang="scss">
+
+    #carousel-block {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        .VueCarousel {
+            padding-left: 40px;
+            padding-right: 40px;
+            width: 100%;
+            .VueCarousel-slide {
+                margin-right: 28px;
+                border-bottom: 1px solid transparent;
+                width: 80px;
+                flex-basis: auto;
+                cursor: pointer;
+                &.active {
+                    border-bottom: 1px solid #1989FA;
+                }
+                .slide-content {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-direction: column;
+                    padding-bottom: 6px;
+                }
+                label {
+                    font-size: 12px;
+                    font-weight: 400;
+                    color: #FFFFFF;
+                    cursor: pointer;
+                }
+            }
+        }
+        /* 轮播导航 */
+        .device-pre {
+            position: absolute;
+            top: 20px;
+            left: 14px;
+            width: 8px;
+            height: 16px;
+            cursor: pointer;
+            z-index: 1000;
+            &:hover {
+                .svg-icon-device_pre {
+                    display: none;
+                }
+                .svg-icon-device_pre_active {
+                    display: block;
+                }
+            }
+            .svg-icon {
+                width: 8px;
+                height: 16px;
+            }
+            .svg-icon-device_pre {
+                display: block;
+            }
+            .svg-icon-device_pre_active {
+                display: none;
+            }
+        }
+        .device-next {
+            position: absolute;
+            top: 20px;
+            right: 10px;
+            width: 8px;
+            height: 16px;
+            cursor: pointer;
+            z-index: 1000;
+            &:hover {
+                .svg-icon-device_next {
+                    display: none;
+                }
+                .svg-icon-device_next_active {
+                    display: block;
+                }
+            }
+            .svg-icon {
+                width: 8px;
+                height: 16px;
+            }
+            .svg-icon-device_next {
+                display: block;
+            }
+            .svg-icon-device_next_active {
+                display: none;
+            }
+        }
+    }
+
+</style>
 
 <style scoped lang="scss">
 
@@ -379,8 +508,8 @@
         height: 72px;
         width: 100%;
         border-bottom: 1px solid #252D3F;
-        overflow-x: scroll;
-        div {
+        /*overflow-x: scroll;*/
+        div.date-block {
             margin: 10px 23px 7px 0;
             flex-shrink: 0;
             flex-grow: 0;
