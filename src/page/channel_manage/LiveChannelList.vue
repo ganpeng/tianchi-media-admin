@@ -312,7 +312,8 @@
                 </el-table-column>
                 <el-table-column prop="multicastIp" min-width="120px" align="center" label="直播地址列">
                     <template slot-scope="scope">
-                        <span>{{scope.row.multicastIp}}:{{scope.row.multicastPort}}</span>
+                        <span v-if="scope.row.multicastIp">{{scope.row.multicastIp}}:{{scope.row.multicastPort}}</span>
+                        <span v-else>无</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="serverGroup" align="center" min-width="120px" label="服务器组"></el-table-column>
@@ -326,13 +327,13 @@
                 <el-table-column align="center" width="150px" label="回看地址">
                     <template slot-scope="scope">
                         <span v-if="scope.row.record">{{scope.row.recordIp}}:{{scope.row.recordPort}}</span>
-                        <span v-else>/</span>
+                        <span v-else>无</span>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" label="回看组">
                     <template slot-scope="scope">
                         <span v-if="scope.row.record">{{scope.row.recordServerGroup}}</span>
-                        <span v-else>/</span>
+                        <span v-else>无</span>
                     </template>
                 </el-table-column>
                 <!--
