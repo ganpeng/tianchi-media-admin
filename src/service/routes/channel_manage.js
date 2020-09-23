@@ -44,10 +44,10 @@ export const getChannelCount = (id) => {
 };
 
 /**
- *  获取频道直播和回看服务器组的列表
+ *  获取直播、轮播、回看服务器组的列表
  */
-export const getChannelServerGroupList = () => {
-    return service.get(`/v1/sys/system-config/server-group/list`);
+export const getChannelServerGroupList = ({type}) => {
+    return service.get(`/v1/sys/system-config/server-group/list?type=` + type);
 };
 
 /**

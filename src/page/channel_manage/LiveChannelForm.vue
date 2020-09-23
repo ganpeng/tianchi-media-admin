@@ -79,7 +79,7 @@
                         placeholder="请选择所属服务器组"
                         @input="inputHandler($event, 'serverGroup')">
                         <el-option
-                            v-for="(item, index) in serverGroupOptions"
+                            v-for="(item, index) in serverGroupOptionsLive"
                             :key="index"
                             :label="item.name"
                             :value="item.name">
@@ -220,7 +220,7 @@
                     </el-input>
                 </el-form-item>
                 <!-- 回看服务器组,2.8 改为下拉 -->
-                <el-form-item label="回看服务器组" prop="recordServerGroup" required>
+                <el-form-item label="回看服务器组" prop="recordServerGroup">
                     <el-select
                         clearable
                         filterable
@@ -228,7 +228,7 @@
                         placeholder="请选择所属服务器组"
                         @input="inputHandler($event, 'recordServerGroup')">
                         <el-option
-                            v-for="(item, index) in serverGroupOptions"
+                            v-for="(item, index) in serverGroupOptionsRecord"
                             :key="index"
                             :label="item.name"
                             :value="item.name">
@@ -325,7 +325,8 @@
         },
         data() {
             return {
-                serverGroupOptions: [],
+                serverGroupOptionsLive: [],
+                serverGroupOptionsRecord: [],
                 inputRules: {
                     name: [
                         {required: true, message: '请输直播频道名称'}
@@ -361,7 +362,7 @@
                         {required: true, message: '请输入所属直播服务器组'}
                     ],
                     recordServerGroup: [
-                        {required: true, message: '请输入所属回看服务器组'}
+                        {required: false, message: '请输入所属回看服务器组'}
                     ],
                     record: [
                         {required: true, message: '请选择是否录制直播回看'}
@@ -447,9 +448,14 @@
         },
         created() {
             this.getFilialeList();
-            this.$service.getChannelServerGroupList().then(res => {
+            this.$service.getChannelServerGroupList({type: 'LIVE'}).then(res => {
                 if (res && res.code === 0) {
-                    this.serverGroupOptions = res.data;
+                    this.serverGroupOptionsLive = res.data;
+                }
+            });
+            this.$service.getChannelServerGroupList({type: 'RECORD'}).then(res => {
+                if (res && res.code === 0) {
+                    this.serverGroupOptionsRecord = res.data;
                 }
             });
         },

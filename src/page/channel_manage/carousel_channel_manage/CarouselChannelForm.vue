@@ -1171,7 +1171,7 @@
                         this.typeOptions = response.data;
                     }
                 });
-                this.$service.getChannelServerGroupList().then(res => {
+                this.$service.getChannelServerGroupList({type: 'CAROUSEL'}).then(res => {
                     if (res && res.code === 0) {
                         this.serverGroupOptions = res.data;
                     }
