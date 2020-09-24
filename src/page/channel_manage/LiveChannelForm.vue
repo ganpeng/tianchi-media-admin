@@ -220,7 +220,7 @@
                     </el-input>
                 </el-form-item>
                 <!-- 回看服务器组,2.8 改为下拉 -->
-                <el-form-item label="回看服务器组" prop="recordServerGroup">
+                <el-form-item label="回看服务器组" prop="recordServerGroup" :required="liveChannel.record">
                     <el-select
                         clearable
                         filterable
@@ -324,6 +324,13 @@
             AreaCodeSearch
         },
         data() {
+            let checkRecordServerGroup = (rule, value, callback) => {
+                if (this.liveChannel.record && this.$util.isEmpty(value)) {
+                    return callback(new Error('请选择回看服务器组'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 serverGroupOptionsLive: [],
                 serverGroupOptionsRecord: [],
@@ -362,7 +369,7 @@
                         {required: true, message: '请输入所属直播服务器组'}
                     ],
                     recordServerGroup: [
-                        {required: false, message: '请输入所属回看服务器组'}
+                        {validator: checkRecordServerGroup, trigger: 'change'}
                     ],
                     record: [
                         {required: true, message: '请选择是否录制直播回看'}
