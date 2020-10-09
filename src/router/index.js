@@ -1089,6 +1089,32 @@ export const routes = [
                 path: '/lookback-thumbnail',
                 name: 'LookbackThumbnail',
                 component: () => import('@/page/site_manage/LookbackThumbnail')
+            },
+            // dev2.9新增路由
+            {
+                path: '/channel-statistics',
+                name: 'ChannelStatistics',
+                component: () => import('@/page/statistics/ChannelStatistics')
+            },
+            {
+                path: '/vod-statistics',
+                name: 'VodStatistics',
+                component: () => import('@/page/statistics/VodStatistics')
+            },
+            {
+                path: '/server-group/list',
+                name: 'ServerGroupList',
+                component: () => import('@/page/site_manage/ServerGroupList')
+            },
+            {
+                path: '/server-group/create',
+                name: 'ServerGroupCreate',
+                component: () => import('@/page/site_manage/ServerGroupCreate')
+            },
+            {
+                path: '/server-group/edit/:id',
+                name: 'ServerGroupEdit',
+                component: () => import('@/page/site_manage/ServerGroupEdit')
             }
         ]
     },

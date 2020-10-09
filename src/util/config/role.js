@@ -554,7 +554,7 @@ const PROGRAMME_TEMPLATE_OPTIONS = [
 ];
 
 //  和选项菜单有关的常量
-const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '站点管理', '配置中心', ''];
+const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '统计', '站点管理', '配置中心', ''];
 const ASIDE_LIST = [
     [
         {
@@ -566,12 +566,12 @@ const ASIDE_LIST = [
             text: '客户端日志',
             uri: '/clientlog/list',
             icon: 'aside_clientlog'
-        },
-        {
-            text: '存储空间',
-            uri: '/server/space',
-            icon: 'aside_server'
         }
+        // {
+        //     text: '存储空间',
+        //     uri: '/server/space',
+        //     icon: 'aside_server'
+        // }
     ],
     [
         {
@@ -722,6 +722,23 @@ const ASIDE_LIST = [
     ],
     [
         {
+            text: '频道统计',
+            uri: '/channel-statistics',
+            icon: 'site_list'
+        },
+        {
+            text: '点播统计',
+            uri: '/vod-statistics',
+            icon: 'site_list'
+        },
+        {
+            text: '存储统计',
+            uri: '/server/space',
+            icon: 'aside_server'
+        }
+    ],
+    [
+        {
             text: '站点列表',
             uri: '/site-manage/list',
             icon: 'site_list'
@@ -752,6 +769,11 @@ const ASIDE_LIST = [
             text: '激活码开关',
             uri: '/manage-activation-code-switch/switch',
             icon: 'aside_active_code'
+        },
+        {
+            text: '服务器组',
+            uri: '/server-group/list',
+            icon: 'aside_net_psd'
         }
     ],
     [
