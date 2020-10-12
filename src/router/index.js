@@ -937,7 +937,7 @@ export const routes = [
             },
             //  站点管理-配置站点
             {
-                path: '/site-manage/config',
+                path: '/site/config',
                 name: 'ConfigSite',
                 component: ConfigSite
             },

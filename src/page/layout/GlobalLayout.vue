@@ -2,7 +2,7 @@
     <div class="app-container">
         <div v-show="showHeaderAndAside" class="header clearfix">
             <ul class="nav-list clearfix float-left" :class="{'is-center-site': (isCenterSite && !appActive)}">
-                <li v-for="(item, index) in activeNavList" :key="index"
+                <li v-for="(item, index) in navList" :key="index"
                     :class="['nav-item', active === index ? 'active' : '']"
                     @click="changeActive(index)">
                     {{item}}
@@ -12,7 +12,8 @@
                  class="user-info float-right clearfix">
                 <svg-icon icon-class="avatar_icon"></svg-icon>
                 <svg-icon icon-class="avatar_icon_active"></svg-icon>
-                <label @click="changeActive(navList.length - 1)">{{name}}</label>
+                <!-- <label @click="changeActive(navList.length - 1)">{{name}}</label> -->
+                <label @click="gotoUserCenter">{{name}}</label>
                 <div class="logout" @click="logout">
                     <svg-icon
                         icon-class="logout">
@@ -100,7 +101,9 @@
                 return this.appActive ? role.APP_ASIDE_LIST : role.ASIDE_LIST;
             },
             navList() {
-                return this.appActive ? role.APP_NAV_LIST : role.NAV_LIST;
+                let isCenterSite = !!(this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteMasterEnable);
+                let navList = isCenterSite ? role.CENTER_NAV_LIST : role.CHILD_NAV_LIST;
+                return this.appActive ? role.APP_NAV_LIST : navList;
             },
             activeNavList() {
                 return this.navList.filter((_, index) => index !== this.navList.length - 1);
@@ -268,6 +271,9 @@
                 } else {
                     this.$router.push({path: `/worktop-manage`});
                 }
+            },
+            gotoUserCenter() {
+                this.$router.push({name: 'MyInfo'});
             }
         }
     };
@@ -289,23 +295,23 @@
             .nav-list {
                 line-height: $headerHeight;
                 padding-left: 80px;
-                /*设置站点管理和配置中心的隐藏和展示*/
-                &.is-center-site {
-                    li:last-child {
-                        display: none;
-                    }
-                    li:nth-child(10) { // 原来是7，我改成8了，原因是广告项被隐藏了, 2.9版本又加了一项统计，改成10了
-                        display: inline-block;
-                    }
-                }
-                &:not(.is-center-site) { // 原来是7，我改成8了，原因是广告项被隐藏了, 2.9版本又加了一项统计，改成10了
-                    li:last-child {
-                        display: inline-block;
-                    }
-                    li:nth-child(10) {
-                        display: none;
-                    }
-                }
+                // /*设置站点管理和配置中心的隐藏和展示*/
+                // &.is-center-site {
+                //     li:last-child {
+                //         display: none;
+                //     }
+                //     li:nth-child(10) { // 原来是7，我改成8了，原因是广告项被隐藏了, 2.9版本又加了一项统计，改成10了
+                //         display: inline-block;
+                //     }
+                // }
+                // &:not(.is-center-site) { // 原来是7，我改成8了，原因是广告项被隐藏了, 2.9版本又加了一项统计，改成10了
+                //     li:last-child {
+                //         display: inline-block;
+                //     }
+                //     li:nth-child(10) {
+                //         display: none;
+                //     }
+                // }
                 .nav-item {
                     float: left;
                     min-width: 110px;

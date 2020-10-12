@@ -554,7 +554,16 @@ const PROGRAMME_TEMPLATE_OPTIONS = [
 ];
 
 //  和选项菜单有关的常量
-const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '统计', '站点管理', '配置中心', ''];
+// const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '统计', '站点管理', '配置中心'];
+const NAV_LIST = [ {
+    title: '首页',
+    status: 0
+}, {
+    title: '内容管理',
+    status: 0
+}, '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '统计', '站点管理', '配置中心'];
+const CENTER_NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '统计', '站点管理'];
+const CHILD_NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '统计', '配置中心'];
 const ASIDE_LIST = [
     [
         {
@@ -747,7 +756,7 @@ const ASIDE_LIST = [
     [
         {
             text: '站点配置',
-            uri: '/site-manage/config',
+            uri: '/site/config',
             icon: 'site_config'
         },
         {
@@ -1065,6 +1074,8 @@ export default {
     HARDWARE_TYPE_OPTIONS,
 //  页面样式布局相关
     NAV_LIST,
+    CENTER_NAV_LIST,
+    CHILD_NAV_LIST,
     ASIDE_LIST,
     LAYOUT_TEMPLATE_LIST,
     VIDEO_SUFFIX_OPTIONS,

@@ -24,24 +24,28 @@
                         id="app-one"
                         :uploadSuccessHandler="appSuccessHandler('mobileUrl1')"
                     ></single-image-uploader-with-button>
+                    <div class="title">支付成功页面</div>
                 </div>
                 <div :style="backgroundImageStyle('mobileUrl2')" class="two item">
                     <single-image-uploader-with-button
                         id="app-two"
                         :uploadSuccessHandler="appSuccessHandler('mobileUrl2')"
                     ></single-image-uploader-with-button>
+                    <div class="title">登录成功页面</div>
                 </div>
                 <div :style="backgroundImageStyle('mobileUrl3')" class="three item">
                     <single-image-uploader-with-button
                         id="app-three"
                         :uploadSuccessHandler="appSuccessHandler('mobileUrl3')"
                     ></single-image-uploader-with-button>
+                    <div class="title">已购买并登录成功页面</div>
                 </div>
                 <div :style="backgroundImageStyle('mobileUrl4')" class="four item">
                     <single-image-uploader-with-button
                         id="app-four"
                         :uploadSuccessHandler="appSuccessHandler('mobileUrl4')"
                     ></single-image-uploader-with-button>
+                    <div class="title">已是VIP页面</div>
                 </div>
             </div>
         </div>
@@ -121,6 +125,7 @@ export default {
 <style lang="scss" scoped>
 .combo-picture {
     .tv {
+        display: none;
         .content {
             margin: 20px 0;
             display: flex;
@@ -151,8 +156,9 @@ export default {
     .app {
         .content {
             display: flex;
-            margin: 20px 0;
+            // margin: 20px 0;
             .item {
+                position: relative;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -163,6 +169,13 @@ export default {
                 background-repeat: no-repeat;
                 background-position: center center;
                 border-radius: 8px;
+                .title {
+                    position: absolute;
+                    bottom: -40px;
+                    left: 50%;
+                    width: 100%;
+                    transform: translateX(-50%);
+                }
             }
             .item + .item {
                 margin-left: 20px;
