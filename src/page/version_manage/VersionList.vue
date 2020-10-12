@@ -19,15 +19,15 @@
                         搜索
                     </el-button>
                     <div class="search-field-item">
-                        <label class="search-field-item-label">类型</label>
+                        <label class="search-field-item-label">状态</label>
                         <el-select
-                            :value="searchFields.productType"
+                            :value="searchFields.releaseStatus"
                             filterable
                             clearable
-                            @input="inputHandler($event, 'productType')"
+                            @input="inputHandler($event, 'releaseStatus')"
                             placeholder="全部">
                             <el-option
-                                v-for="(item, index) in productTypeOptions"
+                                v-for="(item, index) in releaseStatusOptions"
                                 :key="index"
                                 :label="item.name"
                                 :value="item.value">
@@ -35,7 +35,7 @@
                         </el-select>
                     </div>
                     <div class="search-field-item">
-                        <label class="search-field-item-label">方式</label>
+                        <label class="search-field-item-label">升级方式</label>
                         <el-select
                             :value="searchFields.forced"
                             filterable
@@ -44,6 +44,22 @@
                             placeholder="全部">
                             <el-option
                                 v-for="(item, index) in forcedOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">升级类型</label>
+                        <el-select
+                            :value="searchFields.productType"
+                            filterable
+                            clearable
+                            @input="inputHandler($event, 'productType')"
+                            placeholder="全部">
+                            <el-option
+                                v-for="(item, index) in productTypeOptions"
                                 :key="index"
                                 :label="item.name"
                                 :value="item.value">
@@ -64,6 +80,7 @@
                     </span>
                 </div>
                 <div v-show="searchFieldVisible" class="field-row">
+                    <!--
                     <div class="search-field-item">
                         <label class="search-field-item-label">公共频道</label>
                         <el-select
@@ -96,8 +113,9 @@
                             </el-option>
                         </el-select>
                     </div>
+                    -->
                     <div class="search-field-item">
-                        <label class="search-field-item-label">时间</label>
+                        <label class="search-field-item-label">发布时间</label>
                         <el-date-picker
                             :value="searchFields.dateRange"
                             type="daterange"
@@ -138,9 +156,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="版本号" align="center" prop="versionCode"></el-table-column>
-                    <el-table-column align="center" width="120px" label="升级类型">
+                    <el-table-column align="center" width="180px" label="升级类型">
                         <template slot-scope="scope">
-                            {{scope.row.productType === 'TV_LAUNCHER' ? '应用升级' : '系统升级'}}
+                            {{productTypeLabel(scope.row.productType)}}
                         </template>
                     </el-table-column>
                     <el-table-column width="120px" align="center" label="升级方式">
@@ -150,7 +168,7 @@
                     </el-table-column>
                     <el-table-column align="center" width="120px" label="硬件类型">
                         <template slot-scope="scope">
-                            {{hardwareType(scope.row.hardwareType)}}
+                            {{hardwareType(scope.row.productType)}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" width="140px" label="升级包">
@@ -171,17 +189,23 @@
                             {{releaseStatus(scope.row.releaseStatus)}}
                         </template>
                     </el-table-column>
-                    <el-table-column width="120px" align="center" label="发布时间" prop="releaseAt">
+                    <el-table-column width="160px" align="center" label="创建时间" prop="releaseAt">
                         <template slot-scope="scope">
-                            {{scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
+                            {{scope.row.releaseAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" width="190px" label="操作">
+                    <el-table-column width="160px" align="center" label="发布时间" prop="releaseAt">
+                        <template slot-scope="scope">
+                            {{scope.row.releaseAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" width="160px" label="操作">
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
                                 <span v-if="scope.row.releaseStatus !== 'WITHDRAW'" class="btn-text" @click="editVersion(scope.row)">编辑</span>
                                 <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text" @click="releaseVersion(scope.row.id)">发布</span>
                                 <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text text-danger" @click="deleteVersion(scope.row.id)">删除</span>
+                                <span v-if="scope.row.releaseStatus === 'WITHDRAW'">无法操作</span>
                             </div>
                         </template>
                     </el-table-column>
@@ -210,6 +234,20 @@ export default {
             //  toggle搜索区域
             searchFieldVisible: false,
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
+            releaseStatusOptions: [
+                {
+                    name: '未发布',
+                    value: 'PRE_RELEASED'
+                },
+                {
+                    name: '已发布',
+                    value: 'RELEASED'
+                },
+                {
+                    name: '已撤回',
+                    value: 'WITHDRAW'
+                }
+            ],
             forcedOptions: role.FORCED_OPTIONS
         };
     },
@@ -266,6 +304,23 @@ export default {
                         return '';
                 }
             };
+        },
+        // dev2.9
+        productTypeLabel() {
+            return (productType) => {
+                let label = '应用升级';
+                switch (productType) {
+                    case 'TV_ROM_3798_310':
+                        label = '系统升级(3798_310)';
+                        break;
+                    case 'TV_ROM_3798':
+                        label = '系统升级(3798_200)';
+                        break;
+                    default:
+                        label = '应用升级';
+                }
+                return label;
+            };
         }
     },
     methods: {
@@ -300,8 +355,8 @@ export default {
         toggleSearchField() {
             this.searchFieldVisible = !this.searchFieldVisible;
         },
-        hardwareType(hardwareType) {
-            return hardwareType ? (hardwareType === 'HARDWARE_3796' ? '3796' : '3798') : '------';
+        hardwareType(productType) {
+            return productType ? (productType === 'TV_ROM_3798_310' ? '3798_310' : '3798_200') : '------';
         },
         clearSearchFields() {
             if (!this.$authority.isHasAuthority('sys:clientVersion:page')) {

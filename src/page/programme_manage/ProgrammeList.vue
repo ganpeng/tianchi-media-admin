@@ -220,6 +220,7 @@
                     ref="multipleTable"
                     @select="selectHandler"
                     @select-all="selectAllHandler"
+                    @sort-change="sortChangeHandler"
                     row-class-name="programme-row" header-row-class-name="common-table-header" class="my-table-style"
                     :data="list" border>
                     <el-table-column type="selection" align="center"></el-table-column>
@@ -275,7 +276,7 @@
                             {{ scope.row.releaseAt | formatDate('yyyy-MM-DD') | padEmpty}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
+                    <el-table-column prop="produceAreaList" min-width="100px" align="center" label="地区">
                         <template slot-scope="scope">
                             <span class="ellipsis four">
                                 {{areaLabel(scope.row.produceAreaList).map((area) => area.name).join(', ') | padEmpty}}
@@ -314,7 +315,7 @@
                             <i v-else class="off-the-shelf">已下架</i>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" min-width="100px" label="更新时间">
+                    <el-table-column sortable align="center" min-width="120px" label="更新时间" prop="updatedAt">
                         <template slot-scope="scope">
                             {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
                         </template>
@@ -810,6 +811,19 @@
                     this.$util.downloadFile(res, `全部节目.xlsx`);
                 } catch (err) {
                     console.log(err);
+                }
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'updatedAt') {
+                    let sortedListByCreatedAt = [];
+                    if (order === 'ascending') {
+                        sortedListByCreatedAt = _.chain(this.list).sortBy('updatedAt').value();
+                    } else {
+                        sortedListByCreatedAt = _.chain(this.list).sortBy('updatedAt').reverse().value();
+                    }
+                    this.setList({list: sortedListByCreatedAt});
                 }
             }
         }

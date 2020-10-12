@@ -32,7 +32,8 @@ const defaultSearchFields = {
     forced: '', // 强制升级
     keyword: '', // 关键字
     productType: '', // 升级类型
-    dateRange: [] // 时间区间
+    dateRange: [], // 时间区间
+    releaseStatus: '' //  RELEASED 已发布  WITHDRAW 已撤回  PRE_RELEASED 未发布
 };
 
 const defaultPagination = {
@@ -232,6 +233,7 @@ const actions = {
         try {
             let {searchFields} = state;
             let params = {
+                releaseStatus: searchFields.releaseStatus,
                 releaseAtStart: searchFields.releaseAtStart,
                 releaseAtEnd: searchFields.releaseAtEnd,
                 forced: searchFields.forced !== '' ? searchFields.forced === 1 : searchFields.forced,

@@ -2,18 +2,17 @@
     <div class="app-container">
         <div v-show="showHeaderAndAside" class="header clearfix">
             <ul class="nav-list clearfix float-left" :class="{'is-center-site': (isCenterSite && !appActive)}">
-                <li v-for="(item, index) in navList" :key="index"
+                <li v-for="(item, index) in activeNavList" :key="index"
                     :class="['nav-item', active === index ? 'active' : '']"
                     @click="changeActive(index)">
-                    {{item}}
+                    {{item.title}}
                 </li>
             </ul>
             <div :class="[active === navList.length - 1 ? 'active' : '']"
                  class="user-info float-right clearfix">
                 <svg-icon icon-class="avatar_icon"></svg-icon>
                 <svg-icon icon-class="avatar_icon_active"></svg-icon>
-                <!-- <label @click="changeActive(navList.length - 1)">{{name}}</label> -->
-                <label @click="gotoUserCenter">{{name}}</label>
+                <label @click="changeActive(navList.length - 1)">{{name}}</label>
                 <div class="logout" @click="logout">
                     <svg-icon
                         icon-class="logout">
@@ -97,19 +96,18 @@
             ...mapGetters({
                 name: 'user/name'
             }),
-            asideList() {
-                return this.appActive ? role.APP_ASIDE_LIST : role.ASIDE_LIST;
-            },
             navList() {
                 let isCenterSite = !!(this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteMasterEnable);
-                let navList = isCenterSite ? role.CENTER_NAV_LIST : role.CHILD_NAV_LIST;
+                let centerNavList = role.NAV_LIST.filter((item) => item.status === 0 || item.status === 1);
+                let childNavList = role.NAV_LIST.filter((item) => item.status === 0 || item.status === 2);
+                let navList = isCenterSite ? centerNavList : childNavList;
                 return this.appActive ? role.APP_NAV_LIST : navList;
             },
             activeNavList() {
                 return this.navList.filter((_, index) => index !== this.navList.length - 1);
             },
             activeAsideList() {
-                return this.asideList[this.active];
+                return this.navList[this.active].children;
             }
         },
         mounted() {
@@ -191,9 +189,10 @@
                 let leftPart = path.split('/')[1];
                 let active = 0;
                 let activePath = '';
-                for (let i = 0; i < this.asideList.length; i++) {
-                    for (let j = 0; j < this.asideList[i].length; j++) {
-                        let {uri} = this.asideList[i][j];
+                for (let i = 0; i < this.navList.length; i++) {
+                    let asideList = this.navList[i].children;
+                    for (let j = 0; j < asideList.length; j++) {
+                        let {uri} = asideList[j];
                         if (leftPart === uri.split('/')[1]) {
                             active = i;
                             activePath = uri;
@@ -208,7 +207,7 @@
                     window.location.reload();
                 } else {
                     this.active = index;
-                    let newPath = this.asideList[this.active][0].uri;
+                    let newPath = this.navList[this.active].children[0].uri;
                     this.defaultActive = newPath;
                     this.$router.push(newPath);
                 }
@@ -295,23 +294,6 @@
             .nav-list {
                 line-height: $headerHeight;
                 padding-left: 80px;
-                // /*设置站点管理和配置中心的隐藏和展示*/
-                // &.is-center-site {
-                //     li:last-child {
-                //         display: none;
-                //     }
-                //     li:nth-child(10) { // 原来是7，我改成8了，原因是广告项被隐藏了, 2.9版本又加了一项统计，改成10了
-                //         display: inline-block;
-                //     }
-                // }
-                // &:not(.is-center-site) { // 原来是7，我改成8了，原因是广告项被隐藏了, 2.9版本又加了一项统计，改成10了
-                //     li:last-child {
-                //         display: inline-block;
-                //     }
-                //     li:nth-child(10) {
-                //         display: none;
-                //     }
-                // }
                 .nav-item {
                     float: left;
                     min-width: 110px;

@@ -554,18 +554,10 @@ const PROGRAMME_TEMPLATE_OPTIONS = [
 ];
 
 //  和选项菜单有关的常量
-// const NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '统计', '站点管理', '配置中心'];
 const NAV_LIST = [ {
     title: '首页',
-    status: 0
-}, {
-    title: '内容管理',
-    status: 0
-}, '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '统计', '站点管理', '配置中心'];
-const CENTER_NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '统计', '站点管理'];
-const CHILD_NAV_LIST = ['首页', '内容管理', '用户管理', '版本设备', '管理员', '产品管理', '广告管理', '统计', '配置中心'];
-const ASIDE_LIST = [
-    [
+    status: 0,
+    children: [
         {
             text: '操控台',
             uri: '/worktop-manage',
@@ -581,8 +573,11 @@ const ASIDE_LIST = [
         //     uri: '/server/space',
         //     icon: 'aside_server'
         // }
-    ],
-    [
+    ]
+}, {
+    title: '内容管理',
+    status: 0,
+    children: [
         {
             text: '节目管理',
             uri: '/programme-manage/list',
@@ -648,8 +643,11 @@ const ASIDE_LIST = [
             uri: '/search-manage',
             icon: 'search'
         }
-    ],
-    [
+    ]
+}, {
+    title: '用户管理',
+    status: 0,
+    children: [
         {
             text: '用户管理',
             uri: '/user-center/list',
@@ -660,8 +658,11 @@ const ASIDE_LIST = [
             uri: '/order-manage/list',
             icon: 'aside_order'
         }
-    ],
-    [
+    ]
+}, {
+    title: '版本设备',
+    status: 0,
+    children: [
         {
             text: '版本管理',
             uri: '/manage-version/list',
@@ -677,8 +678,11 @@ const ASIDE_LIST = [
             uri: '/manage-activation-code/list',
             icon: 'aside_active_code'
         }
-    ],
-    [
+    ]
+}, {
+    title: '管理员',
+    status: 0,
+    children: [
         {
             text: '管理员',
             uri: '/manage-admin/list',
@@ -694,8 +698,11 @@ const ASIDE_LIST = [
             uri: '/role-manage/list',
             icon: 'aside_admin'
         }
-    ],
-    [
+    ]
+}, {
+    title: '产品管理',
+    status: 0,
+    children: [
         {
             text: '产品管理',
             uri: '/product-manage/list',
@@ -712,12 +719,15 @@ const ASIDE_LIST = [
             icon: 'combo_list'
         },
         {
-            text: '套餐图管理',
+            text: '手机端提示图',
             uri: '/combopicture-manage/list',
             icon: 'combo_list'
         }
-    ],
-    [
+    ]
+}, {
+    title: '广告管理',
+    status: 0,
+    children: [
         {
             text: '广告主',
             uri: '/adsowner-manage/list',
@@ -728,8 +738,11 @@ const ASIDE_LIST = [
             uri: '/ads-manage/list',
             icon: 'ad'
         }
-    ],
-    [
+    ]
+}, {
+    title: '统计',
+    status: 0,
+    children: [
         {
             text: '频道统计',
             uri: '/channel-statistics',
@@ -745,19 +758,15 @@ const ASIDE_LIST = [
             uri: '/server/space',
             icon: 'aside_server'
         }
-    ],
-    [
+    ]
+}, {
+    title: '配置中心',
+    status: 1,
+    children: [
         {
             text: '站点列表',
             uri: '/site-manage/list',
             icon: 'site_list'
-        }
-    ],
-    [
-        {
-            text: '站点配置',
-            uri: '/site/config',
-            icon: 'site_config'
         },
         {
             text: '站点定制',
@@ -765,14 +774,9 @@ const ASIDE_LIST = [
             icon: 'aside_station'
         },
         {
-            text: '回看缩略图',
+            text: '缩略图开关',
             uri: '/lookback-thumbnail',
             icon: 'aside_playback'
-        },
-        {
-            text: '网络密码',
-            uri: '/network-password',
-            icon: 'aside_net_psd'
         },
         {
             text: '激活码开关',
@@ -784,8 +788,46 @@ const ASIDE_LIST = [
             uri: '/server-group/list',
             icon: 'aside_net_psd'
         }
-    ],
-    [
+    ]
+}, {
+    title: '配置中心',
+    status: 2,
+    children: [
+        {
+            text: '站点配置',
+            uri: '/site/config',
+            icon: 'site_config'
+        },
+        {
+            text: '站点定制',
+            uri: '/site-custom',
+            icon: 'aside_station'
+        },
+        {
+            text: '缩略图开关',
+            uri: '/lookback-thumbnail',
+            icon: 'aside_playback'
+        },
+        // {
+        //     text: '网络密码',
+        //     uri: '/network-password',
+        //     icon: 'aside_net_psd'
+        // },
+        {
+            text: '激活码开关',
+            uri: '/manage-activation-code-switch/switch',
+            icon: 'aside_active_code'
+        },
+        {
+            text: '服务器组',
+            uri: '/server-group/list',
+            icon: 'aside_net_psd'
+        }
+    ]
+}, {
+    title: '个人中心',
+    status: 0,
+    children: [
         {
             text: '基本信息',
             uri: '/my-info',
@@ -797,11 +839,12 @@ const ASIDE_LIST = [
             icon: 'modify_password'
         }
     ]
-];
-
-const APP_NAV_LIST = ['内容管理', '版本设备', ''];
-const APP_ASIDE_LIST = [
-    [
+}];
+// const APP_NAV_LIST = ['内容管理', '版本设备', ''];
+const APP_NAV_LIST = [ {
+    title: '内容管理',
+    status: 0,
+    children: [
         {
             text: '栏目管理',
             uri: '/app-nav-bar-manage/setting',
@@ -817,15 +860,21 @@ const APP_ASIDE_LIST = [
             uri: '/app-search-manage',
             icon: 'search'
         }
-    ],
-    [
+    ]
+}, {
+    title: '版本设备',
+    status: 0,
+    children: [
         {
             text: '版本管理',
             uri: '/manage-app-version/list',
             icon: 'shortcut_version'
         }
-    ],
-    [
+    ]
+}, {
+    title: '个人中心',
+    status: 0,
+    children: [
         {
             text: '基本信息',
             uri: '/my-info',
@@ -837,9 +886,8 @@ const APP_ASIDE_LIST = [
             icon: 'modify_password'
         }
     ]
-];
+}];
 //  和选项菜单有关的常量结束
-
 const LAYOUT_TEMPLATE_LIST = [
     {
         text: '节目',
@@ -1074,9 +1122,6 @@ export default {
     HARDWARE_TYPE_OPTIONS,
 //  页面样式布局相关
     NAV_LIST,
-    CENTER_NAV_LIST,
-    CHILD_NAV_LIST,
-    ASIDE_LIST,
     LAYOUT_TEMPLATE_LIST,
     VIDEO_SUFFIX_OPTIONS,
     PROGRAMME_ALLOW_PICTURE_DIMENSIONS,
@@ -1093,6 +1138,5 @@ export default {
     PAYMENT_OPTIONS,
 //  dev_v2.6新增
     APP_NAV_LIST,
-    APP_ASIDE_LIST,
     APPLICABLE_CLIENT_LIST_OPTION
 };
