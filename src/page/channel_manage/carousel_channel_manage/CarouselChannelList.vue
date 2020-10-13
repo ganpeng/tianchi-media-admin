@@ -54,6 +54,7 @@
             <carousel-channel-operate-table
                 ref="channelOperateTable"
                 :channelList="channelList"
+                :setChannelList="setChannelList"
                 v-on:getChannelList="getChannelList"
                 v-on:setBatchDisabledStatus="setBatchDisabledStatus">
             </carousel-channel-operate-table>
@@ -198,6 +199,10 @@
                     name: 'CreateCarouselChannel'
                 });
                 window.open(routeData.href, '_blank');
+            },
+            // dev2.9
+            setChannelList(list) {
+                this.channelList = list;
             }
         }
     };

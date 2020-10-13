@@ -123,7 +123,11 @@
                         </el-button>
                     </div>
                 </div>
-                <el-table header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
+                <el-table
+                    header-row-class-name="common-table-header"
+                    class="my-table-style"
+                    @sort-change="sortChangeHandler"
+                    :data="list" border>
                     <el-table-column width="60" align="center" label="序号">
                         <template slot-scope="scope">
                             {{getIndex(scope.$index)}}
@@ -169,12 +173,12 @@
                             {{scope.row.mac | padEmpty}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" min-width="160" label="注册时间">
+                    <el-table-column sortable align="center" min-width="160" prop="registeredAt" label="注册时间">
                         <template slot-scope="scope">
                             {{scope.row.registeredAt | formatDate('yyyy-MM-DD') | padEmpty}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" min-width="160" label="最后在线时间">
+                    <el-table-column sortable align="center" min-width="160" prop="lastOnlineTime" label="最后在线时间">
                         <template slot-scope="scope">
                             {{scope.row.lastOnlineTime | formatDate('yyyy-MM-DD') | padEmpty}}
                         </template>
@@ -190,16 +194,6 @@
                             <i v-else class="off-the-shelf">禁用</i>
                         </template>
                     </el-table-column>
-                    <!--
-                    <el-table-column align="center" width="120px" label="操作">
-                        <template slot-scope="scope">
-                            <div class="operator-btn-wrapper">
-                                <span class="btn-text" @click="editDevice(scope.row.id)">编辑</span>
-                                <span class="btn-text text-danger" @click="deleteDeviceHandler(scope.row.id)">删除</span>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    -->
                 </el-table>
             </div>
         </div>
@@ -366,20 +360,27 @@
                         });
                 });
             },
-            deleteDeviceHandler(id) {
-                // this.$confirm(`您确定要删除该设备吗, 是否继续?`, '提示', {
-                //     confirmButtonText: '确定',
-                //     cancelButtonText: '取消',
-                //     type: 'error'
-                // }).then(() => {
-                //     this.deleteDeviceById(id)
-                //         .then((res) => {
-                //             if (res && res.code === 0) {
-                //                 this.getDeviceList();
-                //                 this.$message.success('设备删除成功');
-                //             }
-                //         });
-                // });
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'registeredAt') {
+                    let sortedListByCreatedAt = [];
+                    if (order === 'ascending') {
+                        sortedListByCreatedAt = _.chain(this.list).sortBy('registeredAt').value();
+                    } else {
+                        sortedListByCreatedAt = _.chain(this.list).sortBy('registeredAt').reverse().value();
+                    }
+                    this.setList({list: sortedListByCreatedAt});
+                }
+                if (prop === 'lastOnlineTime') {
+                    let sortedListByCreatedAt = [];
+                    if (order === 'ascending') {
+                        sortedListByCreatedAt = _.chain(this.list).sortBy('lastOnlineTime').value();
+                    } else {
+                        sortedListByCreatedAt = _.chain(this.list).sortBy('lastOnlineTime').reverse().value();
+                    }
+                    this.setList({list: sortedListByCreatedAt});
+                }
             }
         }
     };

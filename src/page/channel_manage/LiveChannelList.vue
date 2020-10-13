@@ -253,9 +253,10 @@
             <el-table
                 @select="selectHandler"
                 @select-all="selectAllHandler"
+                @sort-change="sortChangeHandler"
                 header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                 <el-table-column type="selection" align="center"></el-table-column>
-                <el-table-column prop="no" align="center" width="80px" label="台号">
+                <el-table-column sortable prop="no" align="center" width="90px" label="台号">
                     <template slot-scope="scope">
                         <span>{{scope.row.no}}</span>
                         <span @click="displayVideoPlayer(scope.row)" v-if="scope.row.visible" class="display-btn"><svg-icon
@@ -270,7 +271,7 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" align="center" min-width="100px" label="展示名">
+                <el-table-column sortable prop="name" align="center" min-width="100px" label="展示名">
                     <template slot-scope="scope">
                         <span @click="displayLiveChannel(scope.row.id)" class="ellipsis two name">
                             {{scope.row.name}}
@@ -495,7 +496,8 @@
                 setLiveChannel: 'channel/setLiveChannel',
                 updatePagination: 'channel/updatePagination',
                 updateSearchFields: 'channel/updateSearchFields',
-                resetSearchFields: 'channel/resetSearchFields'
+                resetSearchFields: 'channel/resetSearchFields',
+                setList: 'channel/setList'
             }),
             ...mapActions({
                 getChannelType: 'channel/getChannelType',
@@ -791,6 +793,28 @@
                 clipboard.on('error', (e) => {
                     this.$message.error('链接复制失败');
                 });
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'no') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.list).sortBy('no').value();
+                    } else {
+                        sortedList = _.chain(this.list).sortBy('no').reverse().value();
+                    }
+                    this.setList({list: sortedList});
+                }
+                if (prop === 'name') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.list).sortBy('name').value();
+                    } else {
+                        sortedList = _.chain(this.list).sortBy('name').reverse().value();
+                    }
+                    this.setList({list: sortedList});
+                }
             }
         }
     };

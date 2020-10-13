@@ -3,6 +3,7 @@
     <div>
         <el-table
             :data="comboList"
+            @sort-change="sortChangeHandler"
             border
             style="width: 100%">
             <el-table-column
@@ -42,15 +43,19 @@
             </el-table-column>
             <el-table-column
                 align="center"
+                sortable
+                prop="updatedAt"
                 min-width="140px"
                 label="更新时间">
                 <template slot-scope="scope">
-                    <div>{{scope.row.createdAt | formatDate('yyyy-MM-DD')}}</div>
-                    <div>{{scope.row.createdAt | formatDate('HH:mm:SS')}}</div>
+                    <div>{{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}</div>
+                    <div>{{scope.row.updatedAt | formatDate('HH:mm:SS')}}</div>
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
+                sortable
+                prop="createdAt"
                 min-width="140px"
                 label="创建时间">
                 <template slot-scope="scope">
@@ -88,7 +93,7 @@
 </template>
 
 <script>
-
+    import _ from 'lodash';
     export default {
         name: 'ComboOperateTable',
         props: {
@@ -97,6 +102,10 @@
                 default: function () {
                     return [];
                 }
+            },
+            setComboList: {
+                type: Function,
+                default: () => {}
             }
         },
         data() {
@@ -154,6 +163,28 @@
                     name: 'EditCombo',
                     params: {id: item.id}
                 });
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'createdAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.comboList).sortBy('createdAt').value();
+                    } else {
+                        sortedList = _.chain(this.comboList).sortBy('createdAt').reverse().value();
+                    }
+                    this.setComboList(sortedList);
+                }
+                if (prop === 'updatedAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.comboList).sortBy('updatedAt').value();
+                    } else {
+                        sortedList = _.chain(this.comboList).sortBy('updatedAt').reverse().value();
+                    }
+                    this.setComboList(sortedList);
+                }
             }
         }
     };

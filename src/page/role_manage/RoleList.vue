@@ -39,6 +39,7 @@
         <role-operate-table
             ref="roleOperateTable"
             :roleList="roleList"
+            :setRoleList="setRoleList"
             v-on:getRoleList="getRoleList"
             v-on:setBatchDisabledStatus="setBatchDisabledStatus">
         </role-operate-table>
@@ -153,6 +154,11 @@
             // 批量删除
             batchRemove() {
                 this.$refs.roleOperateTable.batchRemove();
+            },
+            // dev2.9新增
+            setRoleList(list) {
+                console.log(list);
+                this.roleList = list;
             }
         }
     };

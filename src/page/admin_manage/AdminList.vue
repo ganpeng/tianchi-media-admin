@@ -36,6 +36,7 @@
         <admin-operate-table
             ref="adminOperateTable"
             :adminList="adminList"
+            :setAdminList="setAdminList"
             v-on:getAdminList="getAdminList"
             v-on:setBatchDisabledStatus="setBatchDisabledStatus">
         </admin-operate-table>
@@ -143,6 +144,10 @@
                     return;
                 }
                 this.$router.push({name: 'CreateAdmin'});
+            },
+            // dev2.9新增
+            setAdminList(list) {
+                this.adminList = list;
             }
         }
     };

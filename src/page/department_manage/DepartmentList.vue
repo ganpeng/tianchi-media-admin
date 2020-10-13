@@ -18,6 +18,7 @@
         </div>
         <department-operate-table
             ref="departmentOperateTable"
+            :setDepartmentList="setDepartmentList"
             :departmentList="departmentList"
             v-on:getDepartmentList="getDepartmentList">
         </department-operate-table>
@@ -95,6 +96,10 @@
                     return;
                 }
                 this.$router.push({name: 'CreateDepartment'});
+            },
+            // dev2.9新增
+            setDepartmentList(list) {
+                this.departmentList = list;
             }
         }
     };

@@ -19,6 +19,7 @@
         <combo-operate-table
             ref="comboOperateTable"
             :comboList="comboList"
+            :setComboList="setComboList"
             v-on:getComboList="getComboList">
         </combo-operate-table>
         <el-pagination
@@ -95,6 +96,10 @@
                     return;
                 }
                 this.$router.push({name: 'CreateCombo'});
+            },
+            // dev2.9新增
+            setComboList(list) {
+                this.comboList = list;
             }
         }
     };

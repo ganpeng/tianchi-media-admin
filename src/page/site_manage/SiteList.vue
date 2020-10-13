@@ -39,6 +39,7 @@
         <el-table
             header-row-class-name="common-table-header"
             :data="siteList"
+            @sort-change="sortChangeHandler"
             border
             row-class-name=site-row
             style="width: 100%">
@@ -64,6 +65,8 @@
             </el-table-column>
             <el-table-column
                 align="center"
+                sortable
+                prop="createdAt"
                 min-width="140px"
                 label="创建时间">
                 <template slot-scope="scope">
@@ -95,7 +98,7 @@
 </template>
 
 <script>
-
+    import _ from 'lodash';
     export default {
         name: 'SiteList',
         data() {
@@ -178,6 +181,19 @@
                         }
                     });
                 });
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'createdAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.siteList).sortBy('createdAt').value();
+                    } else {
+                        sortedList = _.chain(this.siteList).sortBy('createdAt').reverse().value();
+                    }
+                    this.siteList = sortedList;
+                }
             }
         }
     };

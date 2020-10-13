@@ -108,6 +108,7 @@
                 </div>
                 <el-table
                     @select="selectHandler"
+                    @sort-change="sortChangeHandler"
                     @select-all="selectAllHandler"
                     :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style"
                     :data="list" border>
@@ -175,7 +176,7 @@
                             <i v-else class="off-the-shelf">已下架</i>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="更新时间">
+                    <el-table-column sortable align="center" prop="updatedAt" label="更新时间">
                         <template slot-scope="scope">
                             {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
                         </template>
@@ -274,7 +275,8 @@
                 updateSearchFields: 'person/updateSearchFields',
                 updatePagination: 'person/updatePagination',
                 resetSearchFields: 'person/resetSearchFields',
-                resetPagination: 'person/resetPagination'
+                resetPagination: 'person/resetPagination',
+                setList: 'person/setPersonList'
             }),
             ...mapActions({
                 getPersonList: 'person/getPersonList',
@@ -538,6 +540,19 @@
                 if (item.refCount && item.refCount > 0) {
                     this.currentItem = item;
                     this.$refs.displayRelatedDialog.showDialog();
+                }
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'updatedAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.list).sortBy('updatedAt').value();
+                    } else {
+                        sortedList = _.chain(this.list).sortBy('updatedAt').reverse().value();
+                    }
+                    this.setList({list: sortedList});
                 }
             }
         }

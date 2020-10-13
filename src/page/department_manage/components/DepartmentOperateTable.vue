@@ -4,6 +4,7 @@
         <el-table
             :data="departmentList"
             border
+            @sort-change="sortChangeHandler"
             style="width: 100%">
             <el-table-column
                 align="center"
@@ -48,6 +49,8 @@
                 </template>
             </el-table-column>
             <el-table-column
+                sortable
+                prop="createdAt"
                 align="center"
                 min-width="140px"
                 label="创建时间">
@@ -56,6 +59,8 @@
                 </template>
             </el-table-column>
             <el-table-column
+                sortable
+                prop="updatedAt"
                 align="center"
                 min-width="140px"
                 label="更新时间">
@@ -79,7 +84,7 @@
 </template>
 
 <script>
-
+    import _ from 'lodash';
     export default {
         name: 'DepartmentOperateTable',
         props: {
@@ -88,6 +93,10 @@
                 default: function () {
                     return [];
                 }
+            },
+            setDepartmentList: {
+                type: Function,
+                default: () => {}
             }
         },
         data() {
@@ -128,6 +137,28 @@
                         }
                     });
                 });
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'createdAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.adminList).sortBy('createdAt').value();
+                    } else {
+                        sortedList = _.chain(this.adminList).sortBy('createdAt').reverse().value();
+                    }
+                    this.setAdminList(sortedList);
+                }
+                if (prop === 'updatedAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.adminList).sortBy('updatedAt').value();
+                    } else {
+                        sortedList = _.chain(this.adminList).sortBy('updatedAt').reverse().value();
+                    }
+                    this.setAdminList(sortedList);
+                }
             }
         }
     };

@@ -47,6 +47,7 @@
         <subject-operate-table
             ref="subjectOperateTable"
             :subjectList="subjectList"
+            :setSubjectList="setSubjectList"
             v-on:getSubjectList="getSubjectList"
             v-on:setBatchDisabledStatus="setBatchDisabledStatus">
         </subject-operate-table>
@@ -165,6 +166,10 @@
                     name: command === 'PROGRAMME' ? 'CreateProgrammeSubject' : 'CreateFigureSubject'
                 });
                 window.open(routeData.href, '_blank');
+            },
+            // dev2.9新增
+            setSubjectList(list) {
+                this.subjectList = list;
             }
         }
     };
