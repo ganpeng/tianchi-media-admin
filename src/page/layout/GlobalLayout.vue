@@ -450,6 +450,7 @@
             overflow: scroll;
             background: $contentBg;
             .content-wrapper {
+                height: 100%;
                 padding: 20px 20px 100px 20px;
             }
         }

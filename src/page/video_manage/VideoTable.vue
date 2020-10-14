@@ -4,6 +4,7 @@
         <el-table
             ref="multipleTable"
             header-row-class-name="common-table-header"
+            @sort-change="sortChangeHandler"
             @select-all="selectAll"
             @select="selectRow"
             class="my-table-style"
@@ -109,8 +110,10 @@
                 </template>
             </el-table-column>
             <el-table-column
+                sortable
                 prop="takeTimeInSec"
                 align="center"
+                width="120"
                 label="视频时长">
                 <template slot-scope="scope">
                     {{scope.row.takeTimeInSec | fromSecondsToTime}}
@@ -233,8 +236,10 @@
                 </template>
             </el-table-column>
             <el-table-column
+                sortable
+                prop="createdAt"
                 align="center"
-                width="100px"
+                width="120px"
                 label="上传日期">
                 <template slot-scope="scope">
                     <div>{{scope.row.createdAt | formatDate('yyyy-MM-DD')}}</div>
@@ -242,8 +247,10 @@
                 </template>
             </el-table-column>
             <el-table-column
+                sortable
+                prop="updatedAt"
                 align="center"
-                width="100px"
+                width="120px"
                 label="更新日期">
                 <template slot-scope="scope">
                     <div>{{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}</div>
@@ -341,6 +348,7 @@
 </template>
 
 <script>
+    import _ from 'lodash';
     import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
 
@@ -363,6 +371,10 @@
                 default: function () {
                     return [];
                 }
+            },
+            setVideoList: {
+                type: Function,
+                default: () => {}
             }
         },
         data() {
@@ -771,6 +783,37 @@
             // 获取已选的视频列表
             getSelectedVideoList() {
                 return this.multipleSelection;
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'createdAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.videoList).sortBy('createdAt').value();
+                    } else {
+                        sortedList = _.chain(this.videoList).sortBy('createdAt').reverse().value();
+                    }
+                    this.setVideoList(sortedList);
+                }
+                if (prop === 'updatedAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.videoList).sortBy('updatedAt').value();
+                    } else {
+                        sortedList = _.chain(this.videoList).sortBy('updatedAt').reverse().value();
+                    }
+                    this.setVideoList(sortedList);
+                }
+                if (prop === 'takeTimeInSec') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.videoList).sortBy('takeTimeInSec').value();
+                    } else {
+                        sortedList = _.chain(this.videoList).sortBy('takeTimeInSec').reverse().value();
+                    }
+                    this.setVideoList(sortedList);
+                }
             }
         }
     };

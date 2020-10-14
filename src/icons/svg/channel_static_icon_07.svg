@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="223px" height="72px" viewBox="0 0 223 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>font_live</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="59.6562123%" y1="44.7877496%" x2="58.5036058%" y2="55.2122504%" id="linearGradient-1">
+            <stop stop-color="#9BD5FF" stop-opacity="0.01" offset="0%"></stop>
+            <stop stop-color="#62ABFF" stop-opacity="0.0468476836" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="05-01-频道统计-宽度适配2.9" transform="translate(-236.000000, -142.000000)" fill="url(#linearGradient-1)" fill-rule="nonzero">
+            <path d="M326,142 L316.944698,214 L298,214 L304.974193,146.83642 L301.964017,142 L326,142 Z M351.053931,142 L358.976031,191.99509 L378.988015,142 L399,142 L371.065916,214 L343.028464,214 L331.97639,145.563044 L330,142 L351.053931,142 Z M459,142 L458.061796,154.21156 L425.030398,154.21156 L423.04653,169.986164 L453.994867,169.986164 L453.05253,182.197724 L420.963469,182.197724 L418.983734,201.78844 L453.994867,201.78844 L453.05253,214 L397,214 L405.022265,146.83642 L402.005133,142.016068 L459,142 Z M263.010108,142 L256.029369,201.783429 L295,201.783429 L294.061795,213.993965 L242.067889,213.993965 C240.206926,214.084364 238.450841,213.153485 237.521522,211.583991 C236.447863,209.723309 235.924351,207.610413 236.008821,205.478723 L242.051356,146.836015 L239.030089,142.016066 L263.010108,142 Z" id="font_live"></path>
+        </g>
+    </g>
+</svg>

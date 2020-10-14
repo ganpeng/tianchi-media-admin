@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>icon_capacity</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#9BD5FF" stop-opacity="0.1" offset="0%"></stop>
+            <stop stop-color="#62ABFF" stop-opacity="0.1" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="05-01-频道统计-宽度适配2.9" transform="translate(-1854.000000, -259.000000)" fill="url(#linearGradient-1)">
+            <path d="M1869,274 L1869,289 L1868.68617,288.996782 C1860.65249,288.8319 1854.17032,282.351049 1854.0033,274.317894 L1854,274 L1869,274 Z M1870.125,259 C1877.78795,259 1884,265.212049 1884,272.875 C1884,280.537951 1877.78795,286.75 1870.125,286.75 L1870.125,286.75 L1870.125,272.874758 L1856.25,272.875 C1856.25,265.212049 1862.46205,259 1870.125,259 Z" id="icon_capacity" transform="translate(1869.000000, 274.000000) rotate(180.000000) translate(-1869.000000, -274.000000) "></path>
+        </g>
+    </g>
+</svg>

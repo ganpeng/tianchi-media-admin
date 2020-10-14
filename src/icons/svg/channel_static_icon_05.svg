@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="25px" height="30px" viewBox="0 0 25 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>icon_video</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#9BD5FF" stop-opacity="0.1" offset="0%"></stop>
+            <stop stop-color="#62ABFF" stop-opacity="0.1" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="05-01-频道统计-宽度适配2.9" transform="translate(-1858.000000, -163.000000)" fill="url(#linearGradient-1)">
+            <path d="M1872.70332,167.76789 L1885.12419,187.951805 C1885.70309,188.892521 1885.40978,190.124415 1884.46907,190.703317 C1884.15385,190.897295 1883.79099,191 1883.42087,191 L1858.57913,191 C1857.47456,191 1856.57913,190.104569 1856.57913,189 C1856.57913,188.62988 1856.68183,188.267021 1856.87581,187.951805 L1869.29668,167.76789 C1869.87559,166.827174 1871.10748,166.533866 1872.04819,167.112768 C1872.31484,167.276854 1872.53923,167.501249 1872.70332,167.76789 Z" id="icon_video" transform="translate(1871.000000, 178.000000) rotate(90.000000) translate(-1871.000000, -178.000000) "></path>
+        </g>
+    </g>
+</svg>

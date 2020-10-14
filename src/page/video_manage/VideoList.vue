@@ -97,6 +97,7 @@
                     ref="videoTable"
                     :shareSiteOptions="shareSiteOptions"
                     :videoList="videoList"
+                    :setVideoList="setVideoList"
                     v-on:setBatchDisabledStatus="setBatchDisabledStatus">
                 </video-table>
                 <el-pagination
@@ -689,6 +690,10 @@
                     return;
                 }
                 this.$router.push({name: 'DiffTimeVideoList'});
+            },
+            // dev2.9
+            setVideoList(list) {
+                this.videoList = list;
             }
         }
     };
