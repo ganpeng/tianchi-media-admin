@@ -20,15 +20,15 @@
                     <div class="search-field-item">
                         <label class="search-field-item-label">类型</label>
                         <el-select
-                            :value="searchFields.type"
+                            :value="searchFields.code"
                             filterable
                             clearable
-                            @input="inputHandler($event, 'type')"
+                            @input="inputHandler($event, 'code')"
                             placeholder="全部">
                             <el-option
-                                v-for="(item, index) in []"
+                                v-for="(item, index) in serverGroupTypeOPtions"
                                 :key="index"
-                                :label="item.name"
+                                :label="item.label"
                                 :value="item.value">
                             </el-option>
                         </el-select>
@@ -57,9 +57,13 @@
                     @sort-change="sortChangeHandler"
                     header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                     <el-table-column align="center" width="120px" label="组名" prop="name"></el-table-column>
-                    <el-table-column align="center" label="组类型" prop="type"></el-table-column>
+                    <el-table-column align="center" label="组类型" prop="type">
+                        <template slot-scope="scope">
+                            {{typeLabelList(scope.row.typeList)}}
+                        </template>
+                    </el-table-column>
                     <el-table-column align="center" label="IP" prop="ip"></el-table-column>
-                    <el-table-column align="center" label="频道数" prop="no"></el-table-column>
+                    <el-table-column align="center" label="频道数" prop="currentCount"></el-table-column>
                     <el-table-column width="120px" align="center" label="创建时间">
                         <template slot-scope="scope">
                             {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
@@ -95,13 +99,17 @@
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
+import role from '@/util/config/role';
 export default {
     name: 'ServerGroupList',
     data() {
-        return {};
+        return {
+            serverGroupTypeOPtions: role.SERVER_GROUP_TYPE_OPTIONS
+        };
     },
     created() {
         this.resetState();
+        this.getServerGroupList();
         window.addEventListener('keyup', this.keyupHandler);
     },
     beforeDestroy() {
@@ -112,7 +120,18 @@ export default {
             list: 'serverGroup/list',
             pagination: 'serverGroup/pagination',
             searchFields: 'serverGroup/searchFields'
-        })
+        }),
+        typeLabelList() {
+            return (typeList) => {
+                return _.chain(typeList)
+                        .filter((item) => {
+                            let index = this.serverGroupTypeOPtions.findIndex((type) => type.value === item);
+                            return index >= 0;
+                        })
+                        .join(',')
+                        .value();
+            };
+        }
     },
     methods: {
         ...mapMutations({
@@ -123,7 +142,9 @@ export default {
             resetState: 'serverGroup/resetState',
             setList: 'serverGroup/setList'
         }),
-        ...mapActions({}),
+        ...mapActions({
+            getServerGroupList: 'serverGroup/getServerGroupList'
+        }),
         createServerGroupHandler() {
             this.$router.push({name: 'ServerGroupCreate'});
         },

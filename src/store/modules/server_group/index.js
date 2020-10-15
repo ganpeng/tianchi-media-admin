@@ -13,7 +13,7 @@ const defaultServerGroup = {
 
 const defaultSearchFields = {
     keyword: '', // 关键字
-    type: '' // 组类型
+    code: '' // 组类型 LIVE CAROUSEL RECORD
 };
 
 const defaultPagination = {
@@ -100,12 +100,12 @@ const actions = {
             isLoading = false;
         }
     },
-    async updateServerGroupById({state}, id) {
+    async updateServerGroup({state}, id) {
         try {
             if (!isLoading) {
                 isLoading = true;
                 let serverGroup = Object.assign({}, state.currentServerGroup, {id});
-                let res = service.updatePersonById(serverGroup);
+                let res = service.updateServerGroup(serverGroup);
                 isLoading = false;
                 if (res && res.code === 0) {
                     return res;
@@ -116,10 +116,25 @@ const actions = {
             isLoading = false;
         }
     },
-    async getServerGroupList() {
+    async getServerGroupList({commit, state}) {
         try {
-            let res = await service.getServerGroupList();
+            let params = Object.assign({}, state.searchField, state.pagination, {
+                pageNum: state.pagination.pageNum - 1
+            });
+            let res = await service.getServerGroupList(params);
             if (res && res.code === 0) {
+                let {pageNum, pageSize, total, list} = res.data;
+                commit('setList', {list});
+                commit('setPagination', {pageSize, pageNum: pageNum + 1, total});
+                return res;
+            }
+        } catch (err) {}
+    },
+    async getServerGroupById({commit}, id) {
+        try {
+            let res = await service.getServerGroupById(id);
+            if (res && res.code === 0) {
+                commit('setCurrentServerGroup', {currentServerGroup: res.data});
                 return res;
             }
         } catch (err) {}

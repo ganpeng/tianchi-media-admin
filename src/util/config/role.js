@@ -1093,6 +1093,21 @@ const APPLICABLE_CLIENT_LIST_OPTION = [
     }
 ];
 
+const SERVER_GROUP_TYPE_OPTIONS = [
+    {
+        label: '直播服务器组',
+        value: 'LIVE'
+    },
+    {
+        label: '轮播服务器组',
+        value: 'CAROUSEL'
+    },
+    {
+        label: '回看服务器组',
+        value: 'RECORD'
+    }
+];
+
 export default {
     MAIN_ROLE_OPTIONS,
     VIDEO_TYPE,
@@ -1138,5 +1153,7 @@ export default {
     PAYMENT_OPTIONS,
 //  dev_v2.6新增
     APP_NAV_LIST,
-    APPLICABLE_CLIENT_LIST_OPTION
+    APPLICABLE_CLIENT_LIST_OPTION,
+// dev2.9新增
+    SERVER_GROUP_TYPE_OPTIONS
 };
