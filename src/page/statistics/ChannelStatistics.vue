@@ -40,7 +40,13 @@
                     </div>
                 </div>
             </div>
-            <div class="left-bottom-field bottom-field"></div>
+            <div class="left-bottom-field bottom-field">
+                <div class="chart-header">
+                    <div class="title">直播分类</div>
+                    <div class="unit">单位：个</div>
+                </div>
+                <div id="live-data-chart"></div>
+            </div>
         </div>
         <div class="splite"></div>
         <div class="right-field">
@@ -94,20 +100,241 @@
                     </div>
                 </div>
             </div>
-            <div class="right-bottom-field bottom-field"></div>
+            <div class="right-bottom-field bottom-field">
+                <div class="chart-header">
+                    <div class="title">轮播分类</div>
+                    <div class="unit">单位：个</div>
+                </div>
+                <div id="carousel-data-chart"></div>
+            </div>
         </div>
     </div>
 </template>
 <script>
+import echarts from 'echarts';
 export default {
     name: 'ChannelStatistics',
+    data() {
+        return {
+            liveDataChart: null,
+            carouselDataChart: null,
+            liveData: {
+                data1: ['央视专区', '卫视专区', '本地专区', '高清专区'],
+                data2: [405, 361, 117, 67]
+            }
+        };
+    },
     async created() {
         try {
             // await this.$nextTick();
             // let contentWrapper = document.querySelector('.content-wrapper');
             // contentWrapper.style.paddingBottom = '20px';
+            this.initLiveDataChart();
+            this.initCarouselDataChart();
         } catch (err) {
             console.log(err);
+        }
+    },
+    methods: {
+        async initLiveDataChart() {
+            try {
+                await this.$nextTick();
+                let liveDataChartDom = document.querySelector('#live-data-chart');
+                let liveDataChart = echarts.init(liveDataChartDom);
+                this.liveDataChart = liveDataChart;
+                // 为echarts对象加载数据
+                liveDataChart.clear();
+                liveDataChart.setOption(this.getLiveDataChartConfig(), true);
+
+                window.addEventListener('resize', () => {
+                    this.liveDataChart.resize();
+                }, false);
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        async initCarouselDataChart() {
+            try {
+                await this.$nextTick();
+                let carouselDataChartDom = document.querySelector('#carousel-data-chart');
+                let carouselDataChart = echarts.init(carouselDataChartDom);
+                this.carouselDataChart = carouselDataChart;
+                // 为echarts对象加载数据
+                carouselDataChart.clear();
+                carouselDataChart.setOption(this.getCarouselDataChartConfig(), true);
+
+                window.addEventListener('resize', () => {
+                    this.carouselDataChart.resize();
+                }, false);
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        getLiveDataChartConfig() {
+            return {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: (params) => {
+                        return `<span>${params.name}</span>:
+                                <span style="color: ${params.color};">${params.value}</span>`;
+                    }
+                },
+                grid: {
+                    top: '10%',
+                    left: '5%',
+                    right: '2%',
+                    bottom: '15%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: this.liveData.data1,
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        fontSize: 12,
+                        color: '#A3D0FD',
+                        interval: 0
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#3E495E'
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        fontSize: 12,
+                        color: '#A3D0FD'
+                    },
+                    axisLine: {
+                        show: false,
+                        lineStyle: {
+                            color: '#3E495E'
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: ['#36425C']
+                        }
+                    }
+                },
+                series: [
+                    {
+                        data: this.liveData.data2,
+                        type: 'bar',
+                        label: {
+                            show: true,
+                            color: '#FFF',
+                            position: 'top'
+                        },
+                        itemStyle: {
+                            normal: {
+                                barBorderRadius: 6,
+                                color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
+                                {
+                                    offset: 0,
+                                    color: '#148EFF'
+                                },
+                                {
+                                    offset: 1,
+                                    color: '#18A8FF'
+                                }
+                                ])
+                            }
+                        },
+                        barWidth: 32,
+                        showBackground: true,
+                        backgroundStyle: {
+                            color: 'rgba(216, 216, 216, 0.1)'
+                        }
+                    }
+                ]
+            };
+        },
+        getCarouselDataChartConfig() {
+            return {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: (params) => {
+                        return `<span>${params.name}</span>:
+                                <span style="color: ${params.color};">${params.value}</span>`;
+                    }
+                },
+                grid: {
+                    top: '10%',
+                    left: '5%',
+                    right: '2%',
+                    bottom: '15%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: this.liveData.data1,
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        fontSize: 12,
+                        color: '#A3D0FD',
+                        interval: 0
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#3E495E'
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        fontSize: 12,
+                        color: '#A3D0FD'
+                    },
+                    axisLine: {
+                        show: false,
+                        lineStyle: {
+                            color: '#3E495E'
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: ['#36425C']
+                        }
+                    }
+                },
+                series: [
+                    {
+                        data: this.liveData.data2,
+                        type: 'bar',
+                        label: {
+                            show: true,
+                            color: '#FFF',
+                            position: 'top'
+                        },
+                        itemStyle: {
+                            normal: {
+                                barBorderRadius: 6,
+                                color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
+                                {
+                                    offset: 0,
+                                    color: '#95E3E2'
+                                },
+                                {
+                                    offset: 1,
+                                    color: '#62CCCA'
+                                }
+                                ])
+                            }
+                        },
+                        barWidth: 32,
+                        showBackground: true,
+                        backgroundStyle: {
+                            color: 'rgba(216, 216, 216, 0.1)'
+                        }
+                    }
+                ]
+            };
         }
     }
 };
@@ -418,8 +645,29 @@ export default {
     }
     .bottom-field {
         height: 400px;
+        padding: 16px 24px;
         border-radius: 16px;
         background-color: #26304A;
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            // align-items: center;
+            width: 100%;
+            height: 20%;
+            color: #A3D0FD;
+            .title {
+                font-size: 14px;
+                font-weight: 600;
+            }
+            .unit {
+                font-size: 12px;
+            }
+        }
+        #live-data-chart,
+        #carousel-data-chart {
+            width: 100%;
+            height: 80%;
+        }
     }
 }
 </style>
