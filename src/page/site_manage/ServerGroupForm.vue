@@ -105,6 +105,7 @@ export default {
         deleteTypeHandler(type) {
             let typeList = this.serverGroup.typeList.filter((item) => item !== type);
             this.updateCurrentServerGroup({key: 'typeList', value: typeList});
+            this.clearvaidatorByProp('typeList');
         },
         selectTypeHandler(obj) {
             let typeList = _.chain(this.serverGroup.typeList)
@@ -112,9 +113,16 @@ export default {
                             .uniqBy()
                             .value();
             this.updateCurrentServerGroup({key: 'typeList', value: typeList});
+            this.clearvaidatorByProp('typeList');
         },
         validate() {
             return this.$refs.serverGroupForm.validate();
+        },
+        clearvaidatorByProp(prop) {
+            let _prop = _.get(this.serverGroup, prop);
+            if (_prop.length > 0) {
+                this.$refs.serverGroupForm.clearValidate(prop);
+            }
         }
     }
 };
