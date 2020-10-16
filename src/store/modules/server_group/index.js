@@ -7,8 +7,8 @@ let isLoading = false;
 const defaultServerGroup = {
     name: '', // 组名称
     ip: '', // 组ip
-    type: '', // 组类型
-    no: '' // 频道数
+    typeList: [], // 组类型
+    currentCount: '' // 频道数
 };
 
 const defaultSearchFields = {
@@ -118,9 +118,10 @@ const actions = {
     },
     async getServerGroupList({commit, state}) {
         try {
-            let params = Object.assign({}, state.searchField, state.pagination, {
+            let params = Object.assign({}, state.searchFields, state.pagination, {
                 pageNum: state.pagination.pageNum - 1
             });
+            console.log(params);
             let res = await service.getServerGroupList(params);
             if (res && res.code === 0) {
                 let {pageNum, pageSize, total, list} = res.data;

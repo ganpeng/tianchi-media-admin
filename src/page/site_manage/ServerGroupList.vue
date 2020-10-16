@@ -28,7 +28,7 @@
                             <el-option
                                 v-for="(item, index) in serverGroupTypeOPtions"
                                 :key="index"
-                                :label="item.label"
+                                :label="item.name"
                                 :value="item.value">
                             </el-option>
                         </el-select>
@@ -59,7 +59,7 @@
                     <el-table-column align="center" width="120px" label="组名" prop="name"></el-table-column>
                     <el-table-column align="center" label="组类型" prop="type">
                         <template slot-scope="scope">
-                            {{typeLabelList(scope.row.typeList)}}
+                            {{typeNameList(scope.row.typeList)}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" label="IP" prop="ip"></el-table-column>
@@ -121,13 +121,14 @@ export default {
             pagination: 'serverGroup/pagination',
             searchFields: 'serverGroup/searchFields'
         }),
-        typeLabelList() {
+        typeNameList() {
             return (typeList) => {
-                return _.chain(typeList)
+                return _.chain(this.serverGroupTypeOPtions)
                         .filter((item) => {
-                            let index = this.serverGroupTypeOPtions.findIndex((type) => type.value === item);
+                            let index = typeList.findIndex((type) => type === item.value);
                             return index >= 0;
                         })
+                        .map((item) => item.name)
                         .join(',')
                         .value();
             };
@@ -146,16 +147,17 @@ export default {
             getServerGroupList: 'serverGroup/getServerGroupList'
         }),
         createServerGroupHandler() {
-            this.$router.push({name: 'ServerGroupCreate'});
+            this.$router.push({name: 'CreateServerGroup'});
         },
-
         clearSearchFields() {
             this.resetSearchFields();
         },
-        searchHandler() {},
+        searchHandler() {
+            this.getServerGroupList();
+        },
         keyupHandler(e) {
             if (e.keyCode === 13) {
-                console.log('search');
+                this.searchHandler();
             }
         },
         // 跳转到详情页面
@@ -164,9 +166,13 @@ export default {
             if (key === 'pageSize') {
                 window.localStorage.setItem('serverGroupPageSize', value);
             }
+            this.searchHandler();
         },
         inputHandler(value, key) {
             this.updateSearchFields({key, value});
+            if (key !== 'keyword') {
+                this.searchHandler();
+            }
         },
         sortChangeHandler(obj) {
             let {prop, order} = obj;
@@ -182,7 +188,7 @@ export default {
         },
         //  dev_v2.5 新增
         editServerGroupHandler(id) {
-            this.$router.push({name: 'EditVersion', params: {id}});
+            this.$router.push({name: 'EditServerGroup', params: {id}});
         },
         async deleteServerGroupHandler(id) {
             try {

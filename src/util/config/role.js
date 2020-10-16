@@ -1095,15 +1095,15 @@ const APPLICABLE_CLIENT_LIST_OPTION = [
 
 const SERVER_GROUP_TYPE_OPTIONS = [
     {
-        label: '直播服务器组',
+        name: '直播服务器组',
         value: 'LIVE'
     },
     {
-        label: '轮播服务器组',
+        name: '轮播服务器组',
         value: 'CAROUSEL'
     },
     {
-        label: '回看服务器组',
+        name: '回看服务器组',
         value: 'RECORD'
     }
 ];

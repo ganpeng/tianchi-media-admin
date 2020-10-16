@@ -10,12 +10,34 @@
     </div>
 </template>
 <script>
+import {mapActions, mapMutations} from 'vuex';
 import ServerGroupForm from './ServerGroupForm';
 export default {
     name: 'ServerGroupCreate',
     components: {ServerGroupForm},
+    created() {
+        this.resetServerGroup();
+    },
     methods: {
-        createServerGroupHandler() {},
+        ...mapMutations({
+            resetServerGroup: 'serverGroup/resetServerGroup'
+        }),
+        ...mapActions({
+            createServerGroup: 'serverGroup/createServerGroup'
+        }),
+        async createServerGroupHandler() {
+            try {
+                let valid = await this.$refs.serverGroupForm.validate();
+                if (valid) {
+                    let res = await this.createServerGroup();
+                    if (res && res.code === 0) {
+                        this.gotoList();
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        },
         gotoList() {
             this.$router.push({name: 'ServerGroupList'});
         }

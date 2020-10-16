@@ -1108,13 +1108,13 @@ export const routes = [
             },
             {
                 path: '/server-group/create',
-                name: 'ServerGroupCreate',
-                component: () => import('@/page/site_manage/ServerGroupCreate')
+                name: 'CreateServerGroup',
+                component: () => import('@/page/site_manage/CreateServerGroup')
             },
             {
                 path: '/server-group/edit/:id',
-                name: 'ServerGroupEdit',
-                component: () => import('@/page/site_manage/ServerGroupEdit')
+                name: 'EditServerGroup',
+                component: () => import('@/page/site_manage/EditServerGroup')
             }
         ]
     },
