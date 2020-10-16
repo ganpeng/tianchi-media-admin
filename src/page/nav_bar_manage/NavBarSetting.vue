@@ -28,7 +28,7 @@
                         @click="toEditNavBar(item.id)">
                         编辑
                     </label>
-                    <input v-if="item.type === 'CUSTOM'"
+                    <input v-if="item.type === 'CUSTOM' || item.type === 'VISIBLE_ONLY'"
                            class="my-switch switch-anim"
                            type="checkbox"
                            v-model="item.visible"/>
