@@ -38,6 +38,25 @@
                 <i class="el-icon-plus"></i>
             </li>
         </ul>
+        <div class="content-title">默认栏目</div>
+        <div class="default-nav-bar">
+            <div class="label">开机默认栏目</div>
+            <el-select
+                clearable
+                filterable
+                class="my-select"
+                placeholder="请选择栏目"
+                :value="defaultNavbarId"
+                @change="defaultNavbarSelectChangeHandler($event)"
+            >
+                <el-option
+                    v-for="(item, index) in navBarList"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.id">
+                </el-option>
+            </el-select>
+        </div>
         <div class="operate-block text-center">
             <el-button type="primary" @click="updateNavBarSetting" class="btn-style-two">保存</el-button>
         </div>
@@ -55,6 +74,12 @@
         },
         mounted() {
             this.init();
+        },
+        computed: {
+            defaultNavbarId() {
+                let navbar = this.navBarList.find((navbar) => navbar.isDefault);
+                return navbar ? navbar.id : '';
+            }
         },
         methods: {
             init() {
@@ -125,6 +150,17 @@
                     return;
                 }
                 this.$router.push({name: 'EditNavBar', params: {id: id}});
+            },
+            // dev2.9
+            defaultNavbarSelectChangeHandler(id) {
+                this.navBarList = this.navBarList.map((navbar) => {
+                    if (navbar.id === id) {
+                        navbar.isDefault = true;
+                    } else {
+                        navbar.isDefault = null;
+                    }
+                    return navbar;
+                });
             }
         }
     };
@@ -353,4 +389,28 @@
         cursor: -webkit-grab;
     }
 
+</style>
+<style lang="scss">
+    .default-nav-bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        .label {
+            margin-right: 20px;
+            font-size: 14px;
+            color: #A8ABB3;
+        }
+        .my-select {
+            height: 34px;
+            line-height: 34px;
+            .el-input {
+                height: 34px;
+                .el-input__inner {
+                    height: 34px;
+                    line-height: 34px;
+                    color: #6F7480;
+                }
+            }
+        }
+    }
 </style>
