@@ -1,34 +1,68 @@
 <template>
     <div class="lookback-thumbnail-container">
-        <div class="content-title">回看缩略图</div>
+        <div class="content-title">缩略图</div>
         <div class="seperator-line"></div>
         <div class="content">
             <div v-if="isEdit" class="control-content">
-                <div v-if="thumbnailStatus === '1'" class="svg-wrapper">
-                    <svg-icon icon-class="on_active"></svg-icon>
-                    <p class="active">开</p>
+                <div class="control-item">
+                    <div class="label">
+                        回看缩略图
+                    </div>
+                    <div class="icon">
+                        <svg-icon v-if="thumbnailStatusActive" icon-class="on_active_icon"></svg-icon>
+                        <svg-icon v-else icon-class="on_deactive_icon"></svg-icon>
+                    </div>
+                    <div :class="['text', thumbnailStatusActive ? 'active' : 'deactive']">
+                        {{thumbnailStatusActive ? '已开启' : '已关闭' }}
+                    </div>
+                    <input
+                        class="my-switch switch-anim"
+                        type="checkbox"
+                        :checked="thumbnailStatusActive"
+                        @click.prevent="toggleLookbackThumbnail"/>
                 </div>
-                <div @click="changeThumbnailStatus('1')" v-else class="svg-wrapper">
-                    <svg-icon icon-class="on_deactive"></svg-icon>
-                    <p>开</p>
-                </div>
-                <div v-if="thumbnailStatus === '0'" class="svg-wrapper">
-                    <svg-icon icon-class="off_active"></svg-icon>
-                    <p class="deactive">关</p>
-                </div>
-                <div @click="changeThumbnailStatus('0')" v-else class="svg-wrapper">
-                    <svg-icon icon-class="off_deactive"></svg-icon>
-                    <p>关</p>
+                <div class="control-item">
+                    <div class="label">
+                        点播缩略图
+                    </div>
+                    <div class="icon">
+                        <svg-icon v-if="videoThumbnailStatusActive" icon-class="on_active_icon"></svg-icon>
+                        <svg-icon v-else icon-class="on_deactive_icon"></svg-icon>
+                    </div>
+                    <div :class="['text', videoThumbnailStatusActive ? 'active' : 'deactive']">
+                        {{videoThumbnailStatusActive ? '已开启' : '已关闭' }}
+                    </div>
+                    <input
+                        class="my-switch switch-anim"
+                        type="checkbox"
+                        :checked="videoThumbnailStatusActive"
+                        @click.prevent="toggleVodThumbnail"/>
                 </div>
             </div>
-            <div v-else class="display-content">
-                <div v-if="thumbnailStatus === '1'" class="svg-wrapper">
-                    <svg-icon icon-class="on_active"></svg-icon>
-                    <p class="active">开</p>
+            <div v-else class="control-content">
+                <div class="control-item">
+                    <div class="label">
+                        回看缩略图
+                    </div>
+                    <div class="icon">
+                        <svg-icon v-if="thumbnailStatusActive" icon-class="on_active_icon"></svg-icon>
+                        <svg-icon v-else icon-class="on_deactive_icon"></svg-icon>
+                    </div>
+                    <div :class="['text', thumbnailStatusActive ? 'active' : 'deactive']">
+                        {{thumbnailStatusActive ? '已开启' : '已关闭' }}
+                    </div>
                 </div>
-                <div v-else class="svg-wrapper">
-                    <svg-icon icon-class="off_active"></svg-icon>
-                    <p class="deactive">关</p>
+                <div class="control-item">
+                    <div class="label">
+                        点播缩略图
+                    </div>
+                    <div class="icon">
+                        <svg-icon v-if="videoThumbnailStatusActive" icon-class="on_active_icon"></svg-icon>
+                        <svg-icon v-else icon-class="on_deactive_icon"></svg-icon>
+                    </div>
+                    <div :class="['text', videoThumbnailStatusActive ? 'active' : 'deactive']">
+                        {{videoThumbnailStatusActive ? '已开启' : '已关闭' }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,7 +77,10 @@ export default {
     name: 'LookbackThumbnail',
     data() {
         return {
-            thumbnailStatus: '',
+            status: {
+                thumbnailStatus: '1',
+                videoThumbnailStatus: '1'
+            },
             isEdit: false
         };
     },
@@ -51,25 +88,29 @@ export default {
         try {
             let res = await this.$service.getThumbnailStatus();
             if (res && res.code === 0) {
-                this.thumbnailStatus = res.data + '';
+                this.status = res.data;
             }
         } catch (err) {
             console.log(err);
         }
     },
+    computed: {
+        thumbnailStatusActive() {
+            return this.status.thumbnailStatus === '1';
+        },
+        videoThumbnailStatusActive() {
+            return this.status.videoThumbnailStatus === '1';
+        }
+    },
     methods: {
         async saveHandler() {
             try {
-                let res = await this.$service.updateThumbnailStatus({
-                    thumbnailStatus: this.thumbnailStatus
-                });
+                let res = await this.$service.updateThumbnailStatus(this.status);
                 if (res && res.code === 0) {
-                    if (this.thumbnailStatus === '1') {
-                        this.$message.success('回看缩略图已开启');
-                    } else {
-                        this.$message.success('回看缩略图已关闭');
-                    }
+                    this.$message.success('缩略图设置成功');
                     this.isEdit = false;
+                } else {
+                    this.$message.error('缩略图设置失败');
                 }
             } catch (err) {
                 console.log(err);
@@ -80,28 +121,48 @@ export default {
         },
         changeThumbnailStatus(value) {
             this.thumbnailStatus = value;
+        },
+        toggleLookbackThumbnail() {
+            if (this.status.thumbnailStatus === '1') {
+                this.status.thumbnailStatus = '0';
+            } else {
+                this.status.thumbnailStatus = '1';
+            }
+        },
+        toggleVodThumbnail() {
+            if (this.status.videoThumbnailStatus === '1') {
+                this.status.videoThumbnailStatus = '0';
+            } else {
+                this.status.videoThumbnailStatus = '1';
+            }
         }
     }
 };
 </script>
 <style lang="scss" scoped>
 .lookback-thumbnail-container {
-    .content {
-        text-align: left;
-        margin-top: 58px;
-        .svg-wrapper {
-            width: 270px;
-            height: 180px;
-            .svg-icon {
-                width: 270px;
-                height: 180px;
+    .control-content {
+        .control-item {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            margin-top: 18px;
+            margin-bottom: 38px;
+            .label {
+                font-size: 20px;
+                color: #A8ABB3;
+                margin-right: 56px;
             }
-            p {
-                text-align: center;
-                color: #A5A8B0;
-                font-size: 24px;
-                font-weight: 400;
-                margin-top: 10px;
+            .icon {
+                margin-right: 8px;
+                .svg-icon {
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+            .text {
+                margin-right: 56px;
                 &.active {
                     color: #3AC26F;
                 }
@@ -109,15 +170,7 @@ export default {
                     color: #ED4242;
                 }
             }
-        }
-        .control-content {
-            display: flex;
-            .svg-wrapper {
-                margin-right: 20px;
-                .svg-icon {
-                    cursor: pointer;
-                }
-            }
+
         }
     }
 }
