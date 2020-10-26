@@ -209,3 +209,31 @@ export const updateThumbnailStatus = (params) => {
     }));
     return service.patch(`/v1/sys/system-config/thumbnail-status?${paramsStr}`);
 };
+
+/***
+ * 节目统计
+ */
+export const getProgrammeStatistics = () => {
+    return service.get(`/v1/statistics/programme`);
+};
+
+/**
+ * 视频统计
+ */
+export const getVideoStatistics = () => {
+    return service.get(`/v1/statistics/video`);
+};
+
+/**
+ * 轮播频道统计
+ */
+export const getCarouselStatistics = () => {
+    return service.get(`/v1/statistics/carousel`);
+};
+
+/**
+ * 直播频道统计
+ */
+export const getLiveStatistics = () => {
+    return service.get(`/v1/statistics/live`);
+};

@@ -17,21 +17,21 @@
                                     <div class="text">节目总数</div>
                                     <svg-icon icon-class="vod_static_icon_03"></svg-icon>
                                 </div>
-                                <div class="value">87</div>
+                                <div class="value">{{summary.totalNumber}}</div>
                             </div>
                             <div class="content-two">
                                 <div class="title">
                                     <svg-icon icon-class="vod_static_icon_01"></svg-icon>
                                     <div class="text">已上架节目数</div>
                                 </div>
-                                <div class="value">87</div>
+                                <div class="value">{{summary.visibleNumber}}</div>
                             </div>
                             <div class="content-three">
                                 <div class="title">
                                     <svg-icon icon-class="vod_static_icon_02"></svg-icon>
                                     <div class="text">已下架节目数</div>
                                 </div>
-                                <div class="value">87</div>
+                                <div class="value">{{summary.invisibleNumber}}</div>
                             </div>
                         </div>
                     </div>
@@ -57,21 +57,21 @@
                                 <div class="value"></div>
                             </div>
                             <div class="content-two">
-                                <div class="value">54965</div>
+                                <div class="value">{{videoSummary.totalNumber}}</div>
                             </div>
                         </div>
                         <div class="right-content">
                             <div class="right-top-content">
                                 <div class="title">视频<br/>总时长</div>
                                 <div class="value">
-                                    <div class="text">300<i>小时</i></div>
+                                    <div class="text">{{formateSeconds(videoSummary.durationNumber)}}<i>小时</i></div>
                                     <svg-icon icon-class="channel_static_icon_05"></svg-icon>
                                 </div>
                             </div>
                             <div class="right-bottom-content">
                                 <div class="title">视频<br/>总体积</div>
                                 <div class="value">
-                                    <div class="text">10<i>TB</i></div>
+                                    <div class="text">{{convertFileSize(videoSummary.capacityNumber).value}}<i>{{convertFileSize(videoSummary.capacityNumber).unit}}</i></div>
                                     <svg-icon icon-class="channel_static_icon_06"></svg-icon>
                                 </div>
                             </div>
@@ -94,20 +94,20 @@
                     <div class="content-item-header">
                         <div class="title">节目点击次数</div>
                     </div>
-                    <ul class="sort-list">
+                    <ul class="sort-list play-count-sort-list">
                         <li class="sort-item">
                             <div class="item">NO.</div>
                             <div class="item">名称</div>
                             <div class="item">分类</div>
                             <div class="item">点击量</div>
                         </li>
-                        <li v-for="(top, index) in programmeClickedList" :key="index" class="sort-item sort-item-color">
+                        <li v-for="(top, index) in playCountList" :key="index" class="sort-item sort-item-color">
                             <div class="item">
                                 <div class="index">{{index + 1}}</div>
                             </div>
-                            <div class="item">{{top.area}}</div>
-                            <div class="item">{{top.vip}}</div>
-                            <div class="item">{{top.down}}</div>
+                            <div class="item">{{top.name}}</div>
+                            <div class="item">{{getCategory(top.categoryList)}}</div>
+                            <div class="item">{{top.playCountReal}}</div>
                         </li>
                     </ul>
                 </div>
@@ -117,17 +117,16 @@
                     </div>
                     <ul class="sort-list">
                         <li class="sort-item">
-                            <div class="item">NO.</div>
+                            <div class="item no-item">NO.</div>
                             <div class="item">分类</div>
                             <div class="item">节目数量</div>
                         </li>
-                        <li v-for="(top, index) in programmeClickedList" :key="index" class="sort-item sort-item-color">
-                            <div class="item">
+                        <li v-for="(top, index) in numberList" :key="index" class="sort-item sort-item-color">
+                            <div class="item no-item">
                                 <div class="index">{{index + 1}}</div>
                             </div>
-                            <div class="item">{{top.area}}</div>
-                            <div class="item">{{top.vip}}</div>
-                            <div class="item">{{top.down}}</div>
+                            <div class="item">{{top.categoryName}}</div>
+                            <div class="item">{{top.programmeNumber}}</div>
                         </li>
                     </ul>
                 </div>
@@ -138,17 +137,16 @@
                     </div>
                     <ul class="sort-list">
                         <li class="sort-item">
-                            <div class="item">NO.</div>
+                            <div class="item no-item">NO.</div>
                             <div class="item">分类</div>
                             <div class="item">节目时长</div>
                         </li>
-                        <li v-for="(top, index) in programmeClickedList" :key="index" class="sort-item sort-item-color">
-                            <div class="item">
+                        <li v-for="(top, index) in durationList" :key="index" class="sort-item sort-item-color">
+                            <div class="item no-item">
                                 <div class="index">{{index + 1}}</div>
                             </div>
-                            <div class="item">{{top.area}}</div>
-                            <div class="item">{{top.vip}}</div>
-                            <div class="item">{{top.down}}</div>
+                            <div class="item">{{top.categoryName}}</div>
+                            <div class="item">{{formateSeconds(top.takeTimeInSec)}}</div>
                         </li>
                     </ul>
                 </div>
@@ -157,10 +155,16 @@
     </div>
 </template>
 <script>
+import _ from 'lodash';
 export default {
     name: 'VodStatistics',
     data() {
         return {
+            videoSummary: {},
+            summary: {},
+            durationList: [],
+            numberList: [],
+            playCountList: [],
             programmeClickedList: [{
                     area: '北京',
                     vip: '55',
@@ -193,6 +197,99 @@ export default {
                 }
             ]
         };
+    },
+    created() {
+        this.getProgrammeStatistics();
+        this.getVideoStatistics();
+    },
+    computed: {
+        getCategory() {
+            return (categoryList) => {
+                return categoryList.map((item) => item.name).join(', ');
+            };
+        },
+        convertFileSize(size) {
+            return (size) => {
+                let kb = 1024;
+                let mb = kb * 1024;
+                let gb = mb * 1024;
+                let tb = gb * 1024;
+                if (!size) {
+                    return {
+                        value: 0,
+                        unit: 'Byte'
+                    };
+                }
+                if (size >= tb) {
+                    return {
+                        value: Math.round(size / gb),
+                        unit: 'TB'
+                    };
+                } else if (size >= gb) {
+                    return {
+                        value: Math.round(size / gb),
+                        unit: 'GB'
+                    };
+                } else if (size >= mb) {
+                    let f = size / mb;
+                    return {
+                        value: Math.round(f),
+                        unit: 'MB'
+                    };
+                } else if (size >= kb) {
+                    let f = size / kb;
+                    return {
+                        value: Math.round(f),
+                        unit: 'KB'
+                    };
+                } else {
+                    return {
+                        value: size,
+                        unit: 'Byte'
+                    };
+                }
+            };
+        }
+    },
+    methods: {
+        getVideoStatistics() {
+            this.$service.getVideoStatistics()
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        let {summary} = res.data;
+                        this.videoSummary = _.reduce(summary, (res, val) => _.assign({}, res, val), {});
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
+        },
+        getProgrammeStatistics() {
+            this.$service.getProgrammeStatistics()
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        let {durationList, numberList, playCountList, summary} = res.data;
+                        this.durationList = durationList || [];
+                        this.numberList = numberList || [];
+                        this.playCountList = playCountList || [];
+                        this.summary = _.reduce(summary, (res, val) => _.assign({}, res, val), {});
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
+        },
+        formateSeconds(endTime) {
+            let secondTime = parseInt(endTime);
+            let min = 0;
+            let h = 0;
+            if (secondTime > 60) {
+                min = parseInt(secondTime / 60);
+                secondTime = parseInt(secondTime % 60);
+                if (min > 60) {
+                    h = parseInt(min / 60);
+                }
+            }
+            return h;
+        }
     }
 };
 </script>
@@ -490,12 +587,13 @@ export default {
                     .sort-item {
                         display: flex;
                         align-items: center;
+                        justify-content: space-around;
                         width: 100%;
                         height: 40px;
                         padding: 0 15px;
                         border-radius: 8px;
                         .item {
-                            width: 25%;
+                            // width: 25%;
                             text-align: left;
                             color: #A3D0FD;
                             font-size: 12px;
@@ -507,6 +605,28 @@ export default {
                                 color: #fff;
                                 text-align: center;
                             }
+                            margin-right: 10px;
+                            &.no-item {
+                                flex: 1;
+                            }
+                        }
+                        .item:nth-of-type(2),
+                        .item:nth-of-type(3) {
+                            flex: 1;
+                        }
+                    }
+                    &.play-count-sort-list {
+                        .item:nth-of-type(1) {
+                            width: 30px;
+                        }
+                        .item:nth-of-type(2) {
+                            flex: 4;
+                        }
+                        .item:nth-of-type(3) {
+                            flex: 2
+                        }
+                        .item:nth-of-type(4) {
+                            flex: 1;
                         }
                     }
                     .sort-item + .sort-item {

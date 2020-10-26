@@ -16,26 +16,26 @@
                                 <div class="text">直播总数</div>
                                 <svg-icon icon-class="channel_static_icon_07"></svg-icon>
                             </div>
-                            <div class="value">87</div>
+                            <div class="value">{{liveSummary.totalNumber}}</div>
                         </div>
                         <div class="content-two">
                             <div class="title">
                                 <svg-icon icon-class="channel_static_icon_03"></svg-icon>
                                 <div class="text">TV端直播数</div>
                             </div>
-                            <div class="value">87</div>
+                            <div class="value">{{liveSummary.tvNumber}}</div>
                         </div>
                         <div class="content-three">
                             <div class="title">
                                 <svg-icon icon-class="channel_static_icon_04"></svg-icon>
                                 <div class="text">APP端直播数</div>
                             </div>
-                            <div class="value">87</div>
+                            <div class="value">{{liveSummary.appNumber}}</div>
                         </div>
                     </div>
                     <div class="right-content">
                         <div class="title">开启回看频道</div>
-                        <div class="value">10</div>
+                        <div class="value">{{liveSummary.recordNumber}}</div>
                         <svg-icon icon-class="channel_static_icon_08"></svg-icon>
                     </div>
                 </div>
@@ -65,28 +65,28 @@
                                 <div class="text">轮播总数</div>
                                 <svg-icon icon-class="channel_static_icon_09"></svg-icon>
                             </div>
-                            <div class="value">87</div>
+                            <div class="value">{{carouselSummary.totalNumber}}</div>
                         </div>
                         <div class="content-two">
                             <div class="title">
                                 <svg-icon icon-class="channel_static_icon_03"></svg-icon>
                                 <div class="text">TV端轮播数</div>
                             </div>
-                            <div class="value">87</div>
+                            <div class="value">{{carouselSummary.tvNumber}}</div>
                         </div>
                         <div class="content-three">
                             <div class="title">
                                 <svg-icon icon-class="channel_static_icon_04"></svg-icon>
                                 <div class="text">APP端轮播数</div>
                             </div>
-                            <div class="value">87</div>
+                            <div class="value">{{carouselSummary.appNumber}}</div>
                         </div>
                     </div>
                     <div class="right-content">
                         <div class="right-top-content">
                             <div class="title">轮播视频<br/>总时长</div>
                             <div class="value">
-                                <div class="text">300<i>小时</i></div>
+                                <div class="text">{{formateSeconds(carouselSummary.totalTakeSec)}}<i>小时</i></div>
                                 <svg-icon icon-class="channel_static_icon_05"></svg-icon>
                             </div>
                         </div>
@@ -112,12 +112,15 @@
 </template>
 <script>
 import echarts from 'echarts';
+import _ from 'lodash';
 export default {
     name: 'ChannelStatistics',
     data() {
         return {
             liveDataChart: null,
             carouselDataChart: null,
+            liveSummary: {},
+            carouselSummary: {},
             liveData: {
                 data1: ['央视专区', '卫视专区', '本地专区', '高清专区'],
                 data2: [405, 361, 117, 67]
@@ -126,17 +129,63 @@ export default {
     },
     async created() {
         try {
-            // await this.$nextTick();
-            // let contentWrapper = document.querySelector('.content-wrapper');
-            // contentWrapper.style.paddingBottom = '20px';
-            this.initLiveDataChart();
-            this.initCarouselDataChart();
+            this.getCarouselStatistics();
+            this.getLiveStatistics();
         } catch (err) {
             console.log(err);
         }
     },
     methods: {
-        async initLiveDataChart() {
+        getCarouselStatistics() {
+            this.$service.getCarouselStatistics()
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        let channelType = _.get(res.data, 'channelType') || [];
+                        let summary = _.get(res.data, 'summary') || {};
+                        let labelList = _.chain(channelType)
+                                         .map((item) => item.id)
+                                         .value();
+                        let valueList = _.chain(labelList)
+                                         .map((id) => {
+                                             let item = _.find(channelType, (item) => item.id === id);
+                                             return _.get(item, 'number') || 0;
+                                         })
+                                         .value();
+                        this.carouselSummary = _.reduce(summary, (res, val) => _.assign({}, res, val), {});
+                        console.log(this.carouselSummary);
+                        let data = {labelList, valueList};
+                        this.initCarouselDataChart(data);
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
+        },
+        getLiveStatistics() {
+            this.$service.getLiveStatistics()
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        console.log(res.data);
+                        let channelType = _.get(res.data, 'channelType') || [];
+                        let summary = _.get(res.data, 'summary') || {};
+                        let labelList = _.chain(channelType)
+                                         .map((item) => item.id)
+                                         .value();
+                        let valueList = _.chain(labelList)
+                                         .map((id) => {
+                                             let item = _.find(channelType, (item) => item.id === id);
+                                             return _.get(item, 'number') || 0;
+                                         })
+                                         .value();
+                        this.liveSummary = _.reduce(summary, (res, val) => _.assign({}, res, val), {});
+                        console.log(this.liveSummary);
+                        let data = {labelList, valueList};
+                        this.initLiveDataChart(data);
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
+        },
+        async initLiveDataChart(data) {
             try {
                 await this.$nextTick();
                 let liveDataChartDom = document.querySelector('#live-data-chart');
@@ -144,7 +193,7 @@ export default {
                 this.liveDataChart = liveDataChart;
                 // 为echarts对象加载数据
                 liveDataChart.clear();
-                liveDataChart.setOption(this.getLiveDataChartConfig(), true);
+                liveDataChart.setOption(this.getLiveDataChartConfig(data), true);
 
                 window.addEventListener('resize', () => {
                     this.liveDataChart.resize();
@@ -153,7 +202,7 @@ export default {
                 console.log(err);
             }
         },
-        async initCarouselDataChart() {
+        async initCarouselDataChart(data) {
             try {
                 await this.$nextTick();
                 let carouselDataChartDom = document.querySelector('#carousel-data-chart');
@@ -161,7 +210,7 @@ export default {
                 this.carouselDataChart = carouselDataChart;
                 // 为echarts对象加载数据
                 carouselDataChart.clear();
-                carouselDataChart.setOption(this.getCarouselDataChartConfig(), true);
+                carouselDataChart.setOption(this.getCarouselDataChartConfig(data), true);
 
                 window.addEventListener('resize', () => {
                     this.carouselDataChart.resize();
@@ -170,7 +219,20 @@ export default {
                 console.log(err);
             }
         },
-        getLiveDataChartConfig() {
+        formateSeconds(endTime) {
+            let secondTime = parseInt(endTime);
+            let min = 0;
+            let h = 0;
+            if (secondTime > 60) {
+                min = parseInt(secondTime / 60);
+                secondTime = parseInt(secondTime % 60);
+                if (min > 60) {
+                    h = parseInt(min / 60);
+                }
+            }
+            return h;
+        },
+        getLiveDataChartConfig(data) {
             return {
                 tooltip: {
                     trigger: 'item',
@@ -187,7 +249,7 @@ export default {
                 },
                 xAxis: {
                     type: 'category',
-                    data: this.liveData.data1,
+                    data: data.labelList,
                     axisTick: {
                         show: false
                     },
@@ -222,7 +284,7 @@ export default {
                 },
                 series: [
                     {
-                        data: this.liveData.data2,
+                        data: data.valueList,
                         type: 'bar',
                         label: {
                             show: true,
@@ -253,7 +315,7 @@ export default {
                 ]
             };
         },
-        getCarouselDataChartConfig() {
+        getCarouselDataChartConfig(data) {
             return {
                 tooltip: {
                     trigger: 'item',
@@ -270,7 +332,7 @@ export default {
                 },
                 xAxis: {
                     type: 'category',
-                    data: this.liveData.data1,
+                    data: data.labelList,
                     axisTick: {
                         show: false
                     },
@@ -305,7 +367,7 @@ export default {
                 },
                 series: [
                     {
-                        data: this.liveData.data2,
+                        data: data.valueList,
                         type: 'bar',
                         label: {
                             show: true,
