@@ -40,7 +40,7 @@
         </div>
         <div class="fixed-btn-container" id="page-operate-block">
             <!--添加模块-->
-            <el-dropdown v-if="layoutTemplate !== 'FS_9'" @command="addLayout($event)" placement="bottom">
+            <el-dropdown v-if="visibleAddSortBtn" @command="addLayout($event)" placement="bottom">
                 <el-button class="btn-style-two contain-svg-icon hover-state">
                     <svg-icon icon-class="add"></svg-icon>
                 </el-button>
@@ -57,7 +57,7 @@
                 <svg-icon icon-class="back_image"></svg-icon>
             </el-button>
             <!--排序-->
-            <el-button v-if="layoutTemplate !== 'FS_9'" @click="showSortViewHandler"
+            <el-button v-if="visibleAddSortBtn" @click="showSortViewHandler"
                        :class="['layout-sort-btn', 'btn-style-three', layoutList.length <= 0 && 'disabled']">
                 <svg-icon icon-class="sort"></svg-icon>
             </el-button>
@@ -230,6 +230,9 @@
                     let layout = [this.activeLayout[0], ...list];
                     this.setActiveLayout({layout});
                 }
+            },
+            visibleAddSortBtn() {
+                return this.layoutTemplate !== 'FS_9' && this.layoutTemplate !== 'FS_10';
             }
         },
         beforeDestroy() {

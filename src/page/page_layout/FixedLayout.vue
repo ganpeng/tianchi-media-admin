@@ -40,6 +40,10 @@
             :isEdit="isEdit"
             v-if="layoutTemplate === 'FS_9'"
         ></my-fixed-module>
+        <watch-tv-fixed-module
+            :isEdit="isEdit"
+            v-if="layoutTemplate === 'FS_10'"
+        ></watch-tv-fixed-module>
     </div>
 </template>
 <script>
@@ -55,6 +59,7 @@ import PartyFixedModule from './fixed_module/PartyFixedModule';
 import EducationFixedModule from './fixed_module/EducationFixedModule';
 // dev2.9新增
 import MyFixedModule from './fixed_module/MyFixedModule';
+import WatchTvFixedModule from './fixed_module/WatchTvFixedModule';
 export default {
     name: 'FixedLayout',
     components: {
@@ -68,7 +73,8 @@ export default {
         PartyFixedModule,
         EducationFixedModule,
         // dev2.9
-        MyFixedModule
+        MyFixedModule,
+        WatchTvFixedModule
     },
     props: {
         layoutTemplate: {
