@@ -120,11 +120,7 @@ export default {
             liveDataChart: null,
             carouselDataChart: null,
             liveSummary: {},
-            carouselSummary: {},
-            liveData: {
-                data1: ['央视专区', '卫视专区', '本地专区', '高清专区'],
-                data2: [405, 361, 117, 67]
-            }
+            carouselSummary: {}
         };
     },
     async created() {

@@ -164,38 +164,7 @@ export default {
             summary: {},
             durationList: [],
             numberList: [],
-            playCountList: [],
-            programmeClickedList: [{
-                    area: '北京',
-                    vip: '55',
-                    down: '66',
-                    amount: 200
-                },
-                {
-                    area: '广州',
-                    vip: '55',
-                    down: '66',
-                    amount: 200
-                },
-                {
-                    area: '上海',
-                    vip: '55',
-                    down: '66',
-                    amount: 200
-                },
-                {
-                    area: '深圳',
-                    vip: '55',
-                    down: '66',
-                    amount: 200
-                },
-                {
-                    area: '吉林',
-                    vip: '55',
-                    down: '66',
-                    amount: 200
-                }
-            ]
+            playCountList: []
         };
     },
     created() {
