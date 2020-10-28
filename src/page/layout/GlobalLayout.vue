@@ -142,7 +142,7 @@
                 try {
                     let res = await this.getNavbarList();
                     if (res && res.code === 0) {
-                        let recomendNavbar = res.data.find((item) => item.name === '推荐');
+                        let recomendNavbar = res.data.find((item) => item.isDefault);
                         this.layoutId = recomendNavbar.id || _.get(res.data, '2.id');
 
                         let {active, activePath} = this.getActivePath();
