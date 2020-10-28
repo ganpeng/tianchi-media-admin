@@ -50,7 +50,7 @@
                 // 0代表详情，1代表编辑状态
                 pageStatus: 0,
                 codeSwitchInfo: {
-                    status: true
+                    status: false
                 }
             };
         },

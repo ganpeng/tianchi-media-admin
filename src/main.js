@@ -19,6 +19,7 @@ import './icons';
 import VCharts from 'v-charts';
 import dragula from 'dragula';
 import wsCache from '@/util/webStorage';
+import VueCarousel from 'vue-carousel';
 
 const VueScrollTo = require('vue-scrollto');
 Vue.use(VueScrollTo, {
@@ -27,6 +28,7 @@ Vue.use(VueScrollTo, {
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
+Vue.use(VueCarousel);
 Vue.prototype.$service = service;
 Vue.prototype.$util = util;
 Vue.prototype.$authority = authority;

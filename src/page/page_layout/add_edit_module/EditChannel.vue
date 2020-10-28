@@ -37,97 +37,101 @@
     </div>
 </template>
 <script>
-import {mapGetters} from 'vuex';
-import _ from 'lodash';
-import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
-import SinglePoster from 'sysComponents/custom_components/custom/SinglePoster';
-import ChannelSearch from './ChannelSearch';
-export default {
-    name: 'EditChannel',
-    props: {
-        squareIndex: {
-            type: Number,
-            default: 0
+    import {mapGetters} from 'vuex';
+    import _ from 'lodash';
+    import SingleImageUploader from 'sysComponents/custom_components/custom/SingleImageUploader';
+    import SinglePoster from 'sysComponents/custom_components/custom/SinglePoster';
+    import ChannelSearch from './ChannelSearch';
+
+    export default {
+        name: 'EditChannel',
+        props: {
+            squareIndex: {
+                type: Number,
+                default: 0
+            },
+            allowResolutions: {
+                type: Array,
+                default: () => [{width: 260, height: 260}]
+            },
+            selectChannelSuccessHandler: {
+                type: Function,
+                default: () => {
+                }
+            }
         },
-        allowResolutions: {
-            type: Array,
-            default: () => [{width: 260, height: 260}]
+        components: {
+            SingleImageUploader,
+            SinglePoster,
+            ChannelSearch
         },
-        selectChannelSuccessHandler: {
-            type: Function,
-            default: () => {}
-        }
-    },
-    components: {
-        SingleImageUploader,
-        SinglePoster,
-        ChannelSearch
-    },
-    data() {
-        return {
-            dialogVisible: false,
-            channel: {}
-        };
-    },
-    computed: {
-        ...mapGetters({
-            navbarList: 'pageLayout/navbarList'
-        }),
-        image() {
+        data() {
             return {
-                width: 260,
-                height: 260,
-                uri: _.get(this.channel, 'logoUri')
+                dialogVisible: false,
+                channel: {}
             };
         },
-        logoUri() {
-            return _.get(this.channel, 'logoUri');
-        }
-    },
-    methods: {
-        //  弹窗的操作
-        showDialog(layoutItemType) {
-            this.dialogVisible = true;
+        computed: {
+            ...mapGetters({
+                navbarList: 'pageLayout/navbarList'
+            }),
+            image() {
+                return {
+                    width: 260,
+                    height: 260,
+                    uri: _.get(this.channel, 'logoUri')
+                };
+            },
+            logoUri() {
+                return _.get(this.channel, 'logoUri');
+            }
         },
-        closeDialog() {
-            this.dialogVisible = false;
-            this.channel = {};
-        },
-        async dialogOpenHandler() {
-            try {
-                let {navbarId} = this.$route.params;
-                let res = await this.$service.getChannelLayout({navBarId: navbarId});
+        methods: {
+            //  弹窗的操作
+            showDialog(layoutItemType) {
+                this.dialogVisible = true;
+            },
+            closeDialog() {
+                this.dialogVisible = false;
+                this.channel = {};
+            },
+            async dialogOpenHandler() {
+                try {
+                    let {navbarId} = this.$route.params;
+                    let res = await this.$service.getChannelLayout({navBarId: navbarId});
                     if (res && res.code === 0) {
                         let obj = res.data.list[0];
                         this.channel = !_.isEmpty(obj) ? _.get(obj, 'channel') : {};
                     }
-            } catch (err) {
-                console.log(err);
-            }
-        },
-        selectChannelHandler(channel) {
-            this.channel = channel;
-        },
-        async enterHandler() {
-            try {
-                let {navbarId} = this.$route.params;
-                let navbar = this.navbarList.find((navbar) => navbar.id === navbarId);
-                let navbarName = !_.isEmpty(navbar) ? _.get(navbar, 'name') : '';
-                let reqBody = [{
-                    navBarId: navbarId,
-                    navBarName: navbarName,
-                    channel: this.channel,
-                    channelCategory: this.channel.category
-                }];
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+            selectChannelHandler(channel) {
+                this.channel = channel;
+            },
+            async enterHandler() {
+                try {
+                    let {navbarId} = this.$route.params;
+                    let {id} = this.$route.query;
+                    let navbar = this.navbarList.find((navbar) => navbar.id === navbarId);
+                    let navbarName = !_.isEmpty(navbar) ? _.get(navbar, 'name') : '';
+                    let reqBody = [{
+                        id: id,
+                        navBarId: navbarId,
+                        navBarName: navbarName,
+                        channel: this.channel,
+                        channelCategory: this.channel.category
+                    }];
 
-                this.selectChannelSuccessHandler(reqBody);
-                this.closeDialog();
-            } catch (err) {
-                console.log(err);
+                    this.selectChannelSuccessHandler(reqBody);
+                    this.closeDialog();
+                } catch (err) {
+                    console.log(err);
+                }
             }
         }
-    }
-};
+    };
 </script>
 <style lang="scss" scoped>
 </style>

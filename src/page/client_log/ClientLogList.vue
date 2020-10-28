@@ -13,9 +13,11 @@
                             placeholder="搜索你想要的信息">
                         </el-input>
                     </div>
-                    <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>搜索</el-button>
+                    <el-button class="btn-style-one" @click="searchHandler" icon="el-icon-search" type="primary" plain>
+                        搜索
+                    </el-button>
                     <div class="search-field-item">
-                        <label class="search-field-item-label">发行日期</label>
+                        <label class="search-field-item-label">时间</label>
                         <el-date-picker
                             :value="searchFields.dateRange"
                             type="daterange"
@@ -180,74 +182,75 @@
     </div>
 </template>
 <script>
-import {mapActions, mapGetters, mapMutations} from 'vuex';
-export default {
-    name: 'ClientLogList',
-    data() {
-        return {
-            dialogVisible: false,
-            errLog: {}
-        };
-    },
-    created() {
-        if (!this.$authority.isHasAuthority('user:stbLog:page')) {
-            return;
+    import {mapActions, mapGetters, mapMutations} from 'vuex';
+
+    export default {
+        name: 'ClientLogList',
+        data() {
+            return {
+                dialogVisible: false,
+                errLog: {}
+            };
+        },
+        created() {
+            if (!this.$authority.isHasAuthority('user:stbLog:page')) {
+                return;
+            }
+            this.getClientErrorLogList();
+        },
+        computed: {
+            ...mapGetters({
+                state: 'clientErrorLog/state',
+                searchFields: 'clientErrorLog/searchFields'
+            })
+        },
+        methods: {
+            ...mapMutations({
+                updatePagination: 'clientErrorLog/updatePagination',
+                updateSearchFields: 'clientErrorLog/updateSearchFields',
+                resetSearchFields: 'clientErrorLog/resetSearchFields'
+            }),
+            ...mapActions({
+                getClientErrorLogList: 'clientErrorLog/getClientErrorLogList'
+            }),
+            display(id) {
+                let errLog = this.state.list.find((log) => log.id === id);
+                this.errLog = errLog;
+                this.dialogVisible = true;
+            },
+            handlePaginationChange(value, key) {
+                if (!this.$authority.isHasAuthority('user:stbLog:page')) {
+                    return;
+                }
+                this.updatePagination({key, value});
+                this.getClientErrorLogList();
+            },
+            inputHandler(value, key) {
+                if (!this.$authority.isHasAuthority('user:stbLog:page')) {
+                    return;
+                }
+                this.updateSearchFields({key, value});
+                this.getClientErrorLogList();
+            },
+            searchHandler() {
+                if (!this.$authority.isHasAuthority('user:stbLog:page')) {
+                    return;
+                }
+                this.getClientErrorLogList();
+            },
+            clearSearchFields() {
+                if (!this.$authority.isHasAuthority('user:stbLog:page')) {
+                    return;
+                }
+                this.resetSearchFields();
+                this.getClientErrorLogList();
+            }
         }
-        this.getClientErrorLogList();
-    },
-    computed: {
-        ...mapGetters({
-            state: 'clientErrorLog/state',
-            searchFields: 'clientErrorLog/searchFields'
-        })
-    },
-    methods: {
-        ...mapMutations({
-            updatePagination: 'clientErrorLog/updatePagination',
-            updateSearchFields: 'clientErrorLog/updateSearchFields',
-            resetSearchFields: 'clientErrorLog/resetSearchFields'
-        }),
-        ...mapActions({
-            getClientErrorLogList: 'clientErrorLog/getClientErrorLogList'
-        }),
-        display(id) {
-            let errLog = this.state.list.find((log) => log.id === id);
-            this.errLog = errLog;
-            this.dialogVisible = true;
-        },
-        handlePaginationChange(value, key) {
-            if (!this.$authority.isHasAuthority('user:stbLog:page')) {
-                return;
-            }
-            this.updatePagination({key, value});
-            this.getClientErrorLogList();
-        },
-        inputHandler(value, key) {
-            if (!this.$authority.isHasAuthority('user:stbLog:page')) {
-                return;
-            }
-            this.updateSearchFields({key, value});
-            this.getClientErrorLogList();
-        },
-        searchHandler() {
-            if (!this.$authority.isHasAuthority('user:stbLog:page')) {
-                return;
-            }
-            this.getClientErrorLogList();
-        },
-        clearSearchFields() {
-            if (!this.$authority.isHasAuthority('user:stbLog:page')) {
-                return;
-            }
-            this.resetSearchFields();
-            this.getClientErrorLogList();
-        }
-    }
-};
+    };
 </script>
 <style lang="scss" scoped>
-.info-value {
-    text-align: left;
-    word-break: break-all;
-}
+    .info-value {
+        text-align: left;
+        word-break: break-all;
+    }
 </style>

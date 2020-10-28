@@ -290,6 +290,7 @@
                             }
                         }
 
+                        // 设置布局的直播频道
                         let res = await this.$service.postChannelLayout(this.reqBody);
                         if (res && res.code === 0) {
                             console.log('直播频道保存成功');
@@ -307,6 +308,8 @@
                 }
             },
             selectChannelSuccessHandler(reqBody) {
+                console.log('reqBody');
+                console.log(reqBody);
                 let channel = _.get(reqBody, '0.channel');
                 this.reqBody = _.cloneDeep(reqBody);
                 this.channel = _.cloneDeep(channel);

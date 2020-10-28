@@ -12,6 +12,13 @@ export const getChannelDetail = (id) => {
 };
 
 /**
+ * 获取频道详情
+ */
+export const getCarouselProgrammeList = (channelId) => {
+    return service.get('/v1/live/carousel-video/programme/list?channelId=' + channelId);
+};
+
+/**
  * 获取频道分类
  */
 export const getChannelType = ({category}) => {
@@ -34,6 +41,13 @@ export const putChannelType = (channelType) => {
  */
 export const getChannelCount = (id) => {
     return service.get((`/v1/live/channel-type/${id}/channel-count`));
+};
+
+/**
+ *  获取直播、轮播、回看服务器组的列表
+ */
+export const getChannelServerGroupList = ({type}) => {
+    return service.get(`/v1/sys/system-config/server-group/list?type=` + type);
 };
 
 /**
@@ -74,7 +88,7 @@ export const deleteChannelById = (id) => {
 /**
  * 获取频道的列表
  */
-export const getChannelList = ({pageNum, pageSize, record, keyword, typeIdList, visible, category, common, companyCode, protocolList, refCount, paymentType, applicableClientList, cdnPush}) => {
+export const getChannelList = ({pageNum, pageSize, hasChannelProgramme, record, keyword, typeIdList, visible, category, common, companyCode, protocolList, refCount, paymentType, applicableClientList, cdnPush}) => {
     let params = {
         pageNum,
         pageSize,
@@ -89,7 +103,8 @@ export const getChannelList = ({pageNum, pageSize, record, keyword, typeIdList, 
         refCount,
         paymentType,
         applicableClientList,
-        cdnPush
+        cdnPush,
+        hasChannelProgramme
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
@@ -208,4 +223,20 @@ export const updateThumbnailStatus = (params) => {
         return item !== '' && item !== undefined;
     }));
     return service.patch(`/v1/sys/system-config/thumbnail-status?${paramsStr}`);
+};
+
+/**
+ * 根据id的开启或关闭直播回看
+ */
+export const switchLiveChannelLookbBack = ({id, enable}) => {
+    const params = {
+        id,
+        enable
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.patch(`/v1/live/channel-programme/enable-lookback?${paramsStr}`);
 };

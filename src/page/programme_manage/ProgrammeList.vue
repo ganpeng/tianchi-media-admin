@@ -71,7 +71,8 @@
                     <span
                         @click="toggleSearchField"
                         :class="['el-dropdown-link', searchFieldVisible ? 'active' : '']">
-                        更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
+                        更多筛选<i v-if="searchFieldVisible" class="el-icon-arrow-up el-icon--right my-arrow-icon"></i><i
+                        v-else class="el-icon-arrow-down el-icon--right my-arrow-icon"></i>
                     </span>
                 </div>
                 <div v-show="searchFieldVisible" class="field-row">
@@ -186,10 +187,19 @@
                                 <el-dropdown-item>
                                     <span @click="exportAllProgrammeExcel">导出全部</span>
                                 </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <span @click="batchDownloadProgramme">下载选中</span>
+                                </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
                     <div class="float-right">
+                        <el-button
+                            class="btn-style-two contain-svg-icon"
+                            @click="downloadProgramme">
+                            <svg-icon icon-class="download_video"></svg-icon>
+                            下载列表
+                        </el-button>
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="createProgramme">
@@ -242,7 +252,7 @@
                             <img v-if="scope.row.coverImage && scope.row.coverImage.uri" style="width:70px;height:auto;"
                                  @click="displayImage(scope.row.coverImage ? scope.row.coverImage : {})" class="pointer"
                                  :src="scope.row.coverImage ? scope.row.coverImage.uri : '' | imageUrl" alt="">
-                            <span v-else >{{ '' | padEmpty }}</span>
+                            <span v-else>{{ '' | padEmpty }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="featureVideoCount" width="100px" align="center" label="正片数量">
@@ -323,13 +333,14 @@
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
                                 <span class="btn-text" @click="editProgramme(scope.row.id)">编辑</span>
-                                <span :class="['btn-text', 'text-danger', scope.row.visible ? 'not-allowed' : '']" @click="_realDeleteProgramme(scope.row)">删除</span>
+                                <span :class="['btn-text', 'text-danger', scope.row.visible ? 'not-allowed' : '']"
+                                      @click="_realDeleteProgramme(scope.row)">删除</span>
                             </div>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
-                <!-- :page-sizes="[10, 30, 50, 100, 200, 300,500]" -->
+            <!-- :page-sizes="[10, 30, 50, 100, 200, 300,500]" -->
             <el-pagination
                 @size-change="handlePaginationChange($event, 'pageSize')"
                 @current-change="handlePaginationChange($event, 'pageNum')"
@@ -480,6 +491,13 @@
                 });
                 window.open(routeData.href, '_blank');
             },
+            // 暂时没有增加权限确定
+            downloadProgramme() {
+                let routeData = this.$router.resolve({
+                    name: 'DownloadProgrammeList'
+                });
+                window.open(routeData.href, '_blank');
+            },
             editProgramme(id) {
                 if (!this.$authority.isHasAuthority('content:programme:put')) {
                     return;
@@ -624,6 +642,20 @@
                         return message;
                 }
             },
+            // 下载选中，未加权限
+            batchDownloadProgramme() {
+                let idList = this.selectedVideoList.map((item) => item.id);
+                this.$service.batchDownloadProgramme({idList}).then((res) => {
+                    if (res && res.code === 0) {
+                        this.$message.success('已在下载节目，请稍后到下载列表中查看');
+                        this.getProgrammeList().then((result) => {
+                            if (result && result.code === 0) {
+                                this.checkedVideoList();
+                            }
+                        });
+                    }
+                });
+            },
             multUpFrameProgrammeHandler() {
                 if (!this.$authority.isHasAuthority('content:programme:batchVisible')) {
                     return;
@@ -658,7 +690,8 @@
                                     });
                             }
                         });
-                }).catch(() => {});
+                }).catch(() => {
+                });
             },
             multLowerFrameProgrammeHandler() {
                 if (!this.$authority.isHasAuthority('content:programme:batchVisible')) {
@@ -694,7 +727,8 @@
                                     });
                             }
                         });
-                }).catch(() => {});
+                }).catch(() => {
+                });
             },
             batchDeletProgrammeHandler() {
                 if (!this.$authority.isHasAuthority('content:programme:batchDelete')) {
@@ -720,7 +754,8 @@
                                 this.$message.error(res.data.message);
                             }
                         });
-                }).catch(() => {});
+                }).catch(() => {
+                });
             },
             async _realDeleteProgramme(programme) {
                 try {
@@ -807,7 +842,10 @@
                         return;
                     }
                     let res = await this.$service.exportAllProgramme();
-                    this.$util.downloadFile(res, `全部节目.xlsx`);
+                    console.log(res);
+                    if (res && res.code === 0) {
+                        this.$message.success('服务器正在生成excel文件，稍后请到导出列表查看');
+                    }
                 } catch (err) {
                     console.log(err);
                 }

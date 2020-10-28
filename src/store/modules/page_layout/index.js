@@ -322,10 +322,14 @@ const mutations = {
     },
     //  2.3.0 新的修改  ========================
     setActiveLayout(state, payload) {
+        console.log('setActiveLayout');
+        console.log(payload);
         let {layout} = payload;
         state.activeLayout = layout;
     },
     updateLayoutBlockById(state, payload) {
+        console.log('updateLayoutBlockById');
+        console.log(payload);
         let {layoutBlockItem, layoutBlockId, squareIndex} = payload;
         state.activeLayout = state.activeLayout.map((item) => {
             if (item.id === layoutBlockId) {
@@ -383,6 +387,9 @@ const mutations = {
         });
     },
     insertLayoutBlockByIndex(state, payload) {
+        console.log('insertLayoutBlockByIndex');
+        console.log(state);
+        console.log(payload);
         let {index, layoutTemplate, renderType, navbarId, layoutItemMultiList} = payload;
         let layoutBlockDefault = {
             layoutTemplate: '',
@@ -419,7 +426,7 @@ const actions = {
     async getPersonSubjectList({commit, state}) {
         try {
             let {keyword, pagination: {pageSize, pageNum}} = state.personSubject;
-            let params = Object.assign({}, { keyword, pageSize, pageNum: pageNum - 1, visible: true });
+            let params = Object.assign({}, {keyword, pageSize, pageNum: pageNum - 1, visible: true});
             let res = await service.getPersonSubjectList(params);
             if (res && res.code === 0) {
                 let {pageNum, pageSize, total, list} = res.data;
@@ -434,7 +441,7 @@ const actions = {
     async getProgrammeSubjectList({commit, state}) {
         try {
             let {keyword, pagination: {pageSize, pageNum}} = state.programmeSubject;
-            let params = Object.assign({}, { keyword, pageSize, pageNum: pageNum - 1, visible: true });
+            let params = Object.assign({}, {keyword, pageSize, pageNum: pageNum - 1, visible: true});
             let res = await service.getProgrammeSubjectList(params);
             if (res && res.code === 0) {
                 let {pageNum, pageSize, total, list} = res.data;
@@ -479,8 +486,31 @@ const actions = {
     async getLayoutByNavbarId({commit, state}, id) {
         try {
             let res = await service.getPageLayoutByNavbarId(id);
+            console.log('res');
+            console.log(res);
             if (res && res.code === 0) {
-                commit('setActiveLayout', {layout: res.data});
+                // 防止当前页面刷新导致数据请求为空，再次请求
+                let res1 = await service.getNavbarList();
+                if (res1 && res1.code === 0) {
+                    console.log(state.navbarList);
+                    let navbarList = res1.data;
+                    console.log('navbarList');
+                    console.log(navbarList);
+                    let picRemark = '';
+                    navbarList.map(item => {
+                        if (item.id === res.data[0].navBarId) {
+                            picRemark = item.picRemark;
+                            console.log('picRemark');
+                            console.log(picRemark);
+                        }
+                    });
+                    res.data.map(item => {
+                        item.navBarName = item.navBarName || picRemark;
+                    });
+                    console.log(res.data);
+                    // 拿到当前navBar的picRemark
+                    commit('setActiveLayout', {layout: res.data});
+                }
             }
             return res;
         } catch (err) {
