@@ -251,7 +251,7 @@ export const getCarouselStatistics = () => {
  */
 export const getLiveStatistics = () => {
     return service.get(`/v1/statistics/live`);
-}
+};
 
 /**
  * 根据id的开启或关闭直播回看
@@ -266,4 +266,4 @@ export const switchLiveChannelLookbBack = ({id, enable}) => {
         return item !== '' && item !== undefined;
     }));
     return service.patch(`/v1/live/channel-programme/enable-lookback?${paramsStr}`);
-}
+};
