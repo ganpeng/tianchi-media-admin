@@ -61,38 +61,38 @@
             min-width="120px"
             label="有效期">
             <template slot-scope="scope">
-                <div>{{scope.row.applyDateBegin | formatDate('yyyy-MM-DD HH:mm:SS')}}</div>
-                <div>{{scope.row.applyDateEnd | formatDate('yyyy-MM-DD HH:mm:SS')}}</div>
+                <div>起：{{scope.row.applyDateBegin | formatDate('yyyy-MM-DD HH:mm:SS')}}</div>
+                <div>止：{{scope.row.applyDateEnd | formatDate('yyyy-MM-DD HH:mm:SS')}}</div>
+            </template>
+        </el-table-column>
+        <el-table-column
+            align="center"
+            label="有效性">
+            <template slot-scope="scope">
+                <span v-if="scope.row.adStatus === 'ACTIVE'"
+                      class="status-normal">生效中</span>
+                <span v-if="scope.row.adStatus === 'WAITING'"
+                      class="status-deleting">未生效</span>
+                <span v-if="scope.row.adStatus === 'EXPIRED'"
+                      class="status-abnormal">已失效</span>
             </template>
         </el-table-column>
         <el-table-column
             align="center"
             label="状态">
             <template slot-scope="scope">
-                    <span v-if="scope.row.adStatus === 'ACTIVE' && scope.row.visible"
-                          class="status-normal">生效中</span>
-                <span v-if="scope.row.adStatus === 'WAITING' && scope.row.visible"
-                      class="status-deleting">未生效</span>
-                <span v-if="scope.row.adStatus === 'EXPIRED' && scope.row.visible"
-                      class="status-abnormal">已失效</span>
-                <span v-if="!scope.row.visible">/</span>
-            </template>
-        </el-table-column>
-        <el-table-column
-            align="center"
-            label="上下架">
-            <template slot-scope="scope">
                 <input
                     class="my-switch switch-anim"
-                    :class="{'disabled':(!scope.row.visible || scope.row.visible && scope.row.adStatus === 'EXPIRED')}"
+                    :class="{'disabled':(!scope.row.visible && scope.row.adStatus === 'EXPIRED')}"
                     type="checkbox"
                     v-model="scope.row.visible"
                     :checked="scope.row.visible"
                     @click.prevent="updateADStatus(scope.row)"/>
-                <i v-if="scope.row.visible" class="on-the-shelf shelf"
-                   :class="{'disabled':(!scope.row.visible || scope.row.visible && scope.row.adStatus === 'EXPIRED')}">已上架</i>
+                <!-- 上架状态都可以下架 -->
+                <i v-if="scope.row.visible" class="on-the-shelf shelf">已上架</i>
+                <!-- 下架状态，已失效的不可上架 -->
                 <i v-else class="off-the-shelf shelf"
-                   :class="{'disabled':(!scope.row.visible || scope.row.visible && scope.row.adStatus === 'EXPIRED')}">已下架</i>
+                   :class="{'disabled':scope.row.adStatus === 'EXPIRED'}">已下架</i>
             </template>
         </el-table-column>
         <el-table-column
@@ -122,15 +122,17 @@
             class="operate">
             <template slot-scope="scope">
                 <div class="operator-btn-wrapper">
-                        <span
-                            class="btn-text"
-                            :class="{disabled:scope.row.adStatus === 'EXPIRED' || !scope.row.visible}"
-                            @click="editADInfo(scope.row)">
+                    <!-- 已下架已失效不可编辑 -->
+                    <span
+                        class="btn-text"
+                        :class="{disabled:scope.row.adStatus === 'EXPIRED' && !scope.row.visible}"
+                        @click="editADInfo(scope.row)">
                             编辑
                         </span>
+                    <!-- 已上架未生效、已上架生效中不可删除 -->
                     <span
                         class="btn-text text-danger"
-                        :class="{disabled:scope.row.adStatus !== 'WAITING'}"
+                        :class="{disabled:scope.row.visible && (scope.row.adStatus === 'WAITING' || scope.row.adStatus === 'ACTIVE')}"
                         @click="removeAD(scope.row)">
                             删除
                         </span>
@@ -230,7 +232,7 @@
                 }
                 this.$router.push({name: 'ADDetail', params: {id: item.id}});
             },
-            // 未生效的广告可以删除
+            // 已上架未生效、已上架生效中
             removeAD(item) {
                 if (!this.$authority.isHasAuthority('ad:generalAd:delete')) {
                     return;
@@ -243,7 +245,7 @@
                     this.$service.deleteAD(item.id).then(response => {
                         if (response && response.code === 0) {
                             this.$message.success('"' + item.name + '"' + '广告删除成功!');
-                            this.getADList();
+                            this.$emit('getADList');
                         }
                     });
                 });
@@ -253,15 +255,11 @@
                 if (!this.$authority.isHasAuthority('ad:generalAd:visible')) {
                     return;
                 }
-                if (!item.visible) {
-                    this.$message.warning('已下架的广告不能再次上架');
-                    return;
-                }
                 if (item.adStatus === 'EXPIRED') {
                     this.$message.warning('已失效的广告不能进行下架操作');
                     return;
                 }
-                this.$confirm('此操作将' + (item.visible ? '下架该广告' : '上架该广告') + ', 下架的广告不能再次上架，是否继续?', '提示', {
+                this.$confirm('此操作将' + (item.visible ? '下架该广告' : '上架该广告') + ', 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'

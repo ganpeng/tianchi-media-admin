@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="20px" viewBox="0 0 19 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>分组icon</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="10-01-轮播频道-轮播分组" transform="translate(-367.000000, -766.000000)" fill="#A3D0FD">
+            <g id="分组btn" transform="translate(348.000000, 759.000000)">
+                <path d="M27.7692308,7 C28.8738003,7 29.7692308,7.8954305 29.7692308,9 L29.769,15.461 L35.4615385,15.4615385 C36.566108,15.4615385 37.4615385,16.356969 37.4615385,17.4615385 L37.4615385,25 C37.4615385,26.1045695 36.566108,27 35.4615385,27 L28.6923077,27 C27.5877382,27 26.6923077,26.1045695 26.6923077,25 L26.692,18.538 L21,18.5384615 C19.8954305,18.5384615 19,17.643031 19,16.5384615 L19,9 C19,7.8954305 19.8954305,7 21,7 L27.7692308,7 Z" id="分组icon"></path>
+            </g>
+        </g>
+    </g>
+</svg>

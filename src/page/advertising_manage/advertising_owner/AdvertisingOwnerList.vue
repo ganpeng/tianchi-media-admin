@@ -40,7 +40,7 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="上下架">
+                    <el-form-item label="上下架" v-if="false">
                         <el-select
                             :value="searchFields.adVisible"
                             clearable
@@ -255,7 +255,7 @@
                 if (!this.$authority.isHasAuthority('ad:advertiser:add')) {
                     return;
                 }
-                let routeData = this.$router.resolve({ name: 'AddAdvertisingOwner' });
+                let routeData = this.$router.resolve({name: 'AddAdvertisingOwner'});
                 window.open(routeData.href, '_blank');
             },
             editAdvertisingOwner(id) {

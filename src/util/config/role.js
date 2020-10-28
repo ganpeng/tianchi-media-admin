@@ -567,12 +567,12 @@ const NAV_LIST = [ {
             text: '客户端日志',
             uri: '/clientlog/list',
             icon: 'aside_clientlog'
+        },
+        {
+            text: '导出列表',
+            uri: '/download-manage/list',
+            icon: 'aside_server'
         }
-        // {
-        //     text: '存储空间',
-        //     uri: '/server/space',
-        //     icon: 'aside_server'
-        // }
     ]
 }, {
     title: '内容管理',

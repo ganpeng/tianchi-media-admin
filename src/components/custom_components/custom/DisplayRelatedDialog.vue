@@ -71,7 +71,7 @@
                 </li>
                 <li v-for="(item,index) in currentItemInfo.refObjList" :key="index">
                     <span v-html="getRelatedType(item)"></span>
-                    <label @click="toRelatedRoute(item)">{{item.name ? item.name : '点击跳转'}}</label>
+                    <label @click="toRelatedRoute(item)"><i class="ellipsis one">{{item.name ? item.name : '点击跳转'}}</i></label>
                 </li>
             </ul>
         </div>
@@ -187,7 +187,7 @@
             layoutRouter(refItem) {
                 if (refItem.refType === 'LAYOUT' && refItem.params) {
                     let params = JSON.parse(refItem.params);
-                    let {renderType, navBarId} = params;
+                    let {renderType, navBarId, layoutBlockId} = params;
                     if (refItem.refId && navBarId && _.get(this.layout, `${navBarId}.data`)) {
                         let sort = _.get(this.layout, `${navBarId}.data`).findIndex((item) => {
                             return item.id === refItem.refId;
@@ -205,37 +205,46 @@
                         }
 
                         if (parseInt(sort) === 0) {
-                            this.$router.push({name: 'EditFixedModule', params: {navbarId: navBarId, index: sort}, query: {id: refItem.refId}});
+                            this.$router.push({
+                                name: 'EditFixedModule',
+                                params: {navbarId: navBarId, index: sort},
+                                query: {id: refItem.refId}
+                            });
                         } else {
                             switch (renderType) {
                                 case 'FIGURE':
                                     this.$router.push({
                                         name: 'PersonModule',
-                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'},
+                                        query: {id: layoutBlockId}
                                     });
                                     break;
                                 case 'SPECIAL':
                                     this.$router.push({
                                         name: 'EditSpecialModule',
-                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'},
+                                        query: {id: layoutBlockId}
                                     });
                                     break;
                                 case 'PROGRAMME_SUBJECT':
                                     this.$router.push({
                                         name: 'ProgrammeSubjectModule',
-                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'},
+                                        query: {id: layoutBlockId}
                                     });
                                     break;
                                 case 'FIGURE_SUBJECT':
                                     this.$router.push({
                                         name: 'PersonSubjectModule',
-                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'},
+                                        query: {id: layoutBlockId}
                                     });
                                     break;
                                 case 'SHUFFLE':
                                     this.$router.push({
                                         name: 'ShuffleModule',
-                                        params: {navbarId: navBarId, index: sort, operator: 'edit'}
+                                        params: {navbarId: navBarId, index: sort, operator: 'edit'},
+                                        query: {id: layoutBlockId}
                                     });
                                     break;
                             }
@@ -325,6 +334,8 @@
             .relate-list {
                 margin-top: 20px;
                 li {
+                    display: flex;
+                    align-items: center;
                     height: 60px;
                     line-height: 60px;
                     border-bottom: 1px solid #252D3F;

@@ -30,12 +30,12 @@
             <el-form-item label="广告类型">
                 <label class="ad-category">{{status | getADCategory}}</label>
             </el-form-item>
+            <!-- 已下架已失效的整个页面不可编辑，其它都可以编辑生效时间 -->
             <el-form-item label="生效时间" prop="applyDateBegin" required>
                 <el-date-picker
                     v-model="adInfo.applyBeginDate"
                     type="date"
                     @change="validateSingleQuote('applyDateBegin')"
-                    :disabled="status.indexOf('EDIT') !== -1 && adInfo.visible && adInfo.adStatus === 'ACTIVE'"
                     value-format="timestamp"
                     size="medium"
                     placeholder="请选择生效日期">
@@ -44,7 +44,6 @@
                     v-model="adInfo.applyBeginPoint"
                     value-format="timestamp"
                     @change="validateSingleQuote('applyDateBegin')"
-                    :disabled="status.indexOf('EDIT') !== -1 && adInfo.visible && adInfo.adStatus === 'ACTIVE'"
                     size="medium"
                     placeholder="请选择生效时间">
                 </el-time-picker>
@@ -100,9 +99,10 @@
                        class="close-btn el-select__caret el-input__icon el-icon-circle-close is-show-close"></i>
                 </el-autocomplete>
             </el-form-item>
-            <el-form-item label="上下架">
-                <el-radio v-model="adVisible" label="1">上架</el-radio>
-            </el-form-item>
+            <!-- 2.8去除展示 -->
+            <!--<el-form-item label="上下架">-->
+            <!--<el-radio v-model="adVisible" label="1">上架</el-radio>-->
+            <!--</el-form-item>-->
             <el-form-item label="广告资源" prop="adMaterialList" required>
                 <el-button @click="selectADResourceVisible = true" class="contain-svg-icon btn-style-four">
                     <svg-icon icon-class="file"></svg-icon>
@@ -165,7 +165,8 @@
                                 <div>{{item.width}}*{{item.height}}</div>
                                 <div>{{item.size | convertFileSize}}</div>
                                 <div>{{item.advertiserName}}</div>
-                                <div class="set-label" :title="setLabel(item.visitType)">{{setLabel(item.visitType)}}</div>
+                                <div class="set-label" :title="setLabel(item.visitType)">{{setLabel(item.visitType)}}
+                                </div>
                                 <div class="target-url" :title="targetUrl(item)">{{targetUrl(item)}}</div>
                             </div>
                             <div
@@ -242,7 +243,6 @@
         <preview-multiple-images
             :previewMultipleImages="previewImage">
         </preview-multiple-images>
-
         <!-- dev_v2.5 -->
         <link-dialog ref="linkDialog" :setAdSuccess="setAdSuccess"></link-dialog>
         <programme-dialog ref="programmeDialog" :setAdSuccess="setAdSuccess"></programme-dialog>
@@ -472,9 +472,9 @@
             },
             setAdVisible() {
                 return this.status === 'CREATE_SCREEN_SAVER_AD' ||
-                       this.status === 'EDIT_SCREEN_SAVER_AD' ||
-                       this.status === 'CREATE_PROGRAMME_DETAIL_AD' ||
-                       this.status === 'EDIT_PROGRAMME_DETAIL_AD';
+                    this.status === 'EDIT_SCREEN_SAVER_AD' ||
+                    this.status === 'CREATE_PROGRAMME_DETAIL_AD' ||
+                    this.status === 'EDIT_PROGRAMME_DETAIL_AD';
             },
             setLabel() {
                 return (visitType) => {

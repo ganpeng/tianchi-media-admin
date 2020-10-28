@@ -1,6 +1,6 @@
 <!--轮播频道编辑页面-->
 <template>
-    <div>
+    <div id="carousel-channel-container">
         <div class="seperator-line"></div>
         <el-form
             ref="channelInfo"
@@ -101,12 +101,27 @@
                 </el-input>
             </el-form-item>
             <!--  新加选项  -->
-            <el-form-item label="服务器组" prop="serverGroup">
-                <el-input
-                    v-model="channelInfo.serverGroup"
+            <el-form-item label="服务器组" prop="serverGroup" required>
+                <el-select
+                    clearable
+                    filterable
                     size="medium"
-                    placeholder="请填写所属服务器组">
-                </el-input>
+                    v-model="channelInfo.serverGroup"
+                    placeholder="请选择服务器组">
+                    <el-option
+                        v-for="(item, index) in serverGroupOptions"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.name">
+                        <span style="float: left">{{ item.name }}</span>
+                        <span style="float: right">{{item.currentCount}}/{{item.totalCount}}</span>
+                    </el-option>
+                </el-select>
+                <!--<el-input-->
+                <!--v-model="channelInfo.serverGroup"-->
+                <!--size="medium"-->
+                <!--placeholder="请填写所属服务器组">-->
+                <!--</el-input>-->
             </el-form-item>
             <el-form-item label="会员" prop="paymentType" required>
                 <el-radio-group v-model="channelInfo.paymentType">
@@ -202,7 +217,7 @@
         <!--分组与视频-->
         <div class="content-sub-title">分组与视频
             <el-button @click="addVideoGroup" class="contain-svg-icon btn-style-four">
-                <svg-icon icon-class="video"></svg-icon>
+                <svg-icon icon-class="add_item"></svg-icon>
                 添加分组
             </el-button>
             <label class="data-show">共{{carouselGroup.length}}组，实际总播放时长{{carouselGroup |
@@ -210,25 +225,37 @@
                 fromSecondsToTime}}。</label>
         </div>
         <div class="group-container">
-            <draggable tag="ul" id="group-list" v-model="carouselGroup">
+            <draggable tag="ul" id="group-list" v-model="carouselGroup" ghostClass="ghost" chosenClass="chosen">
                 <li v-for="(item, index) in carouselGroup"
                     :key="index" :class="{'current-group':item.current}">
+                    <!-- 头部 tag -->
                     <div class="header-box">
                         <label>组{{index + 1}}</label>
                         <span v-if="item.duration">{{item.duration | fromSecondsToTime}}</span>
                     </div>
+                    <!-- 内容 block -->
                     <div class="content-box" @click="selectCurrentGroup(index)">
                         <p class="name-box">
                             <label class="ellipsis one">{{item.name}}</label>
-                            <span v-if="carouselGroup.length !== 1" @click.stop="removeGroup(index)">
-                                <i class="el-icon-circle-close"></i>
+                            <span class="operate-block">
+                                <i><svg-icon icon-class="operate_more"></svg-icon></i>
+                                <span>
+                                    <label @click.stop="editGroupInfo(index)">编辑</label>
+                                    <label @click.stop="copyGroupInfo(index)">复制</label>
+                                    <label v-if="carouselGroup.length !== 1" @click.stop="removeGroup(index)">删除</label>
+                                </span>
                             </span>
+                            <!-- 原有删除 -->
+                            <!--<span v-if="carouselGroup.length !== 1" @click.stop="removeGroup(index)">-->
+                            <!--<i class="el-icon-circle-close"></i>-->
+                            <!--</span>-->
                         </p>
                         <p class="no-box">
                             <label>
                                 {{item.carouselVideoList.length === 0 ? '暂无视频' : item.carouselVideoList.length + '个视频'}}
                             </label>
-                            <span @click.stop="editGroupInfo(index)"><svg-icon icon-class="edit"></svg-icon></span>
+                            <span>{{item.visible ? '播放':'不播放'}}</span>
+                            <!--<span @click.stop="editGroupInfo(index)"><svg-icon icon-class="edit"></svg-icon></span>-->
                         </p>
                         <p class="duration-box">
                             <label v-if="item.carouselVideoList.length === 0">暂无视频时长</label>
@@ -263,10 +290,18 @@
                         总时长{{currentCarouselGroup.carouselVideoList | getCarouselVideoTime | fromSecondsToTime}}</label>
                 </div>
             </div>
-            <el-button @click="popAppendVideoDialogue(0)" class="contain-svg-icon btn-style-four">
-                <svg-icon icon-class="video"></svg-icon>
-                关联视频
-            </el-button>
+            <div>
+                <el-button @click="popAppendProgrammeVideoDialogue(0)"
+                           id="link-programme-btn"
+                           class="contain-svg-icon btn-style-four">
+                    <svg-icon icon-class="video"></svg-icon>
+                    关联节目内视频
+                </el-button>
+                <el-button @click="popAppendVideoDialogue(0)" class="contain-svg-icon btn-style-four">
+                    <svg-icon icon-class="video"></svg-icon>
+                    关联视频
+                </el-button>
+            </div>
         </div>
         <el-table
             v-if="currentCarouselGroup.carouselVideoList.length !== 0"
@@ -424,11 +459,20 @@
             <el-table-column
                 align="center"
                 label="操作"
-                width="110px"
+                width="130px"
                 class="operate">
                 <template slot-scope="scope">
                     <div class="operator-btn-wrapper">
-                        <span class="btn-text" @click="popAppendVideoDialogue(scope.$index + 1)">添加</span>
+                        <el-dropdown placement="bottom" @command="handleAppendVideoCommand($event, scope.$index + 1)">
+                        <span class="el-dropdown-link">
+                        添加<i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="programmeVideo">节目内视频</el-dropdown-item>
+                                <el-dropdown-item command="video">视频</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <!--<span class="btn-text" @click="popAppendVideoDialogue(scope.$index + 1)">添加</span>-->
                         <span class="btn-text text-danger" @click="removeConfirm(scope.$index,scope.row)">删除</span>
                     </div>
                 </template>
@@ -587,7 +631,7 @@
         </sort-dialog>
         <!--添加分组-->
         <el-dialog
-            title="添加分组"
+            :title="currentGroupInfoMode"
             :close-on-click-modal=false
             width="60%"
             top="25vh"
@@ -605,7 +649,13 @@
                         placeholder="请输入组名称，12字以内">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="播放时长" prop="durationFormat">
+                <el-form-item label="是否播放" prop="visible" required>
+                    <el-radio-group v-model="groupInfo.visible" class="group-radio">
+                        <el-radio :label="true">是</el-radio>
+                        <el-radio :label="false">否</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="播放时长" prop="durationFormat" v-if="groupInfo.visible">
                     <el-input
                         v-model="groupInfo.durationFormat"
                         type="number"
@@ -616,6 +666,39 @@
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="confirmGroup">确 定</el-button>
             </div>
+        </el-dialog>
+        <!-- 关联节目内视频两个步骤 -->
+        <el-dialog
+            :title="selectProgrammeVideoStepIndex === 0 ? '关联节目' : '关联节目内视频'"
+            :visible.sync="selectProgrammeVideoVisible"
+            :close-on-click-modal=false
+            custom-class="normal-dialog"
+            :before-close="closeSelectProgrammeVideo"
+            top="13vh"
+            width="80%">
+            <!-- 选择单个节目 -->
+            <select-single-programme
+                ref="selectSingleProgramme"
+                :currentSelectedProgrammeId="currentSelectedProgrammeId"
+                v-if="selectProgrammeVideoVisible"
+                v-show="selectProgrammeVideoVisible && (selectProgrammeVideoStepIndex === 0)">
+            </select-single-programme>
+            <!-- 选择多个节目内视频 -->
+            <select-programme-multiple-video
+                ref="selectMutipleProgrammeVideo"
+                v-if="selectProgrammeVideoVisible && (selectProgrammeVideoStepIndex === 1)"
+                :currentSelectedProgrammeId="currentSelectedProgrammeId"
+                :currentSelectedVideoList="currentCarouselGroup.carouselVideoList">
+            </select-programme-multiple-video>
+            <!-- 底部按钮 -->
+            <span slot="footer" class="dialog-footer" v-if="selectProgrammeVideoStepIndex === 0">
+                <el-button @click="selectProgrammeVideoVisible = false">取消</el-button>
+                <el-button type="primary" @click="confirmLinkProgramme">下一步</el-button>
+            </span>
+            <span slot="footer" class="dialog-footer" v-else>
+                <el-button @click="selectProgrammeVideoStepIndex = 0">上一步</el-button>
+                <el-button type="primary" @click="confirmLinkProgrammeVideo">确 定</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
@@ -629,6 +712,8 @@
     import {CHANNEL_LOGO_DIMENSION} from '@/util/config/dimension';
     import _ from 'lodash';
     import draggable from 'vuedraggable';
+    import SelectSingleProgramme from './components/SelectSingleProgramme';
+    import SelectProgrammeMultipleVideo from './components/SelectProgrammeMultipleVideo';
 
     const ClipboardJS = require('clipboard');
 
@@ -648,7 +733,9 @@
             SelectMultipleVideo,
             SortDialog,
             SingleImageUploader,
-            draggable
+            draggable,
+            SelectSingleProgramme,
+            SelectProgrammeMultipleVideo
         },
         data() {
             let checkName = (rule, value, callback) => {
@@ -775,6 +862,13 @@
                     callback();
                 }
             };
+            let checkGroupVisible = (rule, value, callback) => {
+                if (this.$util.isEmpty(value)) {
+                    return callback(new Error('请选择是否播放'));
+                } else {
+                    callback();
+                }
+            };
             let checkDurationFormat = (rule, value, callback) => {
                 if (this.$util.isEmpty(value) || isNaN(value)) {
                     this.groupInfo.durationFormat = '';
@@ -786,11 +880,19 @@
                 }
             };
             return {
+                serverGroupOptions: [],
+                // 关联节目内视频变量
+                selectProgrammeVideoStepIndex: 0,
+                selectProgrammeVideoVisible: false,
+                currentSelectedProgrammeId: '',
+                currentProgrammeVideoIndex: '',
                 groupInfo: {
                     name: '',
                     durationFormat: '',
-                    index: ''
+                    index: '',
+                    visible: ''
                 },
+                currentGroupInfoMode: '添加分组',
                 createGroupDialogVisible: false,
                 carouselGroup: [{
                     name: '默认分组1',
@@ -857,13 +959,16 @@
                 },
                 infoRules: {
                     name: [
-                        {validator: checkName, trigger: 'blur'}
+                        {validator: checkName, trigger: 'blur'},
+                        {validator: checkName, trigger: 'change'}
                     ],
                     innerName: [
-                        {validator: checkInnerName, trigger: 'blur'}
+                        {validator: checkInnerName, trigger: 'blur'},
+                        {validator: checkInnerName, trigger: 'change'}
                     ],
                     no: [
-                        {validator: checkNo, trigger: 'blur'}
+                        {validator: checkNo, trigger: 'blur'},
+                        {validator: checkNo, trigger: 'change'}
                     ],
                     typeIdList: [
                         {validator: checkTypeIdList, trigger: 'change'}
@@ -875,28 +980,33 @@
                         {validator: checkStartTime, trigger: 'change'}
                     ],
                     multicastIp: [
-                        {validator: checkMulticastIp, trigger: 'blur'}
+                        {validator: checkMulticastIp, trigger: 'blur'},
+                        {validator: checkMulticastIp, trigger: 'change'}
                     ],
                     multicastPort: [
-                        {validator: checkMulticastPort, trigger: 'blur'}
+                        {validator: checkMulticastPort, trigger: 'blur'},
+                        {validator: checkMulticastPort, trigger: 'change'}
                     ],
                     protocolList: [
                         {validator: checkProtocolList, trigger: 'change'}
                     ],
                     tsId: [
-                        {validator: checkTsId, trigger: 'blur'}
+                        {validator: checkTsId, trigger: 'blur'},
+                        {validator: checkTsId, trigger: 'change'}
                     ],
                     serviceId: [
-                        {validator: checkServiceId, trigger: 'blur'}
+                        {validator: checkServiceId, trigger: 'blur'},
+                        {validator: checkServiceId, trigger: 'change'}
                     ],
                     pushServer: [
-                        {validator: checkPushServer, trigger: 'blur'}
+                        {validator: checkPushServer, trigger: 'blur'},
+                        {validator: checkPushServer, trigger: 'change'}
                     ],
                     paymentType: [
                         {validator: checkPaymentType, trigger: 'change'}
                     ],
                     serverGroup: [ // 新加校验
-                        {required: true, message: '请输入所属服务器组'}
+                        {required: true, message: '请选择服务器组'}
                     ],
                     logoUri: [
                         {validator: checkLogoUri, trigger: 'blur'}
@@ -907,7 +1017,11 @@
                 },
                 groupInfoRules: {
                     name: [
-                        {validator: checkGroupName, trigger: 'blur'}
+                        {validator: checkGroupName, trigger: 'blur'},
+                        {validator: checkGroupName, trigger: 'change'}
+                    ],
+                    visible: [
+                        {validator: checkGroupVisible, trigger: 'change'}
                     ],
                     durationFormat: [
                         {validator: checkDurationFormat, trigger: 'blur'}
@@ -963,6 +1077,45 @@
             this.init();
         },
         methods: {
+            // 视频添加处理
+            handleAppendVideoCommand(command, index) {
+                if (command === 'programmeVideo') {
+                    this.popAppendProgrammeVideoDialogue(index);
+                } else if (command === 'video') {
+                    this.popAppendVideoDialogue(index);
+                }
+            },
+            // 确认关联节目内视频
+            confirmLinkProgrammeVideo() {
+                // videoList包含原先选择的视频
+                let videoList = this.$refs.selectMutipleProgrammeVideo.getSelectedMultipleVideo();
+                // 去除选择视频时编写的tag
+                this.$nextTick(function () {
+                    videoList.map(item => {
+                        item.current = undefined;
+                        item.index = undefined;
+                    });
+                    this.appendVideo(videoList);
+                    this.currentSelectedProgrammeId = '';
+                    this.selectProgrammeVideoStepIndex = 0;
+                    this.selectProgrammeVideoVisible = false;
+                });
+            },
+            // 关闭选择节目视频弹窗
+            closeSelectProgrammeVideo(done) {
+                this.currentSelectedProgrammeId = '';
+                this.selectProgrammeVideoStepIndex = 0;
+                done();
+            },
+            confirmLinkProgramme() {
+                let programme = this.$refs.selectSingleProgramme.getSelectedProgramme();
+                if (programme.id) {
+                    this.currentSelectedProgrammeId = programme.id;
+                    this.selectProgrammeVideoStepIndex = 1;
+                } else {
+                    this.$message.warning('请选择节目');
+                }
+            },
             removeGroup(index) {
                 this.carouselGroup.splice(index, 1);
                 this.$nextTick(function () {
@@ -978,8 +1131,19 @@
                     }
                 });
             },
+            // 复制一项
+            copyGroupInfo(index) {
+                let info = _.cloneDeep(this.carouselGroup[index]);
+                info.current = false;
+                info.visible = false;
+                info.id = '';
+                info.name = info.name + '副本';
+                this.carouselGroup.splice(index + 1, 0, info);
+            },
             editGroupInfo(index) {
+                this.currentGroupInfoMode = '编辑分组';
                 this.groupInfo.name = this.carouselGroup[index].name;
+                this.groupInfo.visible = this.carouselGroup[index].visible;
                 this.groupInfo.durationFormat = this.transDuration(this.carouselGroup[index].duration);
                 this.groupInfo.index = index;
                 this.createGroupDialogVisible = true;
@@ -1005,6 +1169,11 @@
                 this.$service.getChannelType({category: 'CAROUSEL'}).then(response => {
                     if (response && response.code === 0) {
                         this.typeOptions = response.data;
+                    }
+                });
+                this.$service.getChannelServerGroupList({type: 'CAROUSEL'}).then(res => {
+                    if (res && res.code === 0) {
+                        this.serverGroupOptions = res.data;
                     }
                 });
                 // 获取所属区域的数据
@@ -1078,6 +1247,7 @@
                     if (valid) {
                         if (this.groupInfo.index !== '') {
                             this.carouselGroup[this.groupInfo.index].name = this.groupInfo.name;
+                            this.carouselGroup[this.groupInfo.index].visible = this.groupInfo.visible;
                             this.carouselGroup[this.groupInfo.index].durationFormat = this.groupInfo.durationFormat;
                             if (!this.groupInfo.durationFormat) {
                                 this.carouselGroup[this.groupInfo.index].duration = undefined;
@@ -1087,6 +1257,7 @@
                         } else {
                             this.carouselGroup.push({
                                 name: this.groupInfo.name,
+                                visible: this.groupInfo.visible,
                                 duration: !this.groupInfo.durationFormat ? undefined : parseInt(this.groupInfo.durationFormat.substring(0, 2) * 60 * 60) + parseInt(this.groupInfo.durationFormat.substring(2, 4) * 60) + parseInt(this.groupInfo.durationFormat.substring(4, 6)),
                                 durationFormat: this.groupInfo.durationFormat,
                                 videoDuration: '',
@@ -1095,6 +1266,7 @@
                         }
                         this.createGroupDialogVisible = false;
                         this.groupInfo.name = '';
+                        this.groupInfo.visible = '';
                         this.groupInfo.durationFormat = '';
                         this.groupInfo.index = '';
                     }
@@ -1110,6 +1282,14 @@
                 this.currentCarouselGroup.index = index;
             },
             addVideoGroup() {
+                // 清空信息
+                this.groupInfo = {
+                    name: '',
+                    durationFormat: '',
+                    index: '',
+                    visible: ''
+                };
+                this.currentGroupInfoMode = '添加分组';
                 this.createGroupDialogVisible = true;
             },
             validateCompanyList() {
@@ -1257,6 +1437,12 @@
             popAppendVideoDialogue(index) {
                 this.currentVideoIndex = index;
                 this.selectDialogVisible = true;
+            },
+            // 打开节目-视频列表，设置当前点击的某一行视频
+            popAppendProgrammeVideoDialogue(index) {
+                // this.currentProgrammeVideoIndex = index;
+                this.currentVideoIndex = index;
+                this.selectProgrammeVideoVisible = true;
             },
             // 添加相应的视频
             appendVideo(selectedVideoList) {
@@ -1581,9 +1767,33 @@
 
 <style lang="scss">
 
+    #carousel-channel-container {
+        /* 添加分组'是否播放'样式 */
+        .el-radio-group {
+            .el-radio {
+                &.is-checked {
+                    .el-radio__inner {
+                        border: none;
+                    }
+                }
+            }
+            &.group-radio {
+                margin-left: -180px;
+            }
+            .el-radio__inner {
+                border: 1px solid rgba(163, 208, 253, 1);
+            }
+            .el-radio__label {
+                font-size: 14px;
+                font-weight: 400;
+                color: rgba(163, 208, 253, 1);
+            }
+        }
+    }
+
     .video-list-header {
         margin-bottom: 10px;
-        margin-top: 4px;
+        margin-top: -19px;
         display: flex;
         justify-content: space-between;
         align-items: baseline;
@@ -1722,12 +1932,13 @@
     .group-container {
         /*> div {*/
         ul {
-            padding-bottom: 20px;
+            padding-bottom: 35px;
             display: flex;
             flex-wrap: nowrap;
             overflow: scroll;
             li {
                 margin-right: 10px;
+                /* 当前选中组的样式 */
                 &.current-group {
                     .header-box {
                         label, span {
@@ -1741,11 +1952,60 @@
                             background: #0062C4;
                         }
                         .name-box {
+                            display: flex;
+                            align-items: center;
+                            flex-direction: row;
                             label {
                                 color: #FFFFFF;
                             }
-                            span {
-                                visibility: visible;
+                            /*span {*/
+                            /*visibility: visible;*/
+                            /*}*/
+                            .operate-block {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                height: 22px;
+                                width: 50px;
+                                right: -12px;
+                                position: relative;
+                                &:hover {
+                                    span {
+                                        display: flex;
+                                    }
+                                }
+                                i {
+                                    display: flex;
+                                    align-items: center;
+                                    .svg-icon {
+                                        width: 16px;
+                                        height: 4px;
+                                    }
+                                }
+                                span {
+                                    display: none;
+                                    position: absolute;
+                                    left: -2px;
+                                    top: 22px;
+                                    padding: 14px 0;
+                                    flex-direction: column;
+                                    width: 50px;
+                                    background: rgba(65, 74, 93, 0.9);
+                                    box-shadow: 2px 4px 10px 0px rgba(0, 0, 0, 0.3);
+                                    border: 1px solid rgba(99, 116, 151, 1);
+                                    label {
+                                        text-align: center;
+                                        width: 50px;
+                                        height: 24px;
+                                        font-size: 12px;
+                                        font-weight: 400;
+                                        color: rgba(216, 216, 216, 1);
+                                        &:hover {
+                                            background: rgba(25, 137, 250, 1);
+                                            color: rgba(255, 255, 255, 1);
+                                        }
+                                    }
+                                }
                             }
                         }
                         .no-box {
@@ -1754,10 +2014,13 @@
                                 color: #A3D0FD;
                             }
                             span {
-                                visibility: visible;
-                                .svg-icon {
-                                    fill: #A3D0FD;
-                                }
+                                font-size: 12px;
+                                font-weight: 400;
+                                color: rgba(163, 208, 253, 1);
+                                /*visibility: visible;*/
+                                /*.svg-icon {*/
+                                /*fill: #A3D0FD;*/
+                                /*}*/
                             }
                         }
                         .duration-box {
@@ -1770,6 +2033,7 @@
                         }
                     }
                 }
+                /* 组未被选中的样式 */
                 .header-box {
                     margin-bottom: 10px;
                     display: flex;
@@ -1805,7 +2069,10 @@
                         }
                         .no-box {
                             span {
-                                visibility: visible;
+                                /*visibility: visible;*/
+                                /*font-size: 12px;*/
+                                /*font-weight: 400;*/
+                                /*color: rgba(111, 116, 128, 1);*/
                             }
                         }
                     }
@@ -1826,12 +2093,57 @@
                                 color: #A8ABB3;
                                 text-align: left;
                             }
-                            span {
-                                visibility: hidden;
+                            /*span {*/
+                            /*visibility: hidden;*/
+                            /*i {*/
+                            /*font-size: 16px;*/
+                            /*color: #C35757;*/
+                            /*cursor: pointer;*/
+                            /*}*/
+                            /*}*/
+                            .operate-block {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                height: 22px;
+                                width: 50px;
+                                position: relative;
+                                &:hover {
+                                    span {
+                                        display: flex;
+                                    }
+                                }
                                 i {
-                                    font-size: 16px;
-                                    color: #C35757;
-                                    cursor: pointer;
+                                    display: flex;
+                                    align-items: center;
+                                    .svg-icon {
+                                        width: 16px;
+                                        height: 4px;
+                                    }
+                                }
+                                span {
+                                    display: none;
+                                    position: absolute;
+                                    left: -2px;
+                                    top: 22px;
+                                    padding: 14px 0;
+                                    flex-direction: column;
+                                    width: 50px;
+                                    background: rgba(65, 74, 93, 0.9);
+                                    box-shadow: 2px 4px 10px 0px rgba(0, 0, 0, 0.3);
+                                    border: 1px solid rgba(99, 116, 151, 1);
+                                    label {
+                                        text-align: center;
+                                        width: 50px;
+                                        height: 24px;
+                                        font-size: 12px;
+                                        font-weight: 400;
+                                        color: rgba(216, 216, 216, 1);
+                                        &:hover {
+                                            background: rgba(25, 137, 250, 1);
+                                            color: rgba(255, 255, 255, 1);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1841,13 +2153,16 @@
                                 color: #6F7480;
                             }
                             span {
-                                visibility: hidden;
-                                cursor: pointer;
-                                .svg-icon {
-                                    width: 13px !important;
-                                    height: 18px !important;
-                                    fill: #1989FA;
-                                }
+                                /*visibility: hidden;*/
+                                /*cursor: pointer;*/
+                                /*.svg-icon {*/
+                                /*width: 13px !important;*/
+                                /*height: 18px !important;*/
+                                /*fill: #1989FA;*/
+                                /*}*/
+                                font-size: 12px;
+                                font-weight: 400;
+                                color: rgba(111, 116, 128, 1);
                             }
                         }
                         &.duration-box {
@@ -2108,6 +2423,31 @@
 
     .my-tags {
         max-width: 1050px;
+    }
+
+    /* 拖动样式 */
+    .chosen {
+        .content-box {
+            background: rgba(46, 56, 77, 1);
+            border: 1px solid rgba(99, 116, 151, 1);
+        }
+    }
+
+    /* 拖动之后的魂的样式 */
+    .ghost {
+        opacity: 0.5;
+        .content-box {
+            border: none;
+        }
+    }
+
+    #link-programme-btn {
+        width: 156px;
+    }
+
+    .el-dropdown-link {
+        color: #1989FA;
+        cursor: pointer;
     }
 
 </style>

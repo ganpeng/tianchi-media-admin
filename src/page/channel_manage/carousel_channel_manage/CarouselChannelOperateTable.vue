@@ -59,7 +59,7 @@
                 align="center"
                 label="关联">
                 <template slot-scope="scope">
-                    <span @click="openRelateDialog(scope.row)" class="name">{{scope.row.refCount ? scope.row.refCount : '/'}}</span>
+                    <span @click="openRelateDialog(scope.row)" class="name">{{scope.row.refCount ? scope.row.refCount : '无'}}</span>
                 </template>
             </el-table-column>
             <el-table-column
@@ -76,13 +76,10 @@
                 align="center"
                 min-width="120px"
                 prop="multicastIp"
-                label="组播地址">
-            </el-table-column>
-            <el-table-column
-                align="center"
-                min-width="80px"
-                prop="multicastPort"
-                label="端口号">
+                label="轮播地址">
+                <template slot-scope="scope">
+                    <span>{{scope.row.multicastIp}}:{{scope.row.multicastPort}}</span>
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
@@ -120,7 +117,7 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                label="状态">
+                label="定时">
                 <template slot-scope="scope">
                     <span v-if="scope.row.applyStatus === 'ACTIVE'"
                           class="status-normal">生效中</span>
@@ -128,12 +125,13 @@
                           class="status-deleting">未生效</span>
                     <span v-if="scope.row.applyStatus === 'EXPIRED'"
                           class="status-abnormal">已失效</span>
+                    <span v-if="!scope.row.applyStatus">无</span>
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
                 min-width="100px"
-                label="启用/禁用">
+                label="状态">
                 <template slot-scope="scope">
                     <input
                         class="my-switch switch-anim"

@@ -207,7 +207,44 @@ export const editEmptyProgrammeVideo = (id) => {
  * 节目全部导出
  */
 export const exportAllProgramme = () => {
-    return service.post(`/v1/content/programme/export`, null, {
-        responseType: 'blob'
-    });
+    return service.post(`/v1/content/programme/export`);
+};
+
+/**
+ * 节目选中批量下载
+ */
+export const batchDownloadProgramme = ({idList}) => {
+    return service.post(`/v1/content/programme/download`, idList);
+};
+
+/**
+ * 获取下载节目列表
+ */
+export const getDownloadProgrammeList = ({pageNum, pageSize, keyword, downloadStatus}) => {
+    const params = {
+        pageNum: pageNum - 1,
+        pageSize,
+        keyword,
+        downloadStatus
+    };
+
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/content/programme/download/list?${paramsStr}`);
+};
+
+/**
+ * 下载节目列表批量删除
+ */
+export const batchRemoveDownloadProgramme = ({idList}) => {
+    return service.post(`/v1/content/programme/download/delete`, idList);
+};
+
+/**
+ * 下载节目列表删除全部
+ */
+export const removeAllDownloadProgramme = () => {
+    return service.post(`/v1/content/programme/download/delete`, []);
 };
