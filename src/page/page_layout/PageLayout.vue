@@ -399,6 +399,7 @@
 <style lang="scss" scoped>
     .page-layout-content {
         position: relative;
+        padding-bottom: 100px;
         #remove-back-image {
             position: absolute;
             display: flex;

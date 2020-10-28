@@ -115,8 +115,8 @@
         async created() {
             try {
                 await this.$nextTick();
-                let content = document.querySelector('.content');
-                content.addEventListener('scroll', this.toggleFixedBtnContainer.bind(this), false);
+                let content = document.querySelector('.content-wrapper');
+                content.addEventListener('scroll', this.$util.toggleFixedBtnContainer.bind(this), false);
 
                 let isApp = store.get('isApp');
                 this.appActive = isApp;
@@ -218,18 +218,6 @@
             },
             logout() {
                 this.$store.dispatch('user/logout', true);
-            },
-            toggleFixedBtnContainer() {
-                let content = document.querySelector('.content');
-                let fixedBtnContainer = document.querySelector('.fixed-btn-container');
-                let isBottom = content.scrollHeight - content.scrollTop === content.clientHeight;
-                if (fixedBtnContainer) {
-                    if (isBottom) {
-                        fixedBtnContainer.style.background = 'transparent';
-                    } else {
-                        fixedBtnContainer.style.background = '#293550';
-                    }
-                }
             },
             async menuChangeHandler(pathObj) {
                 try {
@@ -447,9 +435,9 @@
             left: 200px;
             right: 0px;
             bottom: 0px;
-            overflow: scroll;
             background: $contentBg;
             .content-wrapper {
+                overflow: scroll;
                 height: 100%;
                 padding: 20px 20px 100px 20px;
             }
