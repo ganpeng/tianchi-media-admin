@@ -325,6 +325,15 @@
                 label="ID">
             </el-table-column>
             <el-table-column
+                prop="programmeName"
+                width="210px"
+                align="center"
+                label="所属节目">
+                <template slot-scope="scope">
+                    {{scope.row.programmeName || '无'}}
+                </template>
+            </el-table-column>
+            <el-table-column
                 prop="originName"
                 width="210px"
                 align="center"
