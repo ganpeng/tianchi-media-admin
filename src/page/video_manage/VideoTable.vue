@@ -49,6 +49,21 @@
                 <template slot-scope="scope">
                     <div class="btn-icon-container preview-link">
                         <el-button
+                            v-if="scope.row.m3u8For8K"
+                            type="text"
+                            size="small"
+                            @click="displayVideoPlayer(scope.row.m3u8For8K, scope.row.originName)">
+                            8K
+                        </el-button>
+                        <svg-icon
+                            v-if="scope.row.m3u8For8K"
+                            icon-class="copy_btn"
+                            class-name="copy-btn pointer"
+                            :data-clipboard-text="getVideoUrl(scope.row.m3u8For8K)">
+                        </svg-icon>
+                    </div>
+                    <div class="btn-icon-container preview-link">
+                        <el-button
                             v-if="scope.row.m3u8For4K"
                             type="text"
                             size="small"
