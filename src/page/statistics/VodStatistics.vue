@@ -239,7 +239,7 @@ export default {
                         let {durationList, numberList, playCountList, summary} = res.data;
                         this.durationList = durationList || [];
                         this.numberList = numberList || [];
-                        this.playCountList = playCountList || [];
+                        this.playCountList = _.chain(playCountList).sortBy('playCountReal').reverse().value() || [];
                         this.summary = _.reduce(summary, (res, val) => _.assign({}, res, val), {});
                     }
                 }).catch((err) => {
