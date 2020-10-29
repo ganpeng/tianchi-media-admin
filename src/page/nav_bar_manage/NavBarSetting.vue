@@ -50,7 +50,7 @@
                 @change="defaultNavbarSelectChangeHandler($event)"
             >
                 <el-option
-                    v-for="(item, index) in navBarList"
+                    v-for="(item, index) in defaultNavBarList"
                     :key="index"
                     :label="item.name"
                     :value="item.id">
@@ -79,6 +79,9 @@
             defaultNavbarId() {
                 let navbar = this.navBarList.find((navbar) => navbar.isDefault);
                 return navbar ? navbar.id : '';
+            },
+            defaultNavBarList() {
+                return this.navBarList.filter((navbar) => navbar.visible);
             }
         },
         methods: {
