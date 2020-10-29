@@ -746,12 +746,12 @@ const NAV_LIST = [ {
         {
             text: '频道统计',
             uri: '/channel-statistics',
-            icon: 'site_list'
+            icon: 'channel_statistics'
         },
         {
             text: '点播统计',
             uri: '/vod-statistics',
-            icon: 'site_list'
+            icon: 'vod_statistics'
         },
         {
             text: '存储统计',

@@ -31,7 +31,14 @@
                     <input v-if="item.type === 'CUSTOM' || item.type === 'VISIBLE_ONLY'"
                            class="my-switch switch-anim"
                            type="checkbox"
+                           @click.prevent="toggleVisible(item)"
+                           :checked="item.visible"/>
+                    <!--
+                    <input v-if="item.type === 'CUSTOM' || item.type === 'VISIBLE_ONLY'"
+                           class="my-switch switch-anim"
+                           type="checkbox"
                            v-model="item.visible"/>
+                    -->
                 </p>
             </li>
             <li class="upload-box" @click="createNavBar">
@@ -123,6 +130,10 @@
                 if (!this.$authority.isHasAuthority('content:navBar:list')) {
                     return;
                 }
+                console.log('+++++++++');
+                console.log(this.previewNavBarList)
+                console.log('+++++++++');
+                // return false;
                 this.$service.setNavBarList(this.previewNavBarList).then(response => {
                     if (response && response.code === 0) {
                         this.$message.success('成功更新栏目列表');
@@ -164,6 +175,29 @@
                     }
                     return navbar;
                 });
+            },
+            toggleVisible(navbar) {
+                if (navbar.visible) {
+                    let len = this.navBarList.filter((_navbar) => _navbar.name !== '我的' && _navbar.id !== navbar.id && _navbar.visible).length;
+                    if (len <= 1) {
+                        this.$message.error(`无法隐藏该栏目，至少需展示两个栏目`);
+                        return false;
+                    } else {
+                        this.navBarList = this.navBarList.map((_navbar) => {
+                            if (_navbar.id === navbar.id) {
+                                _navbar.visible = !_navbar.visible;
+                            }
+                            return _navbar;
+                        });
+                    }
+                } else {
+                    this.navBarList = this.navBarList.map((_navbar) => {
+                        if (_navbar.id === navbar.id) {
+                            _navbar.visible = !_navbar.visible;
+                        }
+                        return _navbar;
+                    });
+                }
             }
         }
     };
