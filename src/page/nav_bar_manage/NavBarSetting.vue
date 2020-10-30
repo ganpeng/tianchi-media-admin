@@ -130,10 +130,6 @@
                 if (!this.$authority.isHasAuthority('content:navBar:list')) {
                     return;
                 }
-                console.log('+++++++++');
-                console.log(this.previewNavBarList)
-                console.log('+++++++++');
-                // return false;
                 this.$service.setNavBarList(this.previewNavBarList).then(response => {
                     if (response && response.code === 0) {
                         this.$message.success('成功更新栏目列表');

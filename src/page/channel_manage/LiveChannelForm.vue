@@ -79,7 +79,7 @@
                         placeholder="请选择所属服务器组"
                         @input="inputHandler($event, 'serverGroup')">
                         <el-option
-                            v-for="(item, index) in serverGroupOptionsLive"
+                            v-for="(item, index) in serverGroupLiveOptions"
                             :key="index"
                             :label="item.name"
                             :value="item.name">
@@ -228,7 +228,7 @@
                         placeholder="请选择所属服务器组"
                         @input="inputHandler($event, 'recordServerGroup')">
                         <el-option
-                            v-for="(item, index) in serverGroupOptionsRecord"
+                            v-for="(item, index) in serverGroupRecordOptions"
                             :key="index"
                             :label="item.name"
                             :value="item.name">
@@ -332,8 +332,7 @@
                 }
             };
             return {
-                serverGroupOptionsLive: [],
-                serverGroupOptionsRecord: [],
+                serverGroupList: [],
                 inputRules: {
                     name: [
                         {required: true, message: '请输直播频道名称'}
@@ -451,20 +450,25 @@
             withHls() {
                 let hlsIndex = this.liveChannel.protocolList.findIndex((item) => item === 'HLS');
                 return hlsIndex >= 0;
+            },
+            // dev2.9
+            serverGroupLiveOptions() {
+                return this.serverGroupList.filter((item) => _.findIndex(item.typeList, (_item) => _item === 'LIVE') >= 0);
+            },
+            serverGroupRecordOptions() {
+                return this.serverGroupList.filter((item) => _.findIndex(item.typeList, (_item) => _item === 'RECORD') >= 0);
             }
         },
         created() {
             this.getFilialeList();
-            this.$service.getChannelServerGroupList({type: 'LIVE'}).then(res => {
-                if (res && res.code === 0) {
-                    this.serverGroupOptionsLive = res.data;
-                }
-            });
-            this.$service.getChannelServerGroupList({type: 'RECORD'}).then(res => {
-                if (res && res.code === 0) {
-                    this.serverGroupOptionsRecord = res.data;
-                }
-            });
+            this.$service.getServerGroupList({pageSize: 10000})
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.serverGroupList = _.get(res.data, 'list') || [];
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
         },
         methods: {
             ...mapMutations({
