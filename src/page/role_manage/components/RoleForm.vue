@@ -55,7 +55,6 @@
 </template>
 
 <script>
-
     export default {
         name: 'RoleForm',
         props: {
@@ -220,6 +219,18 @@
             background-color: transparent !important;
             &:hover {
                 background-color: transparent !important;
+            }
+        }
+        .el-tree {
+            >.el-tree-node {
+                border-bottom: 1px solid #252D3F;
+                >.el-tree-node__children {
+                    display: flex;
+                    flex-wrap: wrap;
+                    >.el-tree-node {
+                        width: 16%;
+                    }
+                }
             }
         }
     }
