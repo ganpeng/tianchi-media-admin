@@ -136,7 +136,10 @@
                 this.$util.toggleFixedBtnContainer();
                 this.$service.getAuthorityTree().then(response => {
                     if (response && response.code === 0) {
-                        this.data = response.data;
+                        this.data = response.data.map((item) => {
+                            item.label = `${item.label} (全选)`;
+                            return item;
+                        });
                     }
                 });
                 if (this.status === 'EDIT_ROLE') {
@@ -205,8 +208,7 @@
                 this.$router.push({name: 'RoleList'});
             }
         }
-    }
-    ;
+    };
 </script>
 
 <style lang="scss">
@@ -214,6 +216,11 @@
     #role-page-container {
         .el-tree-node {
             margin-bottom: 10px;
+            &.is-checked {
+                .el-tree-node__label {
+                    color: #fff;
+                }
+            }
         }
         .el-tree-node__content {
             background-color: transparent !important;

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="28px" height="26px" viewBox="0 0 28 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
-    <g id="Design" stroke="none" stroke-width="1" fill-rule="evenodd">
-        <g id="00-2.9-说明" transform="translate(-1109.000000, -145.000000)">
-            <g id="icon_admin" transform="translate(1107.909091, 143.000000)">
-                <rect id="矩形" fill-opacity="0" x="0" y="0" width="30" height="30"></rect>
+    <g id="Design" stroke-width="1" fill-rule="evenodd">
+        <g id="00-2.9-说明" transform="translate(-1348.000000, -146.000000)">
+            <g id="icon_admin-add备份" transform="translate(1347.000000, 144.000000)">
+                <rect id="矩形" fill-opacity="0" fill-rule="nonzero" x="0" y="0" width="30" height="30"></rect>
                 <path d="M11.875,12.5 C14.29125,12.5 16.25,10.54125 16.25,8.125 C16.25,5.70875625 14.29125,3.75 11.875,3.75 C9.45875,3.75 7.5,5.70875625 7.5,8.125 C7.5,10.54125 9.45875,12.5 11.875,12.5 Z" id="路径" stroke-width="2.5" fill-rule="nonzero" stroke-linecap="round" stroke-linejoin="round"></path>
-                <path d="M20.3798125,4.375 C21.6503125,5.1405625 22.5000625,6.5335625 22.5000625,8.125 C22.5000625,9.7164375 21.6503125,11.1094375 20.3798125,11.875" id="路径" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
                 <path d="M2.5,25.5 L2.5,26.25 L21.25,26.25 L21.25,25.5 C21.25,22.69975 21.25,21.299625 20.7050625,20.2300625 C20.2256875,19.28925 19.46075,18.5243125 18.5199375,18.0449375 C17.450375,17.5 16.05025,17.5 13.25,17.5 L10.5,17.5 C7.69975,17.5 6.299625,17.5 5.23005,18.0449375 C4.2892375,18.5243125 3.52433125,19.28925 3.04496875,20.2300625 C2.5,21.299625 2.5,22.69975 2.5,25.5 Z" id="路径" stroke-width="2.5" fill-rule="nonzero" stroke-linecap="round" stroke-linejoin="round"></path>
-                <path d="M27.4999375,26.25 L27.4999375,25.5 C27.4999375,22.69975 27.4999375,21.299625 26.955,20.2300625 C26.475625,19.28925 25.7106875,18.5243125 24.769875,18.0449375" id="路径" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M23.75,8.125 L23.75,15.625 M20,11.875 L27.5,11.875" id="形状" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
             </g>
         </g>
     </g>

@@ -691,12 +691,12 @@ const NAV_LIST = [ {
         {
             text: '部门管理',
             uri: '/department-manage/list',
-            icon: 'aside_admin'
+            icon: 'aside_admin_two'
         },
         {
             text: '角色管理',
             uri: '/role-manage/list',
-            icon: 'aside_admin'
+            icon: 'aside_admin_three'
         }
     ]
 }, {
@@ -821,7 +821,7 @@ const NAV_LIST = [ {
         {
             text: '服务器组',
             uri: '/server-group/list',
-            icon: 'aside_net_psd'
+            icon: 'aside_server_group'
         }
     ]
 }, {
