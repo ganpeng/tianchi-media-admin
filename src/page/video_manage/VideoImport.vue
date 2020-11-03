@@ -86,7 +86,6 @@
             v-show="false"
             id="upload-input-file2"
             class="upload-input"
-            accept="video/*, application/zip"
             type="file"
             ref="uploadInputFile"
             multiple>
@@ -421,7 +420,7 @@
                 //     return /(.mpg|.ts|.zip)$/.test(file.name);
                 // });
                 let files = Array.from(inputFiles).filter((file) => {
-                    return /(.mpg|.ts|.zip)$/.test(file.name);
+                    return /(.mpg|.ts|.zip|.mp4|.flv)$/.test(file.name);
                 });
                 if (files.length === 0) {
                     this.$message.warning('本次选择没有符合要求的文件');
