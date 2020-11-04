@@ -31,7 +31,10 @@ let defaultSearchFields = {
     // dev_v2.6 新增
     applicableClientList: [],
     // 过完年后增加的字段
-    cdnPush: undefined
+    cdnPush: undefined,
+    // dev2.9新增
+    sortKey: '', // NO NAME
+    sortDirection: '' // ASC DESC
 };
 
 let defaultPagination = {

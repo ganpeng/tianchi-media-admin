@@ -27,7 +27,10 @@ const defaultPerson = {
 const defaultSearchFields = {
     name: '',
     area: '',
-    refCount: '' // 关联
+    refCount: '', // 关联
+    // dev2.9新增
+    sortKey: '', // UPDATED_AT
+    sortDirection: '' // ASC DESC
 };
 
 const defaultPagination = {

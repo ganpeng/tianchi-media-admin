@@ -84,12 +84,13 @@
                     </div>
                     <div class="right-content">
                         <div class="right-top-content">
-                            <div class="title">轮播视频<br/>总时长</div>
+                            <div class="title">轮播视频总时长</div>
                             <div class="value">
                                 <div class="text">{{formateSeconds(carouselSummary.totalTakeSec)}}<i>小时</i></div>
-                                <svg-icon icon-class="channel_static_icon_05"></svg-icon>
                             </div>
+                            <svg-icon icon-class="channel_static_icon_05"></svg-icon>
                         </div>
+                        <!--
                         <div class="right-bottom-content">
                             <div class="title">轮播视频<br/>总体积</div>
                             <div class="value">
@@ -97,6 +98,7 @@
                                 <svg-icon icon-class="channel_static_icon_06"></svg-icon>
                             </div>
                         </div>
+                        -->
                     </div>
                 </div>
             </div>
@@ -621,43 +623,84 @@ export default {
                     }
                 }
                 .right-content {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
+                    position: relative;
                     flex: 1;
-                    .right-top-content,
-                    .right-bottom-content {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        width: 100%;
-                        height: 76px;
-                        background-color: #26304A;
-                        border-radius: 16px;
-                        padding: 0 16px;
-                        .title {
-                            font-size: 14px;
-                            color: #A3D0FD;
-                            text-align: left;
+                    background-color: #293550;
+                    border-radius: 16px;
+                    padding: 0 16px;
+                    .title {
+                        position: absolute;
+                        top: 16px;
+                        left: 16px;
+                        font-size: 14px;
+                        color: #A3D0FD;
+                    }
+                    .value {
+                        position: absolute;
+                        bottom: 16px;
+                        left: 16px;
+                        font-size: 48px;
+                        color: #00ABFF;
+                        .text {
+                            font-size: 32px;
+                            color: #3AC26F;
+                            i {
+                                font-size: 14px;
+                            }
                         }
-                        .value {
-                            display: flex;
-                            align-items: center;
-                            .text {
-                                font-size: 32px;
-                                color: #3AC26F;
-                                i {
-                                    font-size: 14px;
-                                }
-                            }
-                            .svg-icon {
-                                width: 30px;
-                                height: 30px;
-                                margin-left: 8px;
-                            }
+                        .svg-icon {
+                            width: 30px;
+                            height: 30px;
+                            margin-left: 8px;
                         }
                     }
+                    .svg-icon {
+                        position: absolute;
+                        top: 50%;
+                        right: 16px;
+                        transform: translateY(-50%);
+                        width: 147px;
+                        height: 163px;
+                    }
                 }
+                // .right-content {
+                //     display: flex;
+                //     flex-direction: column;
+                //     justify-content: space-between;
+                //     flex: 1;
+                //     .right-top-content,
+                //     .right-bottom-content {
+                //         display: flex;
+                //         justify-content: space-between;
+                //         align-items: center;
+                //         width: 100%;
+                //         height: 76px;
+                //         background-color: #26304A;
+                //         border-radius: 16px;
+                //         padding: 0 16px;
+                //         .title {
+                //             font-size: 14px;
+                //             color: #A3D0FD;
+                //             text-align: left;
+                //         }
+                //         .value {
+                //             display: flex;
+                //             align-items: center;
+                //             .text {
+                //                 font-size: 32px;
+                //                 color: #3AC26F;
+                //                 i {
+                //                     font-size: 14px;
+                //                 }
+                //             }
+                //             .svg-icon {
+                //                 width: 30px;
+                //                 height: 30px;
+                //                 margin-left: 8px;
+                //             }
+                //         }
+                //     }
+                // }
             }
         }
         .right-bottom-field {

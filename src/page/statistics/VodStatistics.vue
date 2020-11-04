@@ -6,7 +6,7 @@
                     <div class="field-header">
                         <div class="line"></div>
                         <div class="icon">
-                            <svg-icon icon-class="channel_static_icon_01"></svg-icon>
+                            <svg-icon icon-class="aside_programme"></svg-icon>
                         </div>
                         <div class="title">节目</div>
                     </div>
@@ -43,7 +43,7 @@
                     <div class="field-header">
                         <div class="line"></div>
                         <div class="icon">
-                            <svg-icon icon-class="channel_static_icon_02"></svg-icon>
+                            <svg-icon icon-class="aside_video"></svg-icon>
                         </div>
                         <div class="title">视频</div>
                     </div>
@@ -87,12 +87,12 @@
                     <svg-icon icon-class="vod_static_icon_05"></svg-icon>
                 </div>
                 <div class="title">排行榜</div>
-                <div class="desc">*截止今天00:00全部数据*</div>
+                <!-- <div class="desc">*截止今天00:00全部数据*</div> -->
             </div>
             <div class="vod-bottom-content">
                 <div class="content-item">
                     <div class="content-item-header">
-                        <div class="title">节目点击次数</div>
+                        <div class="title">节目点击次数<i class="sub-title">实时更新</i></div>
                     </div>
                     <ul class="sort-list play-count-sort-list">
                         <li class="sort-item">
@@ -113,7 +113,7 @@
                 </div>
                 <div class="content-item">
                     <div class="content-item-header">
-                        <div class="title">节目分类数量</div>
+                        <div class="title">节目分类数量<i class="sub-title">实时更新</i></div>
                     </div>
                     <ul class="sort-list">
                         <li class="sort-item">
@@ -132,7 +132,7 @@
                 </div>
                 <div class="content-item">
                     <div class="content-item-header">
-                        <div class="title">节目分类时长</div>
+                        <div class="title">节目分类时长<i class="sub-title">*截止今天00:00全部数据*</i></div>
                         <div class="unit">小时</div>
                     </div>
                     <ul class="sort-list">
@@ -546,6 +546,12 @@ export default {
                         font-size: 14px;
                         font-weight: 600;
                         color: #A3D0FD;
+                        .sub-title {
+                            font-size: 12px;
+                            font-weight: 400;
+                            color: rgba(163, 208, 253, 0.5);
+                            margin-left: 10px;
+                        }
                     }
                     .unit {
                         color: #A3D0FD;
@@ -659,6 +665,12 @@ export default {
             .svg-icon {
                 width: 64px;
                 height: 40px;
+            }
+            .svg-icon-aside_programme {
+                fill: #55BDFF;
+            }
+            .svg-icon-aside_video {
+                fill: #639E68;
             }
         }
         .title {
