@@ -8,7 +8,7 @@
         </role-filter-params>
         <div class="content-title">角色列表</div>
         <div class="table-operator-field">
-            <div>
+            <div class="float-left">
                 <el-dropdown
                     trigger="hover"
                     class="my-dropdown"
@@ -28,6 +28,7 @@
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
+                <sort-item :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
             </div>
             <el-button
                 class="btn-style-two contain-svg-icon"
@@ -79,12 +80,13 @@
 <script>
     import RoleFilterParams from '../search_filter_params/RoleFilterParams';
     import RoleOperateTable from './components/RoleOperateTable';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'RoleList',
         components: {
             RoleFilterParams,
-            RoleOperateTable
+            RoleOperateTable,
+            SortItem
         },
         data() {
             return {
@@ -159,6 +161,12 @@
             setRoleList(list) {
                 console.log(list);
                 this.roleList = list;
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.listQueryParams.sortKey = sortKey;
+                this.listQueryParams.sortDirection = sortDirection;
+                this.getRoleList();
             }
         }
     };

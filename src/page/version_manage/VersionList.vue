@@ -134,7 +134,9 @@
             <div class="table-field">
                 <h2 class="content-title">版本列表</h2>
                 <div class="table-operator-field clearfix">
-                    <div class="float-left"></div>
+                    <div class="float-left">
+                        <sort-item :sortKeyList="sortKeyList" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+                    </div>
                     <div class="float-right">
                         <el-button
                             class="btn-style-two contain-svg-icon"
@@ -227,8 +229,10 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import role from '@/util/config/role';
+import SortItem from 'sysComponents/custom_components/custom/SortItem';
 export default {
     name: 'VersionList',
+    components: {SortItem},
     data() {
         return {
             //  toggle搜索区域
@@ -248,7 +252,21 @@ export default {
                     value: 'WITHDRAW'
                 }
             ],
-            forcedOptions: role.FORCED_OPTIONS
+            forcedOptions: role.FORCED_OPTIONS,
+            sortKeyList: [
+                {
+                    label: '版本号',
+                    value: 'NO'
+                },
+                {
+                    label: '创建时间',
+                    value: 'CREATED_AT'
+                },
+                {
+                    label: '发布时间',
+                    value: 'RELEASED_AT'
+                }
+            ]
         };
     },
     created() {
@@ -464,6 +482,12 @@ export default {
             } catch (err) {
                 console.log(err);
             }
+        },
+        sortQueryChangeHandler(obj) {
+            let {sortKey, sortDirection} = obj;
+            this.updateSearchFields({key: 'sortKey', value: sortKey});
+            this.updateSearchFields({key: 'sortDirection', value: sortDirection});
+            this.getVersionList();
         }
     }
 };

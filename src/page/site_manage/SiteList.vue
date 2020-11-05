@@ -101,7 +101,6 @@
 
 <script>
     import _ from 'lodash';
-    // dev2.9
     import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'SiteList',
@@ -111,9 +110,7 @@
                 listQueryParams: {
                     keyword: '',
                     pageNum: 1,
-                    pageSize: 10,
-                    sortKey: '',
-                    sortDirection: ''
+                    pageSize: 10
                 },
                 total: 0,
                 siteList: []

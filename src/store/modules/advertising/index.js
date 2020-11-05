@@ -10,7 +10,9 @@ let defaultSearchFields = {
     adStatus: '',
     createdAtStart: '',
     createdAtEnd: '',
-    dateRange: []
+    dateRange: [],
+    sortKey: '',
+    sortDirection: ''
 };
 
 let defaultPagination = {

@@ -10,7 +10,9 @@
         <div class="table-field">
             <h2 class="content-title">广告列表</h2>
             <div class="table-operator-field clearfix">
-                <div class="float-left"></div>
+                <div class="float-left">
+                    <sort-item :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+                </div>
                 <div class="float-right">
                     <el-dropdown @command="createAD($event)" placement="bottom">
                         <el-button class="btn-style-two contain-svg-icon">
@@ -50,12 +52,13 @@
 <script>
     import AdFilterParams from '../../search_filter_params/ADFilterParams';
     import AdOperateTable from './components/ADOperateTable';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'ADList',
         components: {
             AdFilterParams,
-            AdOperateTable
+            AdOperateTable,
+            SortItem
         },
         data() {
             return {
@@ -134,6 +137,12 @@
                     default:
                         break;
                 }
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.listQueryParams.sortKey = sortKey;
+                this.listQueryParams.sortDirection = sortDirection;
+                this.getADList();
             }
         }
     };

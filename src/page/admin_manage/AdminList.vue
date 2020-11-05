@@ -8,7 +8,7 @@
         </admin-filter-params>
         <div class="content-title">管理员列表</div>
         <div class="table-operator-field">
-            <div>
+            <div class="float-left">
                 <el-dropdown
                     trigger="hover"
                     class="my-dropdown"
@@ -25,6 +25,7 @@
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
+                <sort-item :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
             </div>
             <el-button
                 class="btn-style-two contain-svg-icon"
@@ -73,12 +74,13 @@
 <script>
     import AdminFilterParams from '../search_filter_params/AdminFilterParams';
     import AdminOperateTable from './components/AdminOperateTable';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'AdminList',
         components: {
             AdminFilterParams,
-            AdminOperateTable
+            AdminOperateTable,
+            SortItem
         },
         data() {
             return {
@@ -148,6 +150,12 @@
             // dev2.9新增
             setAdminList(list) {
                 this.adminList = list;
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.listQueryParams.sortKey = sortKey;
+                this.listQueryParams.sortDirection = sortDirection;
+                this.getAdminList();
             }
         }
     };

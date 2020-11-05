@@ -113,7 +113,9 @@
             <div class="table-field">
                 <h2 class="content-title">设备列表</h2>
                 <div class="table-operator-field clearfix">
-                    <div class="float-left"></div>
+                    <div class="float-left">
+                        <sort-item :sortKeyList="sortKeyList" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+                    </div>
                     <div class="float-right">
                         <el-button
                             @click="importDevice"
@@ -212,10 +214,10 @@
     import {mapGetters, mapActions, mapMutations} from 'vuex';
     import _ from 'lodash';
     import role from '@/util/config/role';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'DeviceList',
-        components: {},
+        components: {SortItem},
         data() {
             return {
                 searchFieldVisible: false,
@@ -223,6 +225,16 @@
                 hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS,
                 visibleOptions: [
                     {value: 'NORMAL', name: '正常'}, {value: 'FORBIDDEN', name: '禁用'}
+                ],
+                sortKeyList: [
+                    {
+                        label: '注册时间',
+                        value: 'REGISTERED_AT'
+                    },
+                    {
+                        label: '最后在线时间',
+                        value: 'LAST_ONLINE_TIME'
+                    }
                 ]
             };
         },
@@ -381,6 +393,12 @@
                     }
                     this.setList({list: sortedListByCreatedAt});
                 }
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.updateSearchFields({key: 'sortKey', value: sortKey});
+                this.updateSearchFields({key: 'sortDirection', value: sortDirection});
+                this.searchHandler();
             }
         }
     };

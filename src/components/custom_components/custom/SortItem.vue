@@ -25,7 +25,7 @@ export default {
     props: {
         sortKeyList: {
             type: Array,
-            default: () => [{label: '更新时间', value: 'UPDATED_AT'}]
+            default: () => [{label: '创建时间', value: 'CREATED_AT'}, {label: '更新时间', value: 'UPDATED_AT'}]
         },
         sortQueryChangeHandler: {
             type: Function,

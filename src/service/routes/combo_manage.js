@@ -24,7 +24,7 @@ export const createCombo = ({name, price, validityDays, description, visible}) =
 /**
  * 获取套餐列表
  */
-export const getComboList = ({keyword, validityDays, createdAtStart, createdAtEnd, pageNum, pageSize, visible}) => {
+export const getComboList = ({keyword, validityDays, createdAtStart, createdAtEnd, pageNum, pageSize, visible, sortKey, sortDirection}) => {
     const params = {
         pageNum: pageNum - 1,
         pageSize,
@@ -32,7 +32,9 @@ export const getComboList = ({keyword, validityDays, createdAtStart, createdAtEn
         validityDays,
         createdAtStart: createdAtStart ? new Date(createdAtStart).getTime() : '',
         createdAtEnd: createdAtEnd ? new Date(createdAtEnd).getTime() : '',
-        visible
+        visible,
+        sortKey,
+        sortDirection
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

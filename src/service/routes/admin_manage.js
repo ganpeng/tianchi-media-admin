@@ -17,14 +17,16 @@ export const createAdmin = ({email, mobile, name, remark, departmentList, roleLi
 /**
  * 获取平台管理员信息列表
  */
-export const getAdminList = ({keyword, departmentId, roleId, status, pageNum, pageSize}) => {
+export const getAdminList = ({keyword, departmentId, roleId, status, pageNum, pageSize, sortKey, sortDirection}) => {
     const params = {
         keyword,
         departmentId,
         roleId,
         status,
         pageSize,
-        pageNum: pageNum - 1
+        pageNum: pageNum - 1,
+        sortKey,
+        sortDirection
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

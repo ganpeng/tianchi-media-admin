@@ -47,7 +47,7 @@ export const getADOwnerResourceList = ({advertiserId, adType, pageNum, pageSize}
  * @param adStatus The type of resource, such as EXPIRED、ACTIVE、WAITING.
  * @param mediaType The type of resource, such as IMAGE、VIDEO.
  */
-export const getADList = ({keyword, advertiserId, adType, visible, adStatus, mediaType, createdAtStart, createdAtEnd, order, pageNum, pageSize}) => {
+export const getADList = ({keyword, advertiserId, adType, visible, adStatus, mediaType, createdAtStart, createdAtEnd, order, pageNum, pageSize, sortKey, sortDirection}) => {
     const params = {
         keyword,
         advertiserId,
@@ -59,7 +59,9 @@ export const getADList = ({keyword, advertiserId, adType, visible, adStatus, med
         createdAtEnd,
         order,
         pageNum: pageNum - 1,
-        pageSize
+        pageSize,
+        sortKey,
+        sortDirection
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

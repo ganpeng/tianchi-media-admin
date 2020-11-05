@@ -102,7 +102,6 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import role from '@/util/config/role';
-// dev2.9
 import SortItem from 'sysComponents/custom_components/custom/SortItem';
 export default {
     name: 'ServerGroupList',
