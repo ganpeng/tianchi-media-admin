@@ -856,6 +856,10 @@ html, body {
     .el-checkbox {
         padding: 0;
     }
+    .float-left {
+        display: flex;
+        align-items: center;
+    }
 }
 
 .el-dropdown {

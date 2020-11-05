@@ -192,6 +192,7 @@
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
+                        <sort-item :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
                     </div>
                     <div class="float-right">
                         <el-button
@@ -368,12 +369,15 @@
     import role from '@/util/config/role';
     import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
+    // dev2.9
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
 
     export default {
         name: 'ProgrammeList',
         components: {
             PreviewSingleImage,
-            DisplayRelatedDialog
+            DisplayRelatedDialog,
+            SortItem
         },
         data() {
             return {
@@ -863,6 +867,12 @@
                     }
                     this.setList({list: sortedListByCreatedAt});
                 }
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.updateProgrammeSearchFields({key: 'sortKey', value: sortKey});
+                this.updateProgrammeSearchFields({key: 'sortDirection', value: sortDirection});
+                this.getProgrammeList();
             }
         }
     };
