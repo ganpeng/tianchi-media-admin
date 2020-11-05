@@ -853,6 +853,11 @@ html, body {
     .my-dropdown {
         margin-left: 0px;
     }
+    .my-dropdown,
+    .my-disabled-dropdown {
+        margin-left: 0;
+        margin-right: 12px;
+    }
     .el-checkbox {
         padding: 0;
     }

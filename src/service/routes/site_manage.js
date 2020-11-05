@@ -56,11 +56,13 @@ export const deleteChildSite = ({id}) => {
 /**
  * 获取子站点列表
  */
-export const getChildSiteList = ({keyword, pageNum, pageSize}) => {
+export const getChildSiteList = ({keyword, pageNum, pageSize, sortKey, sortDirection}) => {
     const params = {
         pageNum: pageNum - 1,
         pageSize,
-        keyword
+        keyword,
+        sortKey,
+        sortDirection
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

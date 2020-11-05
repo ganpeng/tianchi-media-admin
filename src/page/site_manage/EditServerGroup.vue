@@ -30,6 +30,7 @@ export default {
                 if (valid) {
                     let { id } = this.$route.params;
                     let res = await this.updateServerGroup(id);
+                    console.log(res);
                     if (res && res.code === 0) {
                         this.gotoList();
                     }

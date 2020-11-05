@@ -24,7 +24,9 @@
             <div class="table-field">
                 <h2 class="content-title">站点列表</h2>
                 <div class="table-operator-field clearfix">
-                    <div class="float-left"></div>
+                    <div class="float-left">
+                        <sort-item :sortKeyList="[{label: '创建时间', value: 'CREATED_AT'}]" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+                    </div>
                     <div class="float-right">
                         <el-button
                             class="btn-style-two contain-svg-icon"
@@ -99,14 +101,19 @@
 
 <script>
     import _ from 'lodash';
+    // dev2.9
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'SiteList',
+        components: {SortItem},
         data() {
             return {
                 listQueryParams: {
                     keyword: '',
                     pageNum: 1,
-                    pageSize: 10
+                    pageSize: 10,
+                    sortKey: '',
+                    sortDirection: ''
                 },
                 total: 0,
                 siteList: []
@@ -194,6 +201,12 @@
                     }
                     this.siteList = sortedList;
                 }
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.listQueryParams.sortKey = sortKey;
+                this.listQueryParams.sortDirection = sortDirection;
+                this.getSiteList();
             }
         }
     };

@@ -65,9 +65,6 @@ export default {
 };
 </script>
 <style lang="scss">
-.sort-item-container {
-    margin-left: 12px;
-}
 .el-dropdown-menu.el-popper {
     .sort-key-item {
         color: #D8D8D8;

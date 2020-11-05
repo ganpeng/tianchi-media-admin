@@ -43,7 +43,9 @@
             <div class="table-field">
                 <h2 class="content-title">服务器组</h2>
                 <div class="table-operator-field clearfix">
-                    <div class="float-left"></div>
+                    <div class="float-left">
+                        <sort-item :sortKeyList="sortKeyList" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+                    </div>
                     <div class="float-right">
                         <el-button
                             class="btn-style-two contain-svg-icon"
@@ -100,11 +102,28 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import role from '@/util/config/role';
+// dev2.9
+import SortItem from 'sysComponents/custom_components/custom/SortItem';
 export default {
     name: 'ServerGroupList',
+    components: {SortItem},
     data() {
         return {
-            serverGroupTypeOPtions: role.SERVER_GROUP_TYPE_OPTIONS
+            serverGroupTypeOPtions: role.SERVER_GROUP_TYPE_OPTIONS,
+            sortKeyList: [
+                {
+                    label: 'IP',
+                    value: 'IP'
+                },
+                {
+                    label: '创建时间',
+                    value: 'CREATED_AT'
+                },
+                {
+                    label: '更新时间',
+                    value: 'UPDATED_AT'
+                }
+            ]
         };
     },
     created() {
@@ -203,6 +222,13 @@ export default {
             } catch (err) {
                 console.log(err);
             }
+        },
+        // dev2.9
+        sortQueryChangeHandler(obj) {
+            let {sortKey, sortDirection} = obj;
+            this.updateSearchFields({key: 'sortKey', value: sortKey});
+            this.updateSearchFields({key: 'sortDirection', value: sortDirection});
+            this.searchHandler();
         }
     }
 };

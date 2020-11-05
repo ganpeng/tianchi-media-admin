@@ -13,7 +13,9 @@ const defaultServerGroup = {
 
 const defaultSearchFields = {
     keyword: '', // 关键字
-    code: '' // 组类型 LIVE CAROUSEL RECORD
+    code: '', // 组类型 LIVE CAROUSEL RECORD
+    sortKey: '',
+    sortDirection: ''
 };
 
 const defaultPagination = {
@@ -105,7 +107,7 @@ const actions = {
             if (!isLoading) {
                 isLoading = true;
                 let serverGroup = Object.assign({}, state.currentServerGroup, {id});
-                let res = service.updateServerGroup(serverGroup);
+                let res = await service.updateServerGroup(serverGroup);
                 isLoading = false;
                 if (res && res.code === 0) {
                     return res;
