@@ -1,7 +1,7 @@
 <template>
     <div class="sort-item-container">
+            <!-- trigger="click" -->
         <el-dropdown
-            trigger="click"
             :hide-on-click="false"
             class="my-dropdown">
             <span class="el-dropdown-link">

@@ -38,7 +38,7 @@ export const createSubject = ({category, name, programmeCategoryList, tagList, b
  * @param pageNum The current page number.
  * @param pageSize The size of one page.
  */
-export const getSubjectList = ({keyword, category, programmeCategoryId, createdAtBegin, createdAtEnd, pageNum, pageSize, visible, refCount}) => {
+export const getSubjectList = ({keyword, category, programmeCategoryId, createdAtBegin, createdAtEnd, pageNum, pageSize, visible, refCount, sortKey, sortDirection}) => {
     const params = {
         pageNum: pageNum - 1,
         pageSize,
@@ -48,7 +48,9 @@ export const getSubjectList = ({keyword, category, programmeCategoryId, createdA
         createdAtBegin: createdAtBegin ? new Date(createdAtBegin).getTime() : '',
         createdAtEnd: createdAtEnd ? new Date(createdAtEnd).getTime() : '',
         visible,
-        refCount
+        refCount,
+        sortKey,
+        sortDirection
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

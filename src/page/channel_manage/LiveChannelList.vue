@@ -238,6 +238,7 @@
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
+                    <sort-item :sortKeyList="sortKeyList" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
                 </div>
                 <div class="float-right">
                     <el-button
@@ -439,7 +440,7 @@
     import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
     import role from '@/util/config/role';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     const ClipboardJS = require('clipboard');
     // const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
     // const x2js = new X2JS();
@@ -447,7 +448,8 @@
         name: 'LiveChannelList',
         components: {
             DisplayVideoDialog,
-            DisplayRelatedDialog
+            DisplayRelatedDialog,
+            SortItem
         },
         data() {
             return {
@@ -494,7 +496,17 @@
                 status: 0,
                 searchFieldVisible: false,
                 selectedChannelList: [],
-                currentItem: {}
+                currentItem: {},
+                sortKeyList: [
+                    {
+                        label: '台号',
+                        value: 'NO'
+                    },
+                    {
+                        label: '展示名',
+                        value: 'NAME'
+                    }
+                ]
             };
         },
         mounted() {
@@ -867,6 +879,12 @@
                     }
                     this.setList({list: sortedList});
                 }
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.updateSearchFields({key: 'sortKey', value: sortKey});
+                this.updateSearchFields({key: 'sortDirection', value: sortDirection});
+                this.searchHandler();
             }
         }
     };

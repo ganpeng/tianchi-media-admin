@@ -84,6 +84,7 @@
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
+                        <sort-item :sortKeyList="[{label: '更新时间', value: 'UPDATED_AT'}]" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
                     </div>
                     <div class="float-right">
                         <el-button
@@ -216,12 +217,13 @@
     import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
     import role from '../../util/config/role';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'PersonList',
         components: {
             PreviewSingleImage,
-            DisplayRelatedDialog
+            DisplayRelatedDialog,
+            SortItem
         },
         data() {
             return {
@@ -554,6 +556,12 @@
                     }
                     this.setList({list: sortedList});
                 }
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.updateSearchFields({key: 'sortKey', value: sortKey});
+                this.updateSearchFields({key: 'sortDirection', value: sortDirection});
+                this.searchHandler();
             }
         }
     };

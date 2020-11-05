@@ -29,6 +29,7 @@
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
+                    <sort-item :sortKeyList="sortKeyList" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
                 </div>
                 <div class="float-right">
                     <el-button
@@ -97,13 +98,14 @@
     import ChannelFilterParams from '../../search_filter_params/ChannelFilterParams';
     import CarouselChannelOperateTable from './CarouselChannelOperateTable';
     import wsCache from '@/util/webStorage';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'CarouselChannelList',
         components: {
             CreateChannel,
             ChannelFilterParams,
-            CarouselChannelOperateTable
+            CarouselChannelOperateTable,
+            SortItem
         },
         data() {
             return {
@@ -114,7 +116,17 @@
                 pageNum: 1,
                 total: 0,
                 channelList: [],
-                isDisabled: true
+                isDisabled: true,
+                sortKeyList: [
+                    {
+                        label: '台号',
+                        value: 'NO'
+                    },
+                    {
+                        label: '展示名',
+                        value: 'NAME'
+                    }
+                ]
             };
         },
         mounted() {
@@ -203,6 +215,12 @@
             // dev2.9
             setChannelList(list) {
                 this.channelList = list;
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.listQueryParams.sortKey = sortKey;
+                this.listQueryParams.sortDirection = sortDirection;
+                this.getChannelList();
             }
         }
     };

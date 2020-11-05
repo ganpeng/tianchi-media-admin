@@ -1,5 +1,6 @@
 import service from '../config';
-
+import qs from 'querystring';
+import _ from 'lodash';
 /**
  * 新增人物
  */
@@ -10,10 +11,12 @@ export const createPerson = (person) => {
 /**
  * 获取人物列表
  */
-export const getPersonList = ({pageNum, pageSize, name, area, visible, refCount}) => {
-    return service.get('/v1/content/figure/page', {
-        params: {pageNum, pageSize, name, area, visible, refCount}
-    });
+export const getPersonList = (params) => {
+    let paramsStr = qs.stringify(_.pickBy(params, (item) => {
+        return item !== '' && item !== undefined;
+    }));
+
+    return service.get(`/v1/content/figure/page?${paramsStr}`);
 };
 
 /**
