@@ -256,7 +256,7 @@ export default {
             sortKeyList: [
                 {
                     label: '版本号',
-                    value: 'NO'
+                    value: 'VERSION_CODE'
                 },
                 {
                     label: '创建时间',
