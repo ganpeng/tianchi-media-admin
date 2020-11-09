@@ -59,7 +59,7 @@
                 <el-option
                     v-for="(item, index) in defaultNavBarList"
                     :key="index"
-                    :label="item.name"
+                    :label="navbarLabel(item)"
                     :value="item.id">
                 </el-option>
             </el-select>
@@ -89,6 +89,11 @@
             },
             defaultNavBarList() {
                 return this.navBarList.filter((navbar) => navbar.visible);
+            },
+            navbarLabel() {
+                return (navbar) => {
+                    return navbar.name || navbar.picRemark;
+                };
             }
         },
         methods: {
