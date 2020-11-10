@@ -12,8 +12,8 @@
                     {{sort.label}}
                 </div>
                 <div class="seperator-line"></div>
-                <div @click="selectSortDirection('DESC')" :class="['sort-key-item', sortDirection === 'DESC' && 'active']">增序</div>
-                <div @click="selectSortDirection('ASC')" :class="['sort-key-item', sortDirection === 'ASC' && 'active']">降序</div>
+                <div @click="selectSortDirection('ASC')" :class="['sort-key-item', sortDirection === 'ASC' && 'active']">增序</div>
+                <div @click="selectSortDirection('DESC')" :class="['sort-key-item', sortDirection === 'DESC' && 'active']">降序</div>
                 <div @click="resetSort" class="sort-key-item">重置</div>
             </el-dropdown-menu>
         </el-dropdown>

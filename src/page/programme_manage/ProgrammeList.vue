@@ -192,7 +192,7 @@
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
-                        <sort-item :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+                        <sort-item :sortKeyList="[{label: '更新时间', value: 'UPDATED_AT'}]" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
                     </div>
                     <div class="float-right">
                         <el-button

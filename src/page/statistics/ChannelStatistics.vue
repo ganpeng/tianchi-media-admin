@@ -240,10 +240,10 @@ export default {
                     }
                 },
                 grid: {
-                    top: '10%',
+                    top: '5%',
                     left: '5%',
                     right: '2%',
-                    bottom: '15%'
+                    bottom: '20%'
                 },
                 xAxis: {
                     type: 'category',
@@ -254,7 +254,8 @@ export default {
                     axisLabel: {
                         fontSize: 12,
                         color: '#A3D0FD',
-                        interval: 0
+                        interval: 0,
+                        rotate: 40
                     },
                     axisLine: {
                         lineStyle: {
@@ -323,10 +324,10 @@ export default {
                     }
                 },
                 grid: {
-                    top: '10%',
+                    top: '5%',
                     left: '5%',
                     right: '2%',
-                    bottom: '15%'
+                    bottom: '20%'
                 },
                 xAxis: {
                     type: 'category',
@@ -337,7 +338,8 @@ export default {
                     axisLabel: {
                         fontSize: 12,
                         color: '#A3D0FD',
-                        interval: 0
+                        interval: 0,
+                        rotate: 40
                     },
                     axisLine: {
                         lineStyle: {
