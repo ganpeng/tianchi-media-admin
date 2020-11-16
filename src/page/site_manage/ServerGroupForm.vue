@@ -36,10 +36,10 @@
                             @input="inputHandler($event, 'ip')"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="最大频道数" prop="currentCount">
+                    <el-form-item label="最大频道数" prop="totalCount">
                         <el-input
-                            :value="serverGroup.currentCount"
-                            @input="inputHandler($event, 'currentCount')"
+                            :value="serverGroup.totalCount"
+                            @input="inputHandler($event, 'totalCount')"
                         ></el-input>
                     </el-form-item>
 
@@ -74,7 +74,7 @@ export default {
                         message: '请输入正确的IP地址'
                     }
                 ],
-                currentCount: [
+                totalCount: [
                     { required: true, message: '请输入最大频道数' },
                     {
                         pattern: /^\+?[1-9][0-9]*$/,

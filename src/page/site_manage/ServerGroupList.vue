@@ -20,10 +20,10 @@
                     <div class="search-field-item">
                         <label class="search-field-item-label">类型</label>
                         <el-select
-                            :value="searchFields.code"
+                            :value="searchFields.type"
                             filterable
                             clearable
-                            @input="inputHandler($event, 'code')"
+                            @input="inputHandler($event, 'type')"
                             placeholder="全部">
                             <el-option
                                 v-for="(item, index) in serverGroupTypeOPtions"
@@ -65,7 +65,11 @@
                         </template>
                     </el-table-column>
                     <el-table-column align="center" label="IP" prop="ip"></el-table-column>
-                    <el-table-column align="center" label="频道数" prop="currentCount"></el-table-column>
+                    <el-table-column align="center" label="频道数" prop="currentCount">
+                        <template slot-scope="scope">
+                            {{scope.row.currentCount}}/{{scope.row.totalCount}}
+                        </template>
+                    </el-table-column>
                     <el-table-column width="120px" align="center" label="创建时间">
                         <template slot-scope="scope">
                             {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
@@ -169,8 +173,10 @@ export default {
         },
         clearSearchFields() {
             this.resetSearchFields();
+            this.searchHandler();
         },
         searchHandler() {
+            this.updatePagination({value: 1, key: 'pageNum'});
             this.getServerGroupList();
         },
         keyupHandler(e) {
@@ -216,7 +222,10 @@ export default {
                     type: 'error'
                 });
                 if (confirm) {
-                    console.log('delete');
+                    let res = await this.$service.deleteSserverGroupById(id);
+                    if (res && res.code === 0) {
+                        this.getServerGroupList();
+                    }
                 }
             } catch (err) {
                 console.log(err);

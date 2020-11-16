@@ -500,7 +500,7 @@
                 sortKeyList: [
                     {
                         label: '台号',
-                        value: 'NO'
+                        value: 'VERSION_CODE'
                     },
                     {
                         label: '展示名',

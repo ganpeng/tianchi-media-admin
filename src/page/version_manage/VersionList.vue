@@ -193,7 +193,7 @@
                     </el-table-column>
                     <el-table-column width="160px" align="center" label="创建时间" prop="releaseAt">
                         <template slot-scope="scope">
-                            {{scope.row.releaseAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
+                            {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                         </template>
                     </el-table-column>
                     <el-table-column width="160px" align="center" label="发布时间" prop="releaseAt">

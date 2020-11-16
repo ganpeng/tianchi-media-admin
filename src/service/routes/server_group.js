@@ -20,3 +20,7 @@ export const getServerGroupList = (params) => {
 export const getServerGroupById = (id) => {
     return service.get(`/v1/sys/server_group/${id}`);
 };
+
+export const deleteSserverGroupById = (id) => {
+    return service.delete(`/v1/sys/server_group?id=${id}`);
+};

@@ -8,12 +8,12 @@ const defaultServerGroup = {
     name: '', // 组名称
     ip: '', // 组ip
     typeList: [], // 组类型
-    currentCount: '' // 频道数
+    totalCount: '' // 频道数
 };
 
 const defaultSearchFields = {
     keyword: '', // 关键字
-    code: '', // 组类型 LIVE CAROUSEL RECORD
+    type: '', // 组类型 LIVE CAROUSEL RECORD
     sortKey: '',
     sortDirection: ''
 };
