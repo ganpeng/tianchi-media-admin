@@ -92,10 +92,11 @@ export default {
                     let formData = new FormData();
                     formData.append('file', file);
                     let headers = this.$util.getUploadHeaders(this.$store.state.user.token);
+                    let {importType} = this.$route.query;
                     let options = {
                         formData,
                         headers,
-                        uri: `/admin/v1/content/programme/import`,
+                        uri: `/admin/v1/content/programme/import?importType=${importType}`,
                         progressHandler: (event) => {
                             let percent = event.loaded / event.total * 100;
                             this.progress = Math.round(percent);

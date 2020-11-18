@@ -207,12 +207,26 @@
                             <svg-icon icon-class="add"></svg-icon>
                             添加
                         </el-button>
+                        <el-dropdown
+                            @command="gotoProgrammeImportPage($event)" placement="bottom">
+                            <el-button class="btn-style-two contain-svg-icon">
+                                <svg-icon icon-class="import"></svg-icon>
+                                导入
+                                <svg-icon icon-class="arrow_down"></svg-icon>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="PROGRAMME">导入节目</el-dropdown-item>
+                                <el-dropdown-item command="VIDEO">关联视频</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <!--
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="gotoProgrammeImportPage">
                             <svg-icon icon-class="import"></svg-icon>
                             导入
                         </el-button>
+                        -->
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="exportSelectedProgrammeExcel">
@@ -825,7 +839,7 @@
             toggleSearchField() {
                 this.searchFieldVisible = !this.searchFieldVisible;
             },
-            gotoProgrammeImportPage() {
+            gotoProgrammeImportPage(importType) {
                 if (!this.$authority.isHasAuthority('content:programme:import')) {
                     return;
                 }
@@ -833,7 +847,7 @@
                 let routeData = this.$router.resolve({
                     name: 'ProgrammeImport'
                 });
-                window.open(routeData.href, '_blank');
+                window.open(`${routeData.href}?importType=${importType}`, '_blank');
             },
             displayRelated(item) {
                 if (item.refCount && item.refCount > 0) {
