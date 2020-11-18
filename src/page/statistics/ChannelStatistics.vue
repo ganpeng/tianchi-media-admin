@@ -240,7 +240,7 @@ export default {
                     }
                 },
                 grid: {
-                    top: '5%',
+                    top: '10%',
                     left: '5%',
                     right: '2%',
                     bottom: '20%'
@@ -324,7 +324,7 @@ export default {
                     }
                 },
                 grid: {
-                    top: '5%',
+                    top: '10%',
                     left: '5%',
                     right: '2%',
                     bottom: '20%'

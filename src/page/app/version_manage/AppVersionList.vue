@@ -19,7 +19,23 @@
                         搜索
                     </el-button>
                     <div class="search-field-item">
-                        <label class="search-field-item-label">方式</label>
+                        <label class="search-field-item-label">状态</label>
+                        <el-select
+                            :value="searchFields.releaseStatus"
+                            filterable
+                            clearable
+                            @input="inputHandler($event, 'releaseStatus')"
+                            placeholder="全部">
+                            <el-option
+                                v-for="(item, index) in releaseStatusOptions"
+                                :key="index"
+                                :label="item.name"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="search-field-item">
+                        <label class="search-field-item-label">升级方式</label>
                         <el-select
                             :value="searchFields.forced"
                             filterable
@@ -34,8 +50,22 @@
                             </el-option>
                         </el-select>
                     </div>
+                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
+                        <svg-icon icon-class="reset"></svg-icon>
+                        重置
+                    </el-button>
+                    <span
+                        @click="toggleSearchField"
+                        :class="{active:searchFieldVisible}"
+                        class="more-filters">
+                        更多筛选
+                        <i class="el-icon-arrow-up" v-if="searchFieldVisible"></i>
+                        <i class="el-icon-arrow-down" v-else></i>
+                    </span>
+                </div>
+                <div v-show="searchFieldVisible" class="field-row">
                     <div class="search-field-item">
-                        <label class="search-field-item-label">时间</label>
+                        <label class="search-field-item-label">发布时间</label>
                         <el-date-picker
                             :value="searchFields.dateRange"
                             type="daterange"
@@ -48,17 +78,15 @@
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </div>
-                    <el-button class="btn-style-one" type="primary" @click="clearSearchFields" plain>
-                        <svg-icon icon-class="reset"></svg-icon>
-                        重置
-                    </el-button>
                 </div>
             </div>
             <div class="seperator-line"></div>
             <div class="table-field">
                 <h2 class="content-title">版本列表</h2>
                 <div class="table-operator-field clearfix">
-                    <div class="float-left"></div>
+                    <div class="float-left">
+                        <sort-item :sortKeyList="sortKeyList" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+                    </div>
                     <div class="float-right">
                         <el-button
                             class="btn-style-two contain-svg-icon"
@@ -72,14 +100,14 @@
                     @sort-change="sortChangeHandler"
                     header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                     <el-table-column align="center" width="120px" label="编号" prop="id"></el-table-column>
-                    <el-table-column label="版本名称" width="120px" align="center" prop="version">
+                    <el-table-column label="版本名称" min-width="120px" align="center" prop="version">
                         <template slot-scope="scope">
                             <span @click="displayVersion(scope.row.id)" class="ellipsis two name">
                                 {{scope.row.version}}
                             </span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="版本号" align="center" prop="versionCode"></el-table-column>
+                    <el-table-column label="版本号" min-width="80" align="center" prop="versionCode"></el-table-column>
                     <el-table-column width="120px" align="center" label="升级方式">
                         <template slot-scope="scope">
                             {{scope.row.forced ? '强制升级' : '选择升级'}}
@@ -95,20 +123,25 @@
                     </el-table-column>
                     <el-table-column sortable align="center" width="120px" prop="stbCount" label="设备数">
                         <template slot-scope="scope">
-                            {{getCount(scope.row.stbCount)}}
+                            {{scope.row.stbCount}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="状态">
+                    <el-table-column align="center" width="80" label="状态">
                         <template slot-scope="scope">
                             {{releaseStatus(scope.row.releaseStatus)}}
                         </template>
                     </el-table-column>
-                    <el-table-column width="120px" align="center" label="发布时间" prop="releaseAt">
+                    <el-table-column min-width="180px" align="center" label="创建时间" prop="releaseAt">
                         <template slot-scope="scope">
-                            {{scope.row.releaseAt | formatDate('yyyy-MM-DD')}}
+                            {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" width="190px" label="操作">
+                    <el-table-column min-width="180px" align="center" label="发布时间" prop="releaseAt">
+                        <template slot-scope="scope">
+                            {{scope.row.releaseAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" min-width="190px" label="操作">
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
                                 <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text" @click="editVersion(scope.row)">编辑</span>
@@ -135,14 +168,31 @@
 import {mapGetters, mapMutations, mapActions} from 'vuex';
 import _ from 'lodash';
 import role from '@/util/config/role';
+import SortItem from 'sysComponents/custom_components/custom/SortItem';
 export default {
     name: 'AppVersionList',
+    components: {SortItem},
     data() {
         return {
             //  toggle搜索区域
             searchFieldVisible: false,
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
-            forcedOptions: role.FORCED_OPTIONS
+            releaseStatusOptions: role.RELEASE_STATUS_OPTIONS,
+            forcedOptions: role.FORCED_OPTIONS,
+            sortKeyList: [
+                {
+                    label: '版本号',
+                    value: 'VERSION_CODE'
+                },
+                {
+                    label: '创建时间',
+                    value: 'CREATED_AT'
+                },
+                {
+                    label: '发布时间',
+                    value: 'RELEASED_AT'
+                }
+            ]
         };
     },
     created() {
@@ -162,13 +212,6 @@ export default {
             searchFields: 'appVersion/searchFields',
             filialeList: 'channel/filialeList'
         }),
-        getCount() {
-            return (version) => {
-                let installed = _.get(version, 'installed') || 0;
-                let stdCount = _.get(version, 'stdCount') || 0;
-                return `${installed} / ${stdCount}`;
-            };
-        },
         packageUrl(uri) {
             return (uri) => {
                 let baseUri = window.localStorage.getItem('videoBaseUri');
@@ -215,9 +258,6 @@ export default {
         },
         toggleSearchField() {
             this.searchFieldVisible = !this.searchFieldVisible;
-        },
-        hardwareType(hardwareType) {
-            return hardwareType ? (hardwareType === 'HARDWARE_3796' ? '3796' : '3798') : '------';
         },
         clearSearchFields() {
             this.resetSearchFields();
@@ -304,6 +344,12 @@ export default {
             } catch (err) {
                 console.log(err);
             }
+        },
+        sortQueryChangeHandler(obj) {
+            let {sortKey, sortDirection} = obj;
+            this.updateSearchFields({key: 'sortKey', value: sortKey});
+            this.updateSearchFields({key: 'sortDirection', value: sortDirection});
+            this.getVersionList();
         }
     }
 };

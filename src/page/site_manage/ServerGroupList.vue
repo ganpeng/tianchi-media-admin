@@ -70,21 +70,21 @@
                             {{scope.row.currentCount}}/{{scope.row.totalCount}}
                         </template>
                     </el-table-column>
-                    <el-table-column width="120px" align="center" label="创建时间">
+                    <el-table-column width="180px" align="center" label="创建时间">
                         <template slot-scope="scope">
-                            {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                            {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
                         </template>
                     </el-table-column>
-                    <el-table-column width="120px" align="center" label="更新时间">
+                    <el-table-column width="180px" align="center" label="更新时间">
                         <template slot-scope="scope">
-                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
+                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" width="190px" label="操作">
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
-                                <span  class="btn-text" @click="editServerGroupHandler(scope.row.id)">编辑</span>
-                                <span  class="btn-text text-danger" @click="deleteServerGroupHandler(scope.row.id)">删除</span>
+                                <span class="btn-text" @click="editServerGroupHandler(scope.row.id)">编辑</span>
+                                <span v-if="scope.row.currentCount !== 0" class="btn-text text-danger" @click="deleteServerGroupHandler(scope.row.id)">删除</span>
                             </div>
                         </template>
                     </el-table-column>

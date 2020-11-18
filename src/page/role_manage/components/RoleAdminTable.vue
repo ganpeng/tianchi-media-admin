@@ -25,7 +25,7 @@
                 min-width="140px"
                 label="创建时间">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
                 </template>
             </el-table-column>
         </el-table>

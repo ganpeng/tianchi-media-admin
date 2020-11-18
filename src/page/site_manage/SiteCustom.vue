@@ -8,7 +8,7 @@
                 <div class="wrapper">
                     <div :style="bgImageStyle(logoPngUrl)" class="logo-container re-container">
                     </div>
-                    <el-button class="btn-style-two" @click="updateSiteCustom(1)">修改</el-button>
+                    <el-button v-if="hasAuthority" class="btn-style-two" @click="updateSiteCustom(1)">修改</el-button>
                 </div>
             </div>
             <div class="image">
@@ -17,7 +17,7 @@
                     <div :style="bgImageStyle(logoUrl)" class="image-container re-container">
                         <span class="name">logo.jpg</span>
                     </div>
-                    <el-button class="btn-style-two" @click="updateSiteCustom(2)">修改</el-button>
+                    <el-button v-if="hasAuthority" class="btn-style-two" @click="updateSiteCustom(2)">修改</el-button>
                 </div>
             </div>
             <div class="vid">
@@ -29,7 +29,7 @@
                             <svg-icon icon-class="ad_video" class="video"></svg-icon>
                         </span>
                     </div>
-                    <el-button class="btn-style-two" @click="updateSiteCustom(3)">修改</el-button>
+                    <el-button v-if="hasAuthority" class="btn-style-two" @click="updateSiteCustom(3)">修改</el-button>
                 </div>
             </div>
         </div>
@@ -63,19 +63,21 @@ export default {
     },
     async created() {
         try {
-            let res = await this.$service.getSiteCustom();
-            if (res && res.code === 0) {
-                this.logoUrl = _.get(res.data, 'logoUrl');
-                this.logoMd5 = _.get(res.data, 'logoMd5');
-                this.bootanimationUrl = _.get(res.data, 'bootanimationUrl');
-                this.bootanimationMd5 = _.get(res.data, 'bootanimationMd5');
-                this.videoUrl = _.get(res.data, 'videoUrl');
-                this.videoMd5 = _.get(res.data, 'videoMd5');
-            }
+            if (this.hasAuthority) {
+                let res = await this.$service.getSiteCustom();
+                if (res && res.code === 0) {
+                    this.logoUrl = _.get(res.data, 'logoUrl');
+                    this.logoMd5 = _.get(res.data, 'logoMd5');
+                    this.bootanimationUrl = _.get(res.data, 'bootanimationUrl');
+                    this.bootanimationMd5 = _.get(res.data, 'bootanimationMd5');
+                    this.videoUrl = _.get(res.data, 'videoUrl');
+                    this.videoMd5 = _.get(res.data, 'videoMd5');
+                }
 
-            let res2 = await this.$service.getSiteCustomLogo();
-            if (res2 && res2.code === 0) {
-                this.logoPngUrl = _.get(res2.data, 'logoPngUrl');
+                let res2 = await this.$service.getSiteCustomLogo();
+                if (res2 && res2.code === 0) {
+                    this.logoPngUrl = _.get(res2.data, 'logoPngUrl');
+                }
             }
         } catch (err) {
             console.log(err);
@@ -87,6 +89,9 @@ export default {
         },
         videoName() {
             return this.videoUrl ? 'ad.mp4' : 'bootanimation.zip';
+        },
+        hasAuthority() {
+            return this.$authority.isHasAuthority('content:startUp:get');
         }
     },
     methods: {

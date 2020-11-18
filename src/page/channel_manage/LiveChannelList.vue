@@ -499,10 +499,6 @@
                 currentItem: {},
                 sortKeyList: [
                     {
-                        label: '台号',
-                        value: 'VERSION_CODE'
-                    },
-                    {
                         label: '展示名',
                         value: 'NAME'
                     }

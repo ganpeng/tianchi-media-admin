@@ -1108,6 +1108,21 @@ const SERVER_GROUP_TYPE_OPTIONS = [
     }
 ];
 
+const RELEASE_STATUS_OPTIONS = [
+    {
+        name: '未发布',
+        value: 'PRE_RELEASED'
+    },
+    {
+        name: '已发布',
+        value: 'RELEASED'
+    },
+    {
+        name: '已撤回',
+        value: 'WITHDRAW'
+    }
+];
+
 export default {
     MAIN_ROLE_OPTIONS,
     VIDEO_TYPE,
@@ -1155,5 +1170,6 @@ export default {
     APP_NAV_LIST,
     APPLICABLE_CLIENT_LIST_OPTION,
 // dev2.9新增
-    SERVER_GROUP_TYPE_OPTIONS
+    SERVER_GROUP_TYPE_OPTIONS,
+    RELEASE_STATUS_OPTIONS
 };

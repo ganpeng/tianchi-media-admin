@@ -119,10 +119,6 @@
                 isDisabled: true,
                 sortKeyList: [
                     {
-                        label: '台号',
-                        value: 'NO'
-                    },
-                    {
                         label: '展示名',
                         value: 'NAME'
                     }

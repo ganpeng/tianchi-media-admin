@@ -24,7 +24,10 @@ const defaultSearchFields = {
     releaseAtEnd: '',
     forced: '', // 强制升级
     keyword: '', // 关键字
-    dateRange: [] // 时间区间
+    dateRange: [], // 时间区间
+    releaseStatus: '', //  RELEASED 已发布  WITHDRAW 已撤回  PRE_RELEASED 未发布
+    sortKey: '',
+    sortDirection: ''
 };
 
 const defaultPagination = {
@@ -162,7 +165,9 @@ const actions = {
                 releaseAtEnd: searchFields.releaseAtEnd,
                 forced: searchFields.forced !== '' ? searchFields.forced === 1 : searchFields.forced,
                 keyword: searchFields.keyword,
-                productType: searchFields.productType,
+                releaseStatus: searchFields.releaseStatus,
+                sortKey: searchFields.sortKey,
+                sortDirection: searchFields.sortDirection,
                 pageNum: state.pagination.pageNum > 0 ? state.pagination.pageNum - 1 : 0,
                 pageSize: state.pagination.pageSize
             };

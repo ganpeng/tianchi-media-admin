@@ -80,40 +80,6 @@
                     </span>
                 </div>
                 <div v-show="searchFieldVisible" class="field-row">
-                    <!--
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">公共频道</label>
-                        <el-select
-                            :value="searchFields.allCompanyUpdate"
-                            clearable
-                            placeholder="全部"
-                            @input="inputHandler($event, 'allCompanyUpdate')"
-                        >
-                            <el-option
-                                v-for="(item, index) in [{name: '是', value: true}, {name: '否', value: false}]"
-                                :key="index"
-                                :label="item.name"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <div class="search-field-item">
-                        <label class="search-field-item-label">区域</label>
-                        <el-select
-                            :value="searchFields.companyCode"
-                            clearable
-                            placeholder="全部"
-                            @input="inputHandler($event, 'companyCode')"
-                        >
-                            <el-option
-                                v-for="(item, index) in companyOptions"
-                                :key="index"
-                                :label="item.name"
-                                :value="item.code">
-                            </el-option>
-                        </el-select>
-                    </div>
-                    -->
                     <div class="search-field-item">
                         <label class="search-field-item-label">发布时间</label>
                         <el-date-picker
@@ -183,7 +149,7 @@
                     </el-table-column>
                     <el-table-column sortable align="center" width="120px" prop="stbCount" label="设备数">
                         <template slot-scope="scope">
-                            {{getCount(scope.row)}}
+                            {{scope.row.stbCount}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" label="状态">
@@ -238,20 +204,7 @@ export default {
             //  toggle搜索区域
             searchFieldVisible: false,
             productTypeOptions: role.PRODUCT_TYPE_OPTIONS,
-            releaseStatusOptions: [
-                {
-                    name: '未发布',
-                    value: 'PRE_RELEASED'
-                },
-                {
-                    name: '已发布',
-                    value: 'RELEASED'
-                },
-                {
-                    name: '已撤回',
-                    value: 'WITHDRAW'
-                }
-            ],
+            releaseStatusOptions: role.RELEASE_STATUS_OPTIONS,
             forcedOptions: role.FORCED_OPTIONS,
             sortKeyList: [
                 {
@@ -286,15 +239,6 @@ export default {
             searchFields: 'version/searchFields',
             filialeList: 'channel/filialeList'
         }),
-        getCount() {
-            return (version) => {
-                // let installed = _.get(version, 'installed') || 0;
-                // let stdCount = _.get(version, 'stdCount') || 0;
-                // return `${installed} / ${stdCount}`;
-                let stbCount = _.get(version, 'stbCount');
-                return stbCount;
-            };
-        },
         packageUrl(uri) {
             return (uri) => {
                 let baseUri = window.localStorage.getItem('videoBaseUri');
