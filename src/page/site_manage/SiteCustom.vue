@@ -58,26 +58,29 @@ export default {
             bootanimationUrl: '',
             bootanimationMd5: '',
             videoUrl: '',
-            videoMd5: ''
+            videoMd5: '',
+            hasAuthority: true
         };
     },
     async created() {
         try {
-            if (this.hasAuthority) {
-                let res = await this.$service.getSiteCustom();
-                if (res && res.code === 0) {
-                    this.logoUrl = _.get(res.data, 'logoUrl');
-                    this.logoMd5 = _.get(res.data, 'logoMd5');
-                    this.bootanimationUrl = _.get(res.data, 'bootanimationUrl');
-                    this.bootanimationMd5 = _.get(res.data, 'bootanimationMd5');
-                    this.videoUrl = _.get(res.data, 'videoUrl');
-                    this.videoMd5 = _.get(res.data, 'videoMd5');
-                }
+            if (!this.this.$authority.isHasAuthority('content:startUp:get')) {
+                this.hasAuthority = false;
+                return false;
+            }
+            let res = await this.$service.getSiteCustom();
+            if (res && res.code === 0) {
+                this.logoUrl = _.get(res.data, 'logoUrl');
+                this.logoMd5 = _.get(res.data, 'logoMd5');
+                this.bootanimationUrl = _.get(res.data, 'bootanimationUrl');
+                this.bootanimationMd5 = _.get(res.data, 'bootanimationMd5');
+                this.videoUrl = _.get(res.data, 'videoUrl');
+                this.videoMd5 = _.get(res.data, 'videoMd5');
+            }
 
-                let res2 = await this.$service.getSiteCustomLogo();
-                if (res2 && res2.code === 0) {
-                    this.logoPngUrl = _.get(res2.data, 'logoPngUrl');
-                }
+            let res2 = await this.$service.getSiteCustomLogo();
+            if (res2 && res2.code === 0) {
+                this.logoPngUrl = _.get(res2.data, 'logoPngUrl');
             }
         } catch (err) {
             console.log(err);
@@ -89,9 +92,6 @@ export default {
         },
         videoName() {
             return this.videoUrl ? 'ad.mp4' : 'bootanimation.zip';
-        },
-        hasAuthority() {
-            return this.$authority.isHasAuthority('content:startUp:get');
         }
     },
     methods: {
