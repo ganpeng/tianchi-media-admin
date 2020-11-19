@@ -719,9 +719,9 @@ const NAV_LIST = [ {
             icon: 'combo_list'
         },
         {
-            text: '手机端提示图',
+            text: '手机提示图',
             uri: '/combopicture-manage/list',
-            icon: 'combo_list'
+            icon: 'app_icon'
         }
     ]
 }, {

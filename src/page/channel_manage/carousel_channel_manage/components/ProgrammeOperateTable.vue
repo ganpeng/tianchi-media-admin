@@ -14,7 +14,7 @@
                 align="center"
                 width="60px"
                 label="选择">
-                <template slot-scope="scope">
+                <template>
                     <div class="radio-block">
                         <div class="active-radio"></div>
                         <div class="default-radio"></div>

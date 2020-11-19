@@ -188,9 +188,10 @@ const mutations = {
         if (key === 'cdnPush') {
             if (value) {
                 state.liveChannel.protocolList = state.liveChannel.protocolList.filter((item) => item !== 'UDP');
+                state.liveChannel.multicastIp = '';
+                state.liveChannel.multicastPort = '';
             } else {
-                // state.liveChannel.pullAddress = '';
-                // state.liveChannel.pushAddress = '';
+                state.liveChannel.pullAddress = '';
             }
         }
         if (key === 'protocolList' && value.indexOf('HLS') === -1) {
@@ -209,18 +210,26 @@ const mutations = {
         if (key === 'record' && !value) {
             state.liveChannel.useLiveConfig = false;
         }
-        if (key === 'useLiveConfig' && value) {
-            if (state.liveChannel.multicastIp) {
-                state.liveChannel.recordIp = state.liveChannel.multicastIp;
-            }
-            if (state.liveChannel.multicastPort) {
-                state.liveChannel.recordPort = state.liveChannel.multicastPort;
-            }
-            if (state.liveChannel.liveVideoPid) {
-                state.liveChannel.videoPid = state.liveChannel.liveVideoPid;
-            }
-            if (state.liveChannel.liveAudioPid) {
-                state.liveChannel.audioPid = state.liveChannel.liveAudioPid;
+        if (key === 'useLiveConfig') {
+            if (value) {
+                if (!state.liveChannel.cdnPush) {
+                    if (state.liveChannel.multicastIp) {
+                        state.liveChannel.recordIp = state.liveChannel.multicastIp;
+                    }
+                    if (state.liveChannel.multicastPort) {
+                        state.liveChannel.recordPort = state.liveChannel.multicastPort;
+                    }
+                    if (state.liveChannel.liveVideoPid) {
+                        state.liveChannel.videoPid = state.liveChannel.liveVideoPid;
+                    }
+                    if (state.liveChannel.liveAudioPid) {
+                        state.liveChannel.audioPid = state.liveChannel.liveAudioPid;
+                    }
+                }
+            } else {
+                console.log('aaaaa');
+                state.liveChannel.recordIp = '';
+                state.liveChannel.recordPort = '';
             }
         }
     },

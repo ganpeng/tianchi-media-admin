@@ -66,7 +66,7 @@
                     <el-input
                         placeholder="请输入拉流地址"
                         :value="liveChannel.pullAddress"
-                        maxlength="300"
+                        :maxlength="300"
                         @input="inputHandler($event, 'pullAddress')">
                     </el-input>
                 </el-form-item>
@@ -185,7 +185,7 @@
                         否
                     </el-radio>
                 </el-form-item>
-                <el-form-item v-if="liveChannel.record" label="录制IP" prop="recordIp">
+                <el-form-item v-show="liveChannel.record && liveChannel.useLiveConfig" label="录制IP" prop="recordIp">
                     <el-input
                         placeholder="请输入录制IP"
                         :value="liveChannel.recordIp"
@@ -193,7 +193,7 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item v-else label="录制IP">
+                <el-form-item v-show="!(liveChannel.record && liveChannel.useLiveConfig)"  label="录制IP">
                     <el-input
                         placeholder="请输入录制IP"
                         :value="liveChannel.recordIp"
@@ -201,7 +201,7 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item v-if="liveChannel.record" label="录制端口" prop="recordPort">
+                <el-form-item v-show="liveChannel.record && liveChannel.useLiveConfig" label="录制端口" prop="recordPort">
                     <el-input
                         type="number"
                         placeholder="请输入录制端口"
@@ -210,7 +210,7 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item v-else label="录制端口">
+                <el-form-item v-show="!(liveChannel.record && liveChannel.useLiveConfig)" label="录制端口">
                     <el-input
                         type="number"
                         placeholder="请输入录制端口"

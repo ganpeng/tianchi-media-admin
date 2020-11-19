@@ -407,6 +407,7 @@
                     .svg-icon {
                         width: 14px;
                         height: 20px;
+                        fill: #6F7480;
                     }
                 }
                 .tv-btn {
@@ -416,6 +417,7 @@
                     .svg-icon {
                         width: 20px;
                         height: 16px;
+                        fill: #6F7480;
                     }
                 }
             }
