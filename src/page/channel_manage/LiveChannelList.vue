@@ -328,7 +328,7 @@
                 </el-table-column>
                 <el-table-column align="center" width="150px" label="回看地址">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.record">{{scope.row.recordIp}}:{{scope.row.recordPort}}</span>
+                        <span v-if="(scope.row.recordIp && scope.row.recordPort)">{{scope.row.recordIp}}:{{scope.row.recordPort}}</span>
                         <span v-else>无</span>
                     </template>
                 </el-table-column>
