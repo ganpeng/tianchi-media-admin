@@ -64,7 +64,7 @@ export default {
     },
     async created() {
         try {
-            if (!this.this.$authority.isHasAuthority('content:startUp:get')) {
+            if (!this.$authority.isHasAuthority('content:startUp:get')) {
                 this.hasAuthority = false;
                 return false;
             }
