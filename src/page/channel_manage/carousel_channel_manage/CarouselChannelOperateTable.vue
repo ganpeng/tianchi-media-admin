@@ -16,7 +16,6 @@
                 width="60">
             </el-table-column>
             <el-table-column
-                sortable
                 prop="no"
                 width="90px"
                 align="center"
@@ -34,7 +33,6 @@
                 </template>
             </el-table-column>
             <el-table-column
-                sortable
                 prop="name"
                 min-width="140px"
                 align="center"
