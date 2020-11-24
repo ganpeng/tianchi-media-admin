@@ -183,9 +183,11 @@
                 });
             },
             createChannelByImportExcel() {
+                if (!this.$authority.isHasAuthority('content:channel:carouselImport')) {
+                    return;
+                }
                 let routeData = this.$router.resolve({
-                    name: 'CreateChannelByImportExcel',
-                    params: {category: 'CAROUSEL'}
+                    name: 'CarouselChannelImport'
                 });
                 window.open(routeData.href, '_blank');
             },

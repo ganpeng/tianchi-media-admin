@@ -163,6 +163,7 @@ import ActivationCodeList from 'sysPage/activation_code_manage/ActivationCodeLis
 import ActivationCodeSwitch from 'sysPage/activation_code_switch_manage/ActivationCodeSwitch';
 // 导出管理-导出列表
 import DownloadFileList from 'sysPage/download-manage/DownloadFileList';
+import CarouselChannelImport from 'sysPage/channel_manage/CarouselChannelImport';
 
 Vue.use(Router);
 
@@ -231,6 +232,11 @@ export const routes = [
         path: '/channel-live/import',
         name: 'LiveChannelImport',
         component: LiveChannelImport
+    },
+    {
+        path: '/channel-carousel/import',
+        name: 'CarouselChannelImport',
+        component: CarouselChannelImport
     },
     // 网站内容结构
     {

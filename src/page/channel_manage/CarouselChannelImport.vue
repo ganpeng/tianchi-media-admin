@@ -42,7 +42,7 @@
 <script>
 import {uploadRequest} from '../../util/upload';
 export default {
-    name: 'ProgrammeImport',
+    name: 'CarouselChannelImport',
     data() {
         return {
             progress: 0,
@@ -95,7 +95,7 @@ export default {
                     let options = {
                         formData,
                         headers,
-                        uri: `/admin/v1/live/channel/live/import`,
+                        uri: `/admin/v1/live/channel/carousel/import`,
                         progressHandler: (event) => {
                             let percent = event.loaded / event.total * 100;
                             this.progress = Math.round(percent);

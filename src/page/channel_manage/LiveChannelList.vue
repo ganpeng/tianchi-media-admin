@@ -238,7 +238,7 @@
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
-                    <sort-item :sortKeyList="sortKeyList" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+                    <!-- <sort-item :sortKeyList="sortKeyList" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item> -->
                 </div>
                 <div class="float-right">
                     <el-button
@@ -440,16 +440,12 @@
     import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
     import role from '@/util/config/role';
-    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     const ClipboardJS = require('clipboard');
-    // const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
-    // const x2js = new X2JS();
     export default {
         name: 'LiveChannelList',
         components: {
             DisplayVideoDialog,
-            DisplayRelatedDialog,
-            SortItem
+            DisplayRelatedDialog
         },
         data() {
             return {
@@ -720,10 +716,10 @@
             },
             // 批量创建直播频道
             createChannelByImportExcel() {
-                if (!this.$authority.isHasAuthority('content:channel:add')) {
+                if (!this.$authority.isHasAuthority('content:channel:liveImport')) {
                     return;
                 }
-                let routeData = this.$router.resolve({name: 'CreateChannelByImportExcel', params: {category: 'LIVE'}});
+                let routeData = this.$router.resolve({name: 'LiveChannelImport'});
                 window.open(routeData.href, '_blank');
             },
             searchHandler() {
