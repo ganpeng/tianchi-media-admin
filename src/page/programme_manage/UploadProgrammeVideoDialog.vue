@@ -83,8 +83,8 @@
                 <el-input
                     v-else
                     type="textarea"
-                    :maxlength="50"
-                    :autosize="{ minRows: 4, maxRows: 14}"
+                    :maxlength="15"
+                    :autosize="{ minRows: 3, maxRows: 5}"
                     placeholder="请输入子集简介"
                     :value="video.description"
                     @input="inputHandler($event, 'description')">

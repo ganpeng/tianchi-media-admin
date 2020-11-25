@@ -226,10 +226,6 @@ const mutations = {
                         state.liveChannel.audioPid = state.liveChannel.liveAudioPid;
                     }
                 }
-            } else {
-                console.log('aaaaa');
-                state.liveChannel.recordIp = '';
-                state.liveChannel.recordPort = '';
             }
         }
     },

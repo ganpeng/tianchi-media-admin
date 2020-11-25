@@ -29,7 +29,6 @@
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
-                    <sort-item :sortKeyList="sortKeyList" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
                 </div>
                 <div class="float-right">
                     <el-button
@@ -98,14 +97,12 @@
     import ChannelFilterParams from '../../search_filter_params/ChannelFilterParams';
     import CarouselChannelOperateTable from './CarouselChannelOperateTable';
     import wsCache from '@/util/webStorage';
-    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'CarouselChannelList',
         components: {
             CreateChannel,
             ChannelFilterParams,
-            CarouselChannelOperateTable,
-            SortItem
+            CarouselChannelOperateTable
         },
         data() {
             return {

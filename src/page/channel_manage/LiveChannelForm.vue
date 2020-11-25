@@ -175,7 +175,7 @@
                     </el-radio>
                 </el-form-item>
                 <!-- 回看选择是的时候，显示 使用直播配置 -->
-                <el-form-item v-if="liveChannel.record" label="使用直播配置" prop="useLiveConfig"
+                <el-form-item label="使用直播配置" prop="useLiveConfig"
                               :required="liveChannel.record">
                     <el-radio @input="inputHandler(true, 'useLiveConfig')" :value="liveChannel.useLiveConfig"
                               :label="true">是
@@ -185,7 +185,7 @@
                         否
                     </el-radio>
                 </el-form-item>
-                <el-form-item v-show="liveChannel.record && liveChannel.useLiveConfig" label="录制IP" prop="recordIp">
+                <el-form-item v-show="liveChannel.record" label="录制IP" prop="recordIp">
                     <el-input
                         placeholder="请输入录制IP"
                         :value="liveChannel.recordIp"
@@ -193,7 +193,7 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item v-show="!(liveChannel.record && liveChannel.useLiveConfig)"  label="录制IP">
+                <el-form-item v-show="!liveChannel.record"  label="录制IP">
                     <el-input
                         placeholder="请输入录制IP"
                         :value="liveChannel.recordIp"
@@ -201,7 +201,7 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item v-show="liveChannel.record && liveChannel.useLiveConfig" label="录制端口" prop="recordPort">
+                <el-form-item v-show="liveChannel.record" label="录制端口" prop="recordPort">
                     <el-input
                         type="number"
                         placeholder="请输入录制端口"
@@ -210,7 +210,7 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item v-show="!(liveChannel.record && liveChannel.useLiveConfig)" label="录制端口">
+                <el-form-item v-show="!liveChannel.record" label="录制端口">
                     <el-input
                         type="number"
                         placeholder="请输入录制端口"
