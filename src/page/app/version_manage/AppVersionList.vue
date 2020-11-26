@@ -144,9 +144,11 @@
                     <el-table-column align="center" min-width="190px" label="操作">
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
-                                <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text" @click="editVersion(scope.row)">编辑</span>
+                                <span v-if="scope.row.releaseStatus !== 'WITHDRAW'" class="btn-text" @click="editVersion(scope.row)">编辑</span>
+                                <!-- <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text" @click="editVersion(scope.row)">编辑</span> -->
                                 <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text" @click="releaseVersion(scope.row.id)">发布</span>
                                 <span v-if="scope.row.releaseStatus === 'PRE_RELEASED'" class="btn-text text-danger" @click="deleteVersion(scope.row.id)">删除</span>
+                                <span v-if="scope.row.releaseStatus === 'WITHDRAW'">无法操作</span>
                             </div>
                         </template>
                     </el-table-column>
