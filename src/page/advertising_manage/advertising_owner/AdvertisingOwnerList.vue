@@ -170,12 +170,12 @@
                 </el-table-column>
                 <el-table-column sortable align="center" min-width="160" label="创建时间" prop="createdAt">
                     <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS') | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column sortable align="center" min-width="160" label="更新时间" prop="updatedAt">
                     <template slot-scope="scope">
-                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:MM:SS') | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column width="220px" align="center" label="操作">

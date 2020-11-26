@@ -177,12 +177,12 @@
                     </el-table-column>
                     <el-table-column sortable align="center" min-width="160" prop="registeredAt" label="注册时间">
                         <template slot-scope="scope">
-                            {{scope.row.registeredAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                            {{scope.row.registeredAt | formatDate('yyyy-MM-DD HH:MM:SS') | padEmpty}}
                         </template>
                     </el-table-column>
                     <el-table-column sortable align="center" min-width="160" prop="lastOnlineTime" label="最后在线时间">
                         <template slot-scope="scope">
-                            {{scope.row.lastOnlineTime | formatDate('yyyy-MM-DD') | padEmpty}}
+                            {{scope.row.lastOnlineTime | formatDate('yyyy-MM-DD HH:MM:SS') | padEmpty}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" label="状态">

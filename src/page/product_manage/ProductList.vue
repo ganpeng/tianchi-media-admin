@@ -121,7 +121,7 @@
                 sortable="custom"
                 label="更新时间">
                 <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:mm')}}
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -130,7 +130,7 @@
                 sortable="custom"
                 label="创建时间">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm')}}
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                 </template>
             </el-table-column>
             <el-table-column

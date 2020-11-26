@@ -47,7 +47,7 @@
                     class="my-table-style" :data="state.list" border>
                     <el-table-column align="center" label="时间">
                         <template slot-scope="scope">
-                            {{scope.row.createdAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                            {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS') | padEmpty}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" label="系统名称">

@@ -179,7 +179,7 @@
                     </el-table-column>
                     <el-table-column sortable align="center" prop="updatedAt" label="更新时间">
                         <template slot-scope="scope">
-                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:MM:SS') | padEmpty}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" width="120px" label="操作">
