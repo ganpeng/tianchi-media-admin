@@ -73,14 +73,16 @@ export default {
             this.list = list;
         },
         searchItemChangeHandler(e, index) {
-            let _index = this.list.findIndex((item) => {
-                return item.name === e.target.value;
-            });
-            if (_index >= 0) {
-                this.$message.error(`${e.target.value}已经存在`);
-                return false;
-            } else {
-                this.list[index].name = e.target.value;
+            if (e.target.value !== '') {
+                let _index = this.list.findIndex((item) => {
+                    return item.name === e.target.value;
+                });
+                if (_index >= 0) {
+                    this.$message.error(`${e.target.value}已经存在`);
+                    return false;
+                } else {
+                    this.list[index].name = e.target.value;
+                }
             }
         },
         async saveSearchHandler() {

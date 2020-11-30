@@ -16,6 +16,7 @@
                     :allowResolutions="[{width: 1160, height: 360}]"
                     :uploadSuccessHandler="tvSuccessHandler"
                 ></single-image-uploader-with-button>
+                <p class="img-size">图片尺寸：1160*360</p>
             </div>
         </div>
         <div v-if="isEdit" class="fixed-btn-container">
@@ -151,6 +152,11 @@ export default {
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
+            }
+            .img-size {
+                position: absolute;
+                bottom: -25px;
+                left: 0;
             }
         }
     }
