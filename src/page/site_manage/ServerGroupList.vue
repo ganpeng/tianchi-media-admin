@@ -84,7 +84,7 @@
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
                                 <span class="btn-text" @click="editServerGroupHandler(scope.row.id)">编辑</span>
-                                <span v-if="scope.row.currentCount !== 0" class="btn-text text-danger" @click="deleteServerGroupHandler(scope.row.id)">删除</span>
+                                <span v-if="scope.row.currentCount === 0" class="btn-text text-danger" @click="deleteServerGroupHandler(scope.row.id)">删除</span>
                             </div>
                         </template>
                     </el-table-column>
