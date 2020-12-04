@@ -261,7 +261,7 @@
                     </el-button>
                     <el-button
                         class="btn-style-two contain-svg-icon"
-                        @click="gotoBlankPage('LiveChannelImport')">
+                        @click="gotoBlankPage('LiveChannelPageImport')">
                         <svg-icon icon-class="upload_playbill"></svg-icon>
                         节目单
                     </el-button>
