@@ -3,14 +3,15 @@ import service from '../../../service';
 let isLoading = false; // 解决重复调用列表接口的问题
 const defaultSearchFields = {
     no: '',
-    hardWareId: '',
-    status: '',
-    code: '',
-    registeredAtStart: '',
-    registeredAtEnd: '',
-    registeredAt: [],
-    sortKey: '',
-    sortDirection: ''
+    createdAtStart: '',
+    createdAtEnd: '',
+    expiredAtStart: '',
+    expiredAtEnd: '',
+    updatedAtStart: '',
+    updatedAtEnd: '',
+    createdAt: [],
+    expiredAt: [],
+    updatedAt: []
 };
 
 const defaultPagination = {
@@ -19,7 +20,7 @@ const defaultPagination = {
     total: 0
 };
 
-const defaultDevice = {
+const defaultBoss = {
     caNo: '',
     endedAt: ''
 };
@@ -28,15 +29,15 @@ const state = {
     searchFields: _.cloneDeep(defaultSearchFields),
     pagination: _.cloneDeep(defaultPagination),
     list: [],
-    device: _.cloneDeep(defaultDevice)
+    boss: _.cloneDeep(defaultBoss)
 };
 
 const getters = {
     state(state) {
         return state;
     },
-    device(state) {
-        return state.device;
+    boss(state) {
+        return state.boss;
     },
     pagination(state) {
         return state.pagination;
@@ -68,45 +69,47 @@ const mutations = {
     updateSearchFields(state, payload) {
         let {key, value} = payload;
         state.searchFields[key] = value;
-        if (key === 'registeredAt') {
-            state.searchFields.registeredAtStart = state.searchFields.registeredAt ? state.searchFields.registeredAt[0] : '';
-            state.searchFields.registeredAtEnd = state.searchFields.registeredAt ? state.searchFields.registeredAt[1] : '';
+        if (key === 'createdAt') {
+            state.searchFields.createdAtStart = state.searchFields.createdAt ? state.searchFields.createdAt[0] : '';
+            state.searchFields.createdAtEnd = state.searchFields.createdAt ? state.searchFields.createdAt[1] : '';
+        }
+        if (key === 'expiredAt') {
+            state.searchFields.expiredAtStart = state.searchFields.expiredAt ? state.searchFields.expiredAt[0] : '';
+            state.searchFields.expiredAtEnd = state.searchFields.expiredAt ? state.searchFields.expiredAt[1] : '';
+        }
+        if (key === 'updatedAt') {
+            state.searchFields.updatedAtStart = state.searchFields.updatedAt ? state.searchFields.updatedAt[0] : '';
+            state.searchFields.updatedAtEnd = state.searchFields.updatedAt ? state.searchFields.updatedAt[1] : '';
         }
     },
     resetSearchFields(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
     },
-    setDevice(state, payload) {
-        state.device = _.cloneDeep(payload.device);
+    setBoss(state, payload) {
+        state.boss = _.cloneDeep(payload.boss);
     },
-    updateDevice(state, payload) {
+    updateBoss(state, payload) {
         let {key, value} = payload;
-        state.device[key] = value;
+        state.boss[key] = value;
     },
-    resetDevice(state) {
-        state.device = _.cloneDeep(defaultDevice);
+    resetBoss(state) {
+        state.boss = _.cloneDeep(defaultBoss);
     },
     resetState(state) {
         state.searchFields = _.cloneDeep(defaultSearchFields);
         state.pagination = _.cloneDeep(defaultPagination);
         state.list = [];
-        state.device = _.cloneDeep(defaultDevice);
-        state.currentId = null;
+        state.boss = _.cloneDeep(defaultBoss);
     }
 };
 
 const actions = {
-    async getDeviceList({commit, state}) {
+    async getBossList({commit, state}) {
         try {
             let {pageNum, pageSize} = state.pagination;
-            let {sortKey, sortDirection} = state.searchFields;
-            let order = '';
-            if (sortKey && sortDirection) {
-                order = `${sortKey}_${sortDirection}`;
-            }
             let params = Object.assign({},
-                {pageNum: pageNum - 1, pageSize, order}, state.searchFields);
-            let res = await service.getDeviceList(params);
+                {pageNum: pageNum - 1, pageSize}, state.searchFields);
+            let res = await service.getBossList(params);
             if (res && res.code === 0) {
                 let {list, pageNum, pageSize, total} = res.data;
                 commit('setList', {list});
@@ -116,12 +119,12 @@ const actions = {
             console.log(err);
         }
     },
-    async addDevice({state}) {
+    async addBoss({state}) {
         try {
             if (!isLoading) {
                 isLoading = true;
-                let device = _.cloneDeep(state.device);
-                let res = await service.addDevice(device);
+                let boss = _.cloneDeep(state.boss);
+                let res = await service.addBoss(boss);
                 isLoading = false;
                 return res;
             }
@@ -130,22 +133,22 @@ const actions = {
             isLoading = false;
         }
     },
-    async getDeviceById({commit}, id) {
+    async getBossById({commit}, id) {
         try {
-            let res = await service.getDeviceById(id);
+            let res = await service.getBossById(id);
             if (res && res.code === 0) {
-                commit('setDevice', {device: res.data});
+                commit('setBoss', {boss: res.data});
             }
         } catch (err) {
             console.log(err);
         }
     },
-    async updateDeviceById({state}, id) {
+    async updateBossById({state}, id) {
         try {
             if (!isLoading) {
                 isLoading = true;
-                let device = state.device;
-                let res = await service.updateDeviceById(id, device);
+                let boss = Object.assign({}, state.boss, {id});
+                let res = await service.updateBossById(boss);
                 isLoading = false;
                 return res;
             }
@@ -154,9 +157,9 @@ const actions = {
             isLoading = false;
         }
     },
-    async deleteDeviceById({commit}, id) {
+    async deleteBossByIdList({commit}, idList) {
         try {
-            let res = await service.deleteDeviceById(id);
+            let res = await service.deleteBossByIdList(idList);
             return res;
         } catch (err) { }
     }

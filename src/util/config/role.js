@@ -675,7 +675,7 @@ const NAV_LIST = [ {
         },
         {
             text: '设备准入',
-            uri: '/device-enter/list',
+            uri: '/boss/list',
             icon: 'aside_device_enter'
         },
         {

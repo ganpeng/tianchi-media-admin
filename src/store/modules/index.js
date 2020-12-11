@@ -17,7 +17,7 @@ import advertising from './advertising';
 import appPageLayout from './app_page_layout';
 import appVersion from './app_version';
 import serverGroup from './server_group';
-import deviceEnter from './device_enter';
+import boss from './boss';
 
 export default {
     permission,
@@ -38,5 +38,5 @@ export default {
     appPageLayout,
     appVersion,
     serverGroup,
-    deviceEnter
+    boss
 };

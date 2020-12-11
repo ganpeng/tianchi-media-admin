@@ -1145,19 +1145,19 @@ export const routes = [
                 component: () => import('@/page/site_manage/EditServerGroup')
             },
             {
-                path: '/device-enter/list',
-                name: 'DeviceEnterList',
-                component: () => import('@/page/device_enter/DeviceEnterList')
+                path: '/boss/list',
+                name: 'BossList',
+                component: () => import('@/page/boss/BossList')
             },
             {
-                path: '/device-enter/create',
-                name: 'CreateDeviceEnter',
-                component: () => import('@/page/device_enter/CreateDeviceEnter')
+                path: '/boss/create',
+                name: 'CreateBoss',
+                component: () => import('@/page/boss/CreateBoss')
             },
             {
-                path: '/device-enter/edit/:id',
-                name: 'EditDeviceEnter',
-                component: () => import('@/page/device_enter/EditDeviceEnter')
+                path: '/boss/edit/:id',
+                name: 'EditBoss',
+                component: () => import('@/page/boss/EditBoss')
             }
         ]
     },

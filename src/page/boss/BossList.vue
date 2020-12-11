@@ -75,17 +75,16 @@
                 <h2 class="content-title">设备准入列表</h2>
                 <div class="table-operator-field clearfix">
                     <div class="float-left">
-                        <sort-item :sortKeyList="sortKeyList" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
                     </div>
                     <div class="float-right">
                         <el-button
                             class="btn-style-two contain-svg-icon"
-                            @click="createDeviceEnter">
+                            @click="createBoss">
                             <svg-icon icon-class="add"></svg-icon>
                             添加
                         </el-button>
                         <el-button
-                            @click="importDevice"
+                            @click="importBoss"
                             class="btn-style-two contain-svg-icon">
                             <svg-icon icon-class="import"></svg-icon>
                             导入
@@ -104,33 +103,33 @@
                     </el-table-column>
                     <el-table-column min-width="150" align="center" label="序列号">
                         <template slot-scope="scope">
-                            {{scope.row.no | padEmpty}}
+                            {{scope.row.stbNo | padEmpty}}
                         </template>
                     </el-table-column>
                     <el-table-column min-width="120" align="center" label="到期时间">
                         <template slot-scope="scope">
-                            {{scope.row.caNo | padEmpty}}
+                            {{scope.row.expiredAt | formatDate('yyyy-MM-DD')}} 00:00:00
                         </template>
                     </el-table-column>
                     <el-table-column min-width="120" align="center" label="受理时间">
                         <template slot-scope="scope">
-                            {{scope.row.currentHardVersion | padEmpty}}
+                            {{scope.row.processedAt | formatDate('yyyy-MM-DD')}} 00:00:00
                         </template>
                     </el-table-column>
                     <el-table-column min-width="120" align="center" label="创建时间">
                         <template slot-scope="scope">
-                            {{scope.row.currentVersion | padEmpty}}
+                            {{scope.row.createdAt | formatDate('yyyy-MM-DD')}} 00:00:00
                         </template>
                     </el-table-column>
                     <el-table-column min-width="120" align="center" label="更新时间">
                         <template slot-scope="scope">
-                            {{scope.row.currentVersion | padEmpty}}
+                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}} 00:00:00
                         </template>
                     </el-table-column>
                     <el-table-column align="center" width="120px" label="操作">
                         <template slot-scope="scope">
                             <div class="operator-btn-wrapper">
-                                <span class="btn-text" @click="editDeviceEnter(scope.row.id)">编辑</span>
+                                <span class="btn-text" @click="editBoss(scope.row.id)">编辑</span>
                                 <span class="btn-text text-danger" @click="deleteDevice(scope.row.id)">删除</span>
                             </div>
                         </template>
@@ -152,36 +151,19 @@
 <script>
 import {mapGetters, mapActions, mapMutations} from 'vuex';
 import _ from 'lodash';
-import role from '@/util/config/role';
-import SortItem from 'sysComponents/custom_components/custom/SortItem';
 export default {
-  name: 'DeviceEnterList',
-  components: {SortItem},
+  name: 'BossList',
   data() {
       return {
           searchFieldVisible: false,
-          status: 0, // 0 是创建，1 是编辑
-          hardwareTypeOptions: role.HARDWARE_TYPE_OPTIONS,
-          visibleOptions: [
-              {value: 'NORMAL', name: '正常'}, {value: 'FORBIDDEN', name: '禁用'}
-          ],
-          sortKeyList: [
-              {
-                  label: '注册时间',
-                  value: 'REGISTERED_AT'
-              },
-              {
-                  label: '最后在线时间',
-                  value: 'LAST_ONLINE_TIME'
-              }
-          ]
+          status: 0 // 0 是创建，1 是编辑
       };
   },
   created() {
       if (!this.$authority.isHasAuthority('user:stb:page')) {
           return;
       }
-      this.getDeviceList();
+      this.getBossList();
       window.addEventListener('keyup', this.keyupHandler);
   },
   beforeDestroy() {
@@ -189,42 +171,23 @@ export default {
   },
   computed: {
       ...mapGetters({
-          list: 'deviceEnter/list',
-          pagination: 'deviceEnter/pagination',
-          searchFields: 'deviceEnter/searchFields',
-          device: 'deviceEnter/device'
-      }),
-      getIndex() {
-          return (index) => {
-              let {pageNum, pageSize} = this.pagination;
-              return index + 1 + (pageNum - 1) * pageSize;
-          };
-      },
-      getDistrictName() {
-          return (districtCode) => {
-              if (_.isNil(districtCode)) {
-                  return '';
-              } else {
-                  let district = this.filialeList.find((item) => parseInt(item.code) === parseInt(districtCode));
-                  return _.get(district, 'name');
-              }
-          };
-      }
+          list: 'boss/list',
+          pagination: 'boss/pagination',
+          searchFields: 'boss/searchFields',
+          boss: 'boss/boss'
+      })
   },
   methods: {
       ...mapMutations({
-          updatePagination: 'deviceEnter/updatePagination',
-          updateSearchFields: 'deviceEnter/updateSearchFields',
-          resetSearchFields: 'deviceEnter/resetSearchFields',
-          setDevice: 'deviceEnter/setDevice',
-          setCurrentId: 'deviceEnter/setCurrentId',
-          resetDevice: 'deviceEnter/resetDevice'
+          updatePagination: 'boss/updatePagination',
+          updateSearchFields: 'boss/updateSearchFields',
+          resetSearchFields: 'boss/resetSearchFields'
       }),
       ...mapActions({
-          getDeviceList: 'device/getDeviceList',
-          deleteDeviceById: 'device/deleteDeviceById'
+          getBossList: 'boss/getBossList',
+          deleteBossByIdList: 'boss/deleteBossByIdList'
       }),
-      importDevice() {
+      importBoss() {
           let routeData = this.$router.resolve({
               name: 'DeviceImport'
           });
@@ -246,7 +209,7 @@ export default {
               return;
           }
           this.updatePagination({key, value});
-          this.getDeviceList();
+          this.getBossList();
       },
       inputSearchFieldHandler(value, key) {
           if (!this.$authority.isHasAuthority('user:stb:page')) {
@@ -254,23 +217,23 @@ export default {
           }
           this.updateSearchFields({key, value});
           if (key !== 'no') {
-              this.getDeviceList();
+              this.getBossList();
           }
       },
       searchHandler() {
           if (!this.$authority.isHasAuthority('user:stb:page')) {
               return;
           }
-          this.getDeviceList();
+          this.getBossList();
       },
-      createDeviceEnter() {
+      createBoss() {
           if (!this.$authority.isHasAuthority('user:stb:page')) {
               return;
           }
-            this.$router.push({name: 'CreateDeviceEnter'});
+            this.$router.push({name: 'CreateBoss'});
       },
-      editDeviceEnter(id) {
-            this.$router.push({name: 'EditDeviceEnter', params: {id}});
+      editBoss(id) {
+            this.$router.push({name: 'EditBoss', params: {id}});
       },
       toggleSearchField() {
           this.searchFieldVisible = !this.searchFieldVisible;
