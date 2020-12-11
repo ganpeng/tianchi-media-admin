@@ -1143,6 +1143,21 @@ export const routes = [
                 path: '/server-group/edit/:id',
                 name: 'EditServerGroup',
                 component: () => import('@/page/site_manage/EditServerGroup')
+            },
+            {
+                path: '/device-enter/list',
+                name: 'DeviceEnterList',
+                component: () => import('@/page/device_enter/DeviceEnterList')
+            },
+            {
+                path: '/device-enter/create',
+                name: 'CreateDeviceEnter',
+                component: () => import('@/page/device_enter/CreateDeviceEnter')
+            },
+            {
+                path: '/device-enter/edit/:id',
+                name: 'EditDeviceEnter',
+                component: () => import('@/page/device_enter/EditDeviceEnter')
             }
         ]
     },
