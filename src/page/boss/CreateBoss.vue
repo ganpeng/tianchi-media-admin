@@ -4,7 +4,7 @@
     <div class="seperator-line"></div>
     <boss-form ref="bossFormComponent" :status="0"></boss-form>
     <div class="fixed-btn-container">
-        <el-button class="btn-style-two" type="primary" @click="createDeviceHandler">创建</el-button>
+        <el-button class="btn-style-two" type="primary" @click="createBossHandler">创建</el-button>
         <el-button class="btn-style-three" @click="gotoList" plain>返回列表</el-button>
     </div>
   </div>
@@ -21,20 +21,20 @@ export default {
       this.$util.toggleFixedBtnContainer();
   },
   created() {
-      this.resetDevice();
+      this.resetBoss();
   },
   methods: {
       ...mapMutations({
-          resetDevice: 'device/resetDevice'
+          resetBoss: 'boss/resetBoss'
       }),
       ...mapActions({
-          addDevice: 'device/addDevice'
+          addBoss: 'boss/addBoss'
       }),
-      async createDeviceHandler() {
+      async createBossHandler() {
           try {
               let valid = await this.$refs.bossFormComponent.validate();
               if (valid) {
-                  let res = await this.addDevice();
+                  let res = await this.addBoss();
                   if (res && res.code === 0) {
                       this.gotoList();
                   }
@@ -44,7 +44,7 @@ export default {
           }
       },
       gotoList() {
-          this.$router.push({name: 'DeviceList'});
+        this.$router.push({name: 'BossList'});
       }
   }
 };

@@ -19,6 +19,7 @@
         <el-form-item label="到期时间" prop="expiredAt">
           <el-date-picker
             :value="boss.expiredAt"
+            value-format="timestamp"
             @input="inputHandler($event, 'expiredAt')"
             type="date"
             placeholder="请选择到期时间"

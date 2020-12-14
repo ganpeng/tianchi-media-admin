@@ -87,10 +87,10 @@
             -->
         </div>
         <div class="scroll-btn-container">
-            <a class="top-btn" href="#" v-scroll-to="{el: '#top', offset: -50}">
+            <a @click="scrollToTop" class="top-btn">
                 <i class="el-icon-arrow-up"></i>
             </a>
-            <a class="bottom-btn" href="#" v-scroll-to="'#bottom'">
+            <a @click="scrollToBottom" class="bottom-btn">
                 <i class="el-icon-arrow-down"></i>
             </a>
         </div>
@@ -157,7 +157,7 @@
             };
         },
         async mounted() {
-            let content = document.querySelector('.content');
+            let content = document.querySelector('.page-layout-content');
             content.addEventListener('scroll', this.toggleTopBottomBtns.bind(this), false);
             this.$service.getNavBarDetail(this.$route.params.navbarId).then(response => {
                 if (response && response.code === 0 && response.data.backGroundImage && response.data.backGroundImage.uri) {
@@ -187,6 +187,8 @@
                         scrollX: true,
                         eventPassthrough: 'vertical'
                     });
+
+                    this.toggleTopBottomBtns();
                 }
             } catch (err) {
                 console.log(err);
@@ -370,7 +372,7 @@
                 }
             },
             toggleTopBottomBtns() {
-                let content = document.querySelector('.content');
+                let content = document.querySelector('.page-layout-content');
                 let topBtn = document.querySelector('.top-btn');
                 let bottomBtn = document.querySelector('.bottom-btn');
                 let isBottom = content.scrollHeight - content.scrollTop === content.clientHeight;
@@ -391,6 +393,14 @@
                         bottomBtn.style.display = 'block';
                     }
                 }
+            },
+            scrollToTop() {
+                let content = document.querySelector('.page-layout-content');
+                content.scrollTo({top: 0, behavior: "smooth"});
+            },
+            scrollToBottom() {
+                let content = document.querySelector('.page-layout-content');
+                content.scrollTo({top: content.scrollHeight - content.clientHeight, behavior: "smooth"});
             }
         }
     };
@@ -399,6 +409,10 @@
 <style lang="scss" scoped>
     .page-layout-content {
         position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        overflow-y: scroll;
         #remove-back-image {
             position: absolute;
             display: flex;
@@ -528,6 +542,10 @@
 
     .page-layout-container {
         position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        // overflow-y: scroll;
         .fixed-btn-container {
             .el-button {
                 margin-right: 0px;

@@ -126,8 +126,8 @@
                 } else {
                     await this.menuInit();
                 }
-                this.setMinHeight();
-                window.addEventListener('resize', this.setMinHeight, false);
+                // this.setMinHeight();
+                // window.addEventListener('resize', this.setMinHeight, false);
             } catch (err) {
                 console.log(err);
             }

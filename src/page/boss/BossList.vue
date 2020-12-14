@@ -6,9 +6,9 @@
                 <div class="field-row">
                     <div class="search-field-item">
                         <el-input
-                            :value="searchFields.no"
+                            :value="searchFields.keyword"
                             placeholder="请输入关键字"
-                            @input="inputSearchFieldHandler($event, 'no')"
+                            @input="inputSearchFieldHandler($event, 'keyword')"
                             clearable
                             class="border-input">
                         </el-input>
@@ -20,13 +20,13 @@
                     <div class="search-field-item">
                         <label class="search-field-item-label">到期时间</label>
                         <el-date-picker
-                            :value="searchFields.registeredAt"
+                            :value="searchFields.expiredAt"
                             type="daterange"
                             :unlink-panels="true"
                             value-format="timestamp"
                             range-separator="至"
                             start-placeholder="开始日期"
-                            @input="inputSearchFieldHandler($event, 'registeredAt')"
+                            @input="inputSearchFieldHandler($event, 'expiredAt')"
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </div>
@@ -45,26 +45,26 @@
                     <div class="search-field-item">
                         <label class="search-field-item-label">创建时间</label>
                         <el-date-picker
-                            :value="searchFields.registeredAt"
+                            :value="searchFields.createdAt"
                             type="daterange"
                             :unlink-panels="true"
                             value-format="timestamp"
                             range-separator="至"
                             start-placeholder="开始日期"
-                            @input="inputSearchFieldHandler($event, 'registeredAt')"
+                            @input="inputSearchFieldHandler($event, 'createdAt')"
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </div>
                     <div class="search-field-item">
                         <label class="search-field-item-label">更新时间</label>
                         <el-date-picker
-                            :value="searchFields.registeredAt"
+                            :value="searchFields.updatedAt"
                             type="daterange"
                             :unlink-panels="true"
                             value-format="timestamp"
                             range-separator="至"
                             start-placeholder="开始日期"
-                            @input="inputSearchFieldHandler($event, 'registeredAt')"
+                            @input="inputSearchFieldHandler($event, 'updatedAt')"
                             end-placeholder="结束日期">
                         </el-date-picker>
                     </div>

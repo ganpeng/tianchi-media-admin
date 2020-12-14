@@ -2,7 +2,7 @@ import _ from 'lodash';
 import service from '../../../service';
 let isLoading = false; // 解决重复调用列表接口的问题
 const defaultSearchFields = {
-    no: '',
+    keyword: '',
     createdAtStart: '',
     createdAtEnd: '',
     expiredAtStart: '',
@@ -21,8 +21,8 @@ const defaultPagination = {
 };
 
 const defaultBoss = {
-    caNo: '',
-    endedAt: ''
+    stbNo: '',
+    expiredAt: ''
 };
 
 const state = {
