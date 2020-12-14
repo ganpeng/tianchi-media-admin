@@ -396,11 +396,11 @@
             },
             scrollToTop() {
                 let content = document.querySelector('.page-layout-content');
-                content.scrollTo({top: 0, behavior: "smooth"});
+                content.scrollTo({top: 0, behavior: 'smooth'});
             },
             scrollToBottom() {
                 let content = document.querySelector('.page-layout-content');
-                content.scrollTo({top: content.scrollHeight - content.clientHeight, behavior: "smooth"});
+                content.scrollTo({top: content.scrollHeight - content.clientHeight, behavior: 'smooth'});
             }
         }
     };
