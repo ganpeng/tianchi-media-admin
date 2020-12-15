@@ -72,7 +72,7 @@
             </div>
             <div class="seperator-line"></div>
             <div class="table-field">
-                <h2 class="content-title">设备准入列表</h2>
+                <h2 class="content-title">设备准入列表 <span class="max-count">({{maxCount}})</span></h2>
                 <div class="table-operator-field clearfix">
                     <div class="float-left">
                         <div v-show="isDisabled" class="my-disabled-dropdown">
@@ -176,15 +176,24 @@ export default {
       return {
           searchFieldVisible: false,
           status: 0, // 0 是创建，1 是编辑
+          maxCount: '',
           selectedBossList: []
       };
   },
   created() {
-      if (!this.$authority.isHasAuthority('bo:boss:page')) {
-          return;
-      }
-      this.resetSearch();
-      window.addEventListener('keyup', this.keyupHandler);
+        this.$service.getBossMax()
+        .then((res) => {
+            if (res && res.code === 0) {
+                this.maxCount = res.data;
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
+        if (!this.$authority.isHasAuthority('bo:boss:page')) {
+            return;
+        }
+        this.resetSearch();
+        window.addEventListener('keyup', this.keyupHandler);
   },
   beforeDestroy() {
       window.removeEventListener('keyup', this.keyupHandler);
@@ -358,4 +367,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.max-count {
+    font-size: 14px;
+}
 </style>
