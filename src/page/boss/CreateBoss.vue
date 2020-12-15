@@ -32,13 +32,16 @@ export default {
       }),
       async createBossHandler() {
           try {
-              let valid = await this.$refs.bossFormComponent.validate();
-              if (valid) {
-                  let res = await this.addBoss();
-                  if (res && res.code === 0) {
-                      this.gotoList();
-                  }
-              }
+            if (!this.$authority.isHasAuthority('bo:boss:add')) {
+                return;
+            }
+            let valid = await this.$refs.bossFormComponent.validate();
+            if (valid) {
+                let res = await this.addBoss();
+                if (res && res.code === 0) {
+                    this.gotoList();
+                }
+            }
           } catch (err) {
               console.log(err);
           }

@@ -31,6 +31,9 @@ export default {
       }),
       async editBossHandler() {
         try {
+            if (!this.$authority.isHasAuthority('bo:boss:put')) {
+                return;
+            }
             let valid = await this.$refs.bossForm.validate();
             let {id} = this.$route.params;
             if (valid) {

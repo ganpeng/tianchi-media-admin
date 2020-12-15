@@ -27,7 +27,7 @@ export const updateBossById = (boss) => {
  * 根据id删除设备信息
  */
 export const deleteBossByIdList = (idList) => {
-    return service.delete(`/v1/boss`, idList);
+    return service.post(`/v1/boss/delete`, idList);
 };
 
 /**

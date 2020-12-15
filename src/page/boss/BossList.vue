@@ -75,6 +75,23 @@
                 <h2 class="content-title">设备准入列表</h2>
                 <div class="table-operator-field clearfix">
                     <div class="float-left">
+                        <div v-show="isDisabled" class="my-disabled-dropdown">
+                            批量操作
+                            <i class="el-icon-arrow-down"></i>
+                        </div>
+                        <el-dropdown
+                            trigger="click"
+                            v-show="!isDisabled"
+                            class="my-dropdown">
+                            <span class="el-dropdown-link">
+                                批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>
+                                    <span @click="batchDeletHandler">批量删除</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
                     </div>
                     <div class="float-right">
                         <el-button
@@ -95,7 +112,9 @@
                     header-row-class-name="common-table-header"
                     class="my-table-style"
                     @sort-change="sortChangeHandler"
+                    @selection-change="handleSelectionChange"
                     :data="list" border>
+                    <el-table-column type="selection" align="center" width="55"></el-table-column>
                     <el-table-column width="60" align="center" label="id">
                         <template slot-scope="scope">
                             {{scope.row.id | padEmpty}}
@@ -156,14 +175,15 @@ export default {
   data() {
       return {
           searchFieldVisible: false,
-          status: 0 // 0 是创建，1 是编辑
+          status: 0, // 0 是创建，1 是编辑
+          selectedBossList: []
       };
   },
   created() {
-      if (!this.$authority.isHasAuthority('user:stb:page')) {
+      if (!this.$authority.isHasAuthority('bo:boss:page')) {
           return;
       }
-      this.getBossList();
+      this.resetSearch();
       window.addEventListener('keyup', this.keyupHandler);
   },
   beforeDestroy() {
@@ -175,26 +195,38 @@ export default {
           pagination: 'boss/pagination',
           searchFields: 'boss/searchFields',
           boss: 'boss/boss'
-      })
+      }),
+        isDisabled() {
+            return this.selectedBossList.length === 0;
+        }
   },
   methods: {
       ...mapMutations({
           updatePagination: 'boss/updatePagination',
           updateSearchFields: 'boss/updateSearchFields',
-          resetSearchFields: 'boss/resetSearchFields'
+          resetSearchFields: 'boss/resetSearchFields',
+          resetPagination: 'boss/resetPagination'
       }),
       ...mapActions({
           getBossList: 'boss/getBossList',
           deleteBossByIdList: 'boss/deleteBossByIdList'
       }),
       importBoss() {
+          if (!this.$authority.isHasAuthority('bo:boss:import')) {
+              return;
+          }
           let routeData = this.$router.resolve({
-              name: 'DeviceImport'
+              name: 'BossImport'
           });
           window.open(routeData.href, '_blank');
       },
+      resetSearch() {
+          this.resetSearchFields();
+          this.resetPagination();
+          this.getBossList();
+      },
       clearSearchFields() {
-          if (!this.$authority.isHasAuthority('user:stb:page')) {
+          if (!this.$authority.isHasAuthority('bo:boss:page')) {
               return;
           }
           this.resetSearchFields();
@@ -205,14 +237,14 @@ export default {
           }
       },
       handlePaginationChange(value, key) {
-          if (!this.$authority.isHasAuthority('user:stb:page')) {
+          if (!this.$authority.isHasAuthority('bo:boss:page')) {
               return;
           }
           this.updatePagination({key, value});
           this.getBossList();
       },
       inputSearchFieldHandler(value, key) {
-          if (!this.$authority.isHasAuthority('user:stb:page')) {
+          if (!this.$authority.isHasAuthority('bo:boss:page')) {
               return;
           }
           this.updateSearchFields({key, value});
@@ -221,19 +253,22 @@ export default {
           }
       },
       searchHandler() {
-          if (!this.$authority.isHasAuthority('user:stb:page')) {
+          if (!this.$authority.isHasAuthority('bo:boss:page')) {
               return;
           }
           this.getBossList();
       },
       createBoss() {
-          if (!this.$authority.isHasAuthority('user:stb:page')) {
-              return;
-          }
-            this.$router.push({name: 'CreateBoss'});
+        if (!this.$authority.isHasAuthority('bo:boss:add')) {
+            return;
+        }
+        this.$router.push({name: 'CreateBoss'});
       },
       editBoss(id) {
-            this.$router.push({name: 'EditBoss', params: {id}});
+        if (!this.$authority.isHasAuthority('bo:boss:put')) {
+            return;
+        }
+        this.$router.push({name: 'EditBoss', params: {id}});
       },
       toggleSearchField() {
           this.searchFieldVisible = !this.searchFieldVisible;
@@ -266,8 +301,58 @@ export default {
           this.updateSearchFields({key: 'sortDirection', value: sortDirection});
           this.searchHandler();
       },
-      deleteDevice(id) {
-        console.log(id);
+      async deleteDevice(id) {
+          try {
+            if (!this.$authority.isHasAuthority('bo:boss:delete')) {
+                return;
+            }
+             let confirm = await this.$confirm(`您确定要删除这个设备吗, 是否继续?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'error'
+            });
+            if (confirm) {
+                let idList = [id];
+                if (idList.length > 0) {
+                    let res = await this.$service.deleteBossByIdList(idList);
+                    if (res && res.code === 0) {
+                        this.resetSearch();
+                    } else {
+                        this.$message.error(res.errorMsg);
+                    }
+                }
+            }
+          } catch (err) {
+              console.log(err);
+          }
+     },
+     handleSelectionChange(val) {
+        this.selectedBossList = val;
+     },
+     async batchDeletHandler() {
+         try {
+            if (!this.$authority.isHasAuthority('bo:boss:delete')) {
+                return;
+            }
+             let confirm = await this.$confirm(`您确定要删除这些设备吗, 是否继续?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'error'
+            });
+            if (confirm) {
+                let idList = this.selectedBossList.map((boss) => boss.id);
+                if (idList.length > 0) {
+                    let res = await this.$service.deleteBossByIdList(idList);
+                    if (res && res.code === 0) {
+                        this.resetSearch();
+                    } else {
+                        this.$message.error(res.errorMsg);
+                    }
+                }
+            }
+         } catch (err) {
+             console.log(err);
+         }
      }
   }
 };

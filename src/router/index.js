@@ -244,6 +244,11 @@ export const routes = [
         name: 'LiveChannelPageImport',
         component: LiveChannelPageImport
     },
+    {
+        path: '/boss/import',
+        name: 'BossImport',
+        component: () => import('@/page/boss/BossImport')
+    },
     // 网站内容结构
     {
         path: '/layout',
