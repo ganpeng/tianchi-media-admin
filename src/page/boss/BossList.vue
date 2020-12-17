@@ -132,17 +132,17 @@
                     </el-table-column>
                     <el-table-column min-width="120" align="center" label="受理时间">
                         <template slot-scope="scope">
-                            {{scope.row.processedAt | formatDate('yyyy-MM-DD')}} 00:00:00
+                            {{scope.row.processedAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                         </template>
                     </el-table-column>
                     <el-table-column min-width="120" align="center" label="创建时间">
                         <template slot-scope="scope">
-                            {{scope.row.createdAt | formatDate('yyyy-MM-DD')}} 00:00:00
+                            {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                         </template>
                     </el-table-column>
                     <el-table-column min-width="120" align="center" label="更新时间">
                         <template slot-scope="scope">
-                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}} 00:00:00
+                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" width="120px" label="操作">
