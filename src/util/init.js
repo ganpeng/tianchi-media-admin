@@ -165,7 +165,7 @@ export async function initNavbarLayout(navbarId) {
     }
 }
 
-export default async function init() {
+export async function init() {
     //  初始化页面布局的本地存储数据结构
     try {
         let navbarListRes = await service.getNavbarList();
@@ -229,5 +229,31 @@ export default async function init() {
         }
     } catch (err) {
         console.log(err);
+    }
+}
+
+export async function initApp() {
+    // getAppNavbarList
+    // getAppLayoutByNavbarId
+    let res = await service.getAppNavbarList();
+    if (res && res.code === 0) {
+        let appNavbarList = res.data || [];
+        let appLayoutList = await Promise.all(appNavbarList.map((navbar) => {
+            return service.getAppLayoutByNavbarId(navbar.id);
+        })) || [];
+        let appLayoutStore = appNavbarList.reduce((res, curr, index) => {
+            res[curr.id] = {
+                id: curr.id,
+                index,
+                layoutTemplate: curr.layoutTemplate,
+                name: curr.name,
+                signCode: curr.signCode,
+                changed: false,
+                data: _.get(appLayoutList, `${index}.data`) || []
+            };
+            return res;
+        }, {});
+        store.set('appLayoutStore', appLayoutStore);
+        vuexStore.commit('appPageLayout/updateLayout');
     }
 }
