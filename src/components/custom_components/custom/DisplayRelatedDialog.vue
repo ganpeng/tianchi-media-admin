@@ -259,20 +259,26 @@
                                 params: {navbarId: navBarId, index: sort},
                                 query: {id: refItem.refId, isRecommend: navBarName === '推荐' ? 'yes' : 'no'}
                             });
+                            this.pageReload();
                         } else {
                             this.$router.push({
                                 name: 'AppShuffleModule',
                                 params: {navbarId: navBarId, index: sort, operator: 'edit'},
                                 query: {id: layoutBlockId}
                             });
+                            this.pageReload();
                         }
-                        store.set('isApp', true);
-                        window.location.reload();
                     } else {
                         this.$message.error('页面布局数据不存在');
                         return false;
                     }
                 }
+            },
+            pageReload() {
+                store.set('isApp', true);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             },
             getLayoutTitle(refItem) {
                 if (refItem.refType === 'LAYOUT' && refItem.params) {
