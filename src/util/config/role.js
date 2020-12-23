@@ -673,11 +673,11 @@ const NAV_LIST = [ {
             uri: '/manage-device/list',
             icon: 'aside_device'
         },
-        {
-            text: '设备准入',
-            uri: '/boss/list',
-            icon: 'aside_device_enter'
-        },
+        // {
+        //     text: '设备准入',
+        //     uri: '/boss/list',
+        //     icon: 'aside_device_enter'
+        // },
         {
             text: '激活码',
             uri: '/manage-activation-code/list',
