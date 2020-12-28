@@ -191,7 +191,7 @@ export default {
                 }
                 if (size >= tb) {
                     return {
-                        value: Math.round(size / gb),
+                        value: Math.round(size / tb),
                         unit: 'TB'
                     };
                 } else if (size >= gb) {
