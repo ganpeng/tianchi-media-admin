@@ -88,25 +88,7 @@ export const deleteChannelById = (id) => {
 /**
  * 获取频道的列表
  */
-export const getChannelList = ({pageNum, pageSize, hasChannelProgramme, record, keyword, typeIdList, visible, category, common, companyCode, protocolList, refCount, paymentType, applicableClientList, cdnPush}) => {
-    let params = {
-        pageNum,
-        pageSize,
-        record,
-        keyword,
-        typeIdList,
-        visible,
-        category,
-        common,
-        companyCode,
-        protocolList,
-        refCount,
-        paymentType,
-        applicableClientList,
-        cdnPush,
-        hasChannelProgramme
-    };
-
+export const getChannelList = (params) => {
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
         return item !== '' && item !== undefined;
     }));
@@ -225,6 +207,34 @@ export const updateThumbnailStatus = (params) => {
     return service.patch(`/v1/sys/system-config/thumbnail-status?${paramsStr}`);
 };
 
+/***
+ * 节目统计
+ */
+export const getProgrammeStatistics = () => {
+    return service.get(`/v1/statistics/programme`);
+};
+
+/**
+ * 视频统计
+ */
+export const getVideoStatistics = () => {
+    return service.get(`/v1/statistics/video`);
+};
+
+/**
+ * 轮播频道统计
+ */
+export const getCarouselStatistics = () => {
+    return service.get(`/v1/statistics/carousel`);
+};
+
+/**
+ * 直播频道统计
+ */
+export const getLiveStatistics = () => {
+    return service.get(`/v1/statistics/live`);
+};
+
 /**
  * 根据id的开启或关闭直播回看
  */
@@ -237,6 +247,5 @@ export const switchLiveChannelLookbBack = ({id, enable}) => {
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {
         return item !== '' && item !== undefined;
     }));
-
     return service.patch(`/v1/live/channel-programme/enable-lookback?${paramsStr}`);
 };

@@ -84,6 +84,7 @@
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
+                        <sort-item :sortKeyList="[{label: '更新时间', value: 'UPDATED_AT'}]" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
                     </div>
                     <div class="float-right">
                         <el-button
@@ -108,6 +109,7 @@
                 </div>
                 <el-table
                     @select="selectHandler"
+                    @sort-change="sortChangeHandler"
                     @select-all="selectAllHandler"
                     :row-class-name='"figure-row"' :header-row-class-name='"common-table-header"' class="my-table-style"
                     :data="list" border>
@@ -175,9 +177,9 @@
                             <i v-else class="off-the-shelf">已下架</i>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="更新时间">
+                    <el-table-column sortable align="center" prop="updatedAt" label="更新时间">
                         <template slot-scope="scope">
-                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:MM:SS') | padEmpty}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" width="120px" label="操作">
@@ -215,12 +217,13 @@
     import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
     import role from '../../util/config/role';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'PersonList',
         components: {
             PreviewSingleImage,
-            DisplayRelatedDialog
+            DisplayRelatedDialog,
+            SortItem
         },
         data() {
             return {
@@ -274,7 +277,8 @@
                 updateSearchFields: 'person/updateSearchFields',
                 updatePagination: 'person/updatePagination',
                 resetSearchFields: 'person/resetSearchFields',
-                resetPagination: 'person/resetPagination'
+                resetPagination: 'person/resetPagination',
+                setList: 'person/setPersonList'
             }),
             ...mapActions({
                 getPersonList: 'person/getPersonList',
@@ -539,6 +543,25 @@
                     this.currentItem = item;
                     this.$refs.displayRelatedDialog.showDialog();
                 }
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'updatedAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.list).sortBy('updatedAt').value();
+                    } else {
+                        sortedList = _.chain(this.list).sortBy('updatedAt').reverse().value();
+                    }
+                    this.setList({list: sortedList});
+                }
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.updateSearchFields({key: 'sortKey', value: sortKey});
+                this.updateSearchFields({key: 'sortDirection', value: sortDirection});
+                this.searchHandler();
             }
         }
     };

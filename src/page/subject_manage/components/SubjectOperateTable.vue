@@ -4,6 +4,7 @@
         <el-table
             :data="subjectList"
             @selection-change="handleSelectionChange"
+            @sort-change="sortChangeHandler"
             border
             style="width: 100%">
             <el-table-column
@@ -82,11 +83,13 @@
                 </template>
             </el-table-column>
             <el-table-column
+                sortable
                 align="center"
+                prop="createdAt"
                 min-width="140px"
                 label="创建时间">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -110,6 +113,7 @@
 </template>
 
 <script>
+    import _ from 'lodash';
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
 
     export default {
@@ -123,6 +127,10 @@
                 default: function () {
                     return [];
                 }
+            },
+            setSubjectList: {
+                type: Function,
+                default: () => {}
             }
         },
         data() {
@@ -269,6 +277,19 @@
                     name: item.category === 'FIGURE' ? 'EditFigureSubject' : 'EditProgrammeSubject',
                     params: {id: item.id}
                 });
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'createdAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.subjectList).sortBy('createdAt').value();
+                    } else {
+                        sortedList = _.chain(this.subjectList).sortBy('createdAt').reverse().value();
+                    }
+                    this.setSubjectList(sortedList);
+                }
             }
         }
     };

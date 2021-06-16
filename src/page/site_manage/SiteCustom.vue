@@ -8,7 +8,7 @@
                 <div class="wrapper">
                     <div :style="bgImageStyle(logoPngUrl)" class="logo-container re-container">
                     </div>
-                    <el-button class="btn-style-two" @click="updateSiteCustom(1)">修改</el-button>
+                    <el-button v-if="hasAuthority" class="btn-style-two" @click="updateSiteCustom(1)">修改</el-button>
                 </div>
             </div>
             <div class="image">
@@ -17,7 +17,7 @@
                     <div :style="bgImageStyle(logoUrl)" class="image-container re-container">
                         <span class="name">logo.jpg</span>
                     </div>
-                    <el-button class="btn-style-two" @click="updateSiteCustom(2)">修改</el-button>
+                    <el-button v-if="hasAuthority" class="btn-style-two" @click="updateSiteCustom(2)">修改</el-button>
                 </div>
             </div>
             <div class="vid">
@@ -29,7 +29,7 @@
                             <svg-icon icon-class="ad_video" class="video"></svg-icon>
                         </span>
                     </div>
-                    <el-button class="btn-style-two" @click="updateSiteCustom(3)">修改</el-button>
+                    <el-button v-if="hasAuthority" class="btn-style-two" @click="updateSiteCustom(3)">修改</el-button>
                 </div>
             </div>
         </div>
@@ -58,11 +58,16 @@ export default {
             bootanimationUrl: '',
             bootanimationMd5: '',
             videoUrl: '',
-            videoMd5: ''
+            videoMd5: '',
+            hasAuthority: true
         };
     },
     async created() {
         try {
+            if (!this.$authority.isHasAuthority('content:startUp:get')) {
+                this.hasAuthority = false;
+                return false;
+            }
             let res = await this.$service.getSiteCustom();
             if (res && res.code === 0) {
                 this.logoUrl = _.get(res.data, 'logoUrl');

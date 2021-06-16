@@ -172,7 +172,7 @@
                     min-width="100px"
                     label="上传时间">
                     <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS') | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column

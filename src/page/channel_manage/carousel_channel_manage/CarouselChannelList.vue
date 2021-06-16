@@ -54,6 +54,7 @@
             <carousel-channel-operate-table
                 ref="channelOperateTable"
                 :channelList="channelList"
+                :setChannelList="setChannelList"
                 v-on:getChannelList="getChannelList"
                 v-on:setBatchDisabledStatus="setBatchDisabledStatus">
             </carousel-channel-operate-table>
@@ -96,7 +97,6 @@
     import ChannelFilterParams from '../../search_filter_params/ChannelFilterParams';
     import CarouselChannelOperateTable from './CarouselChannelOperateTable';
     import wsCache from '@/util/webStorage';
-
     export default {
         name: 'CarouselChannelList',
         components: {
@@ -113,7 +113,13 @@
                 pageNum: 1,
                 total: 0,
                 channelList: [],
-                isDisabled: true
+                isDisabled: true,
+                sortKeyList: [
+                    {
+                        label: '展示名',
+                        value: 'NAME'
+                    }
+                ]
             };
         },
         mounted() {
@@ -174,9 +180,11 @@
                 });
             },
             createChannelByImportExcel() {
+                if (!this.$authority.isHasAuthority('content:channel:carouselImport')) {
+                    return;
+                }
                 let routeData = this.$router.resolve({
-                    name: 'CreateChannelByImportExcel',
-                    params: {category: 'CAROUSEL'}
+                    name: 'CarouselChannelImport'
                 });
                 window.open(routeData.href, '_blank');
             },
@@ -198,6 +206,16 @@
                     name: 'CreateCarouselChannel'
                 });
                 window.open(routeData.href, '_blank');
+            },
+            // dev2.9
+            setChannelList(list) {
+                this.channelList = list;
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.listQueryParams.sortKey = sortKey;
+                this.listQueryParams.sortDirection = sortDirection;
+                this.getChannelList();
             }
         }
     };

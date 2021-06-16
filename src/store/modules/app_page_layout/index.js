@@ -117,7 +117,7 @@ const mutations = {
     },
     //  重新定义的增删改查方法结束
     updateLayout(state) {
-        state.layout = store.get('layoutStore');
+        state.layout = store.get('appLayoutStore');
     },
     //  2.3.0 新的修改  ========================
     setActiveLayout(state, payload) {

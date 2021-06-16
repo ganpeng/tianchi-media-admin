@@ -28,6 +28,7 @@
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
+                <sort-item :sortKeyList="[{label: '创建时间', value: 'CREATED_AT'}]" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
             </div>
             <div class="float-right">
                 <el-dropdown
@@ -47,6 +48,7 @@
         <subject-operate-table
             ref="subjectOperateTable"
             :subjectList="subjectList"
+            :setSubjectList="setSubjectList"
             v-on:getSubjectList="getSubjectList"
             v-on:setBatchDisabledStatus="setBatchDisabledStatus">
         </subject-operate-table>
@@ -86,12 +88,13 @@
 <script>
     import SubjectFilterParams from '../search_filter_params/SubjectFilterParams';
     import SubjectOperateTable from './components/SubjectOperateTable';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'SubjectList',
         components: {
             SubjectFilterParams,
-            SubjectOperateTable
+            SubjectOperateTable,
+            SortItem
         },
         data() {
             return {
@@ -165,6 +168,16 @@
                     name: command === 'PROGRAMME' ? 'CreateProgrammeSubject' : 'CreateFigureSubject'
                 });
                 window.open(routeData.href, '_blank');
+            },
+            // dev2.9新增
+            setSubjectList(list) {
+                this.subjectList = list;
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.listQueryParams.sortKey = sortKey;
+                this.listQueryParams.sortDirection = sortDirection;
+                this.getSubjectList();
             }
         }
     };

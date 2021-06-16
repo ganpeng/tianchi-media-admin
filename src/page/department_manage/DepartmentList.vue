@@ -8,7 +8,9 @@
         </department-filter-params>
         <div class="content-title">部门列表</div>
         <div class="table-operator-field">
-            <div></div>
+            <div class="float-left">
+                <sort-item :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+            </div>
             <el-button
                 class="btn-style-two contain-svg-icon"
                 @click="createDepartment">
@@ -18,6 +20,7 @@
         </div>
         <department-operate-table
             ref="departmentOperateTable"
+            :setDepartmentList="setDepartmentList"
             :departmentList="departmentList"
             v-on:getDepartmentList="getDepartmentList">
         </department-operate-table>
@@ -36,12 +39,13 @@
 <script>
     import DepartmentFilterParams from '../search_filter_params/DepartmentFilterParams';
     import DepartmentOperateTable from './components/DepartmentOperateTable';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'DepartmentList',
         components: {
             DepartmentFilterParams,
-            DepartmentOperateTable
+            DepartmentOperateTable,
+            SortItem
         },
         data() {
             return {
@@ -95,6 +99,16 @@
                     return;
                 }
                 this.$router.push({name: 'CreateDepartment'});
+            },
+            // dev2.9新增
+            setDepartmentList(list) {
+                this.departmentList = list;
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.listQueryParams.sortKey = sortKey;
+                this.listQueryParams.sortDirection = sortDirection;
+                this.getDepartmentList();
             }
         }
     };

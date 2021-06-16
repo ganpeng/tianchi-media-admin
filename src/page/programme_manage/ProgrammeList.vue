@@ -192,6 +192,7 @@
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
+                        <sort-item :sortKeyList="[{label: '更新时间', value: 'UPDATED_AT'}]" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
                     </div>
                     <div class="float-right">
                         <el-button
@@ -206,12 +207,26 @@
                             <svg-icon icon-class="add"></svg-icon>
                             添加
                         </el-button>
+                        <el-dropdown
+                            @command="gotoProgrammeImportPage($event)" placement="bottom">
+                            <el-button class="btn-style-two contain-svg-icon">
+                                <svg-icon icon-class="import"></svg-icon>
+                                导入
+                                <svg-icon icon-class="arrow_down"></svg-icon>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="PROGRAMME">导入节目</el-dropdown-item>
+                                <el-dropdown-item command="VIDEO">关联视频</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <!--
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="gotoProgrammeImportPage">
                             <svg-icon icon-class="import"></svg-icon>
                             导入
                         </el-button>
+                        -->
                         <el-button
                             class="btn-style-two contain-svg-icon"
                             @click="exportSelectedProgrammeExcel">
@@ -230,6 +245,7 @@
                     ref="multipleTable"
                     @select="selectHandler"
                     @select-all="selectAllHandler"
+                    @sort-change="sortChangeHandler"
                     row-class-name="programme-row" header-row-class-name="common-table-header" class="my-table-style"
                     :data="list" border>
                     <el-table-column type="selection" align="center"></el-table-column>
@@ -285,7 +301,7 @@
                             {{ scope.row.releaseAt | formatDate('yyyy-MM-DD') | padEmpty}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="produceAreaList" min-width="150px" align="center" label="地区">
+                    <el-table-column prop="produceAreaList" min-width="100px" align="center" label="地区">
                         <template slot-scope="scope">
                             <span class="ellipsis four">
                                 {{areaLabel(scope.row.produceAreaList).map((area) => area.name).join(', ') | padEmpty}}
@@ -324,9 +340,9 @@
                             <i v-else class="off-the-shelf">已下架</i>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" min-width="100px" label="更新时间">
+                    <el-table-column sortable align="center" min-width="120px" label="更新时间" prop="updatedAt">
                         <template slot-scope="scope">
-                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                            {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:MM:SS') | padEmpty}}
                         </template>
                     </el-table-column>
                     <el-table-column align="center" width="120px" label="操作">
@@ -367,12 +383,15 @@
     import role from '@/util/config/role';
     import PreviewSingleImage from 'sysComponents/custom_components/custom/PreviewSingleImage';
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
+    // dev2.9
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
 
     export default {
         name: 'ProgrammeList',
         components: {
             PreviewSingleImage,
-            DisplayRelatedDialog
+            DisplayRelatedDialog,
+            SortItem
         },
         data() {
             return {
@@ -820,7 +839,7 @@
             toggleSearchField() {
                 this.searchFieldVisible = !this.searchFieldVisible;
             },
-            gotoProgrammeImportPage() {
+            gotoProgrammeImportPage(importType) {
                 if (!this.$authority.isHasAuthority('content:programme:import')) {
                     return;
                 }
@@ -828,7 +847,7 @@
                 let routeData = this.$router.resolve({
                     name: 'ProgrammeImport'
                 });
-                window.open(routeData.href, '_blank');
+                window.open(`${routeData.href}?importType=${importType}`, '_blank');
             },
             displayRelated(item) {
                 if (item.refCount && item.refCount > 0) {
@@ -849,6 +868,25 @@
                 } catch (err) {
                     console.log(err);
                 }
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'updatedAt') {
+                    let sortedListByCreatedAt = [];
+                    if (order === 'ascending') {
+                        sortedListByCreatedAt = _.chain(this.list).sortBy('updatedAt').value();
+                    } else {
+                        sortedListByCreatedAt = _.chain(this.list).sortBy('updatedAt').reverse().value();
+                    }
+                    this.setList({list: sortedListByCreatedAt});
+                }
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.updateProgrammeSearchFields({key: 'sortKey', value: sortKey});
+                this.updateProgrammeSearchFields({key: 'sortDirection', value: sortDirection});
+                this.getProgrammeList();
             }
         }
     };

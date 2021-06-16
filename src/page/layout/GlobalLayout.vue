@@ -5,7 +5,7 @@
                 <li v-for="(item, index) in activeNavList" :key="index"
                     :class="['nav-item', active === index ? 'active' : '']"
                     @click="changeActive(index)">
-                    {{item}}
+                    {{item.title}}
                 </li>
             </ul>
             <div :class="[active === navList.length - 1 ? 'active' : '']"
@@ -96,17 +96,18 @@
             ...mapGetters({
                 name: 'user/name'
             }),
-            asideList() {
-                return this.appActive ? role.APP_ASIDE_LIST : role.ASIDE_LIST;
-            },
             navList() {
-                return this.appActive ? role.APP_NAV_LIST : role.NAV_LIST;
+                let isCenterSite = !!(this.$wsCache.localStorage.get('siteInfo') && this.$wsCache.localStorage.get('siteInfo').siteMasterEnable);
+                let centerNavList = role.NAV_LIST.filter((item) => item.status === 0 || item.status === 1);
+                let childNavList = role.NAV_LIST.filter((item) => item.status === 0 || item.status === 2);
+                let navList = isCenterSite ? centerNavList : childNavList;
+                return this.appActive ? role.APP_NAV_LIST : navList;
             },
             activeNavList() {
                 return this.navList.filter((_, index) => index !== this.navList.length - 1);
             },
             activeAsideList() {
-                return this.asideList[this.active];
+                return this.navList[this.active].children;
             }
         },
         mounted() {
@@ -114,8 +115,8 @@
         async created() {
             try {
                 await this.$nextTick();
-                let content = document.querySelector('.content');
-                content.addEventListener('scroll', this.toggleFixedBtnContainer.bind(this), false);
+                let content = document.querySelector('.content-wrapper');
+                content.addEventListener('scroll', this.$util.toggleFixedBtnContainer.bind(this), false);
 
                 let isApp = store.get('isApp');
                 this.appActive = isApp;
@@ -125,8 +126,8 @@
                 } else {
                     await this.menuInit();
                 }
-                this.setMinHeight();
-                window.addEventListener('resize', this.setMinHeight, false);
+                // this.setMinHeight();
+                // window.addEventListener('resize', this.setMinHeight, false);
             } catch (err) {
                 console.log(err);
             }
@@ -141,8 +142,8 @@
                 try {
                     let res = await this.getNavbarList();
                     if (res && res.code === 0) {
-                        let recomendNavbar = res.data.find((item) => item.name === '推荐');
-                        this.layoutId = recomendNavbar.id || _.get(res.data, '2.id');
+                        let recomendNavbar = res.data.find((item) => item.isDefault);
+                        this.layoutId = _.get(recomendNavbar, 'id') || _.get(res.data, '2.id');
 
                         let {active, activePath} = this.getActivePath();
                         this.active = active;
@@ -188,9 +189,10 @@
                 let leftPart = path.split('/')[1];
                 let active = 0;
                 let activePath = '';
-                for (let i = 0; i < this.asideList.length; i++) {
-                    for (let j = 0; j < this.asideList[i].length; j++) {
-                        let {uri} = this.asideList[i][j];
+                for (let i = 0; i < this.navList.length; i++) {
+                    let asideList = this.navList[i].children;
+                    for (let j = 0; j < asideList.length; j++) {
+                        let {uri} = asideList[j];
                         if (leftPart === uri.split('/')[1]) {
                             active = i;
                             activePath = uri;
@@ -205,7 +207,7 @@
                     window.location.reload();
                 } else {
                     this.active = index;
-                    let newPath = this.asideList[this.active][0].uri;
+                    let newPath = this.navList[this.active].children[0].uri;
                     this.defaultActive = newPath;
                     this.$router.push(newPath);
                 }
@@ -216,18 +218,6 @@
             },
             logout() {
                 this.$store.dispatch('user/logout', true);
-            },
-            toggleFixedBtnContainer() {
-                let content = document.querySelector('.content');
-                let fixedBtnContainer = document.querySelector('.fixed-btn-container');
-                let isBottom = content.scrollHeight - content.scrollTop === content.clientHeight;
-                if (fixedBtnContainer) {
-                    if (isBottom) {
-                        fixedBtnContainer.style.background = 'transparent';
-                    } else {
-                        fixedBtnContainer.style.background = '#293550';
-                    }
-                }
             },
             async menuChangeHandler(pathObj) {
                 try {
@@ -268,6 +258,9 @@
                 } else {
                     this.$router.push({path: `/worktop-manage`});
                 }
+            },
+            gotoUserCenter() {
+                this.$router.push({name: 'MyInfo'});
             }
         }
     };
@@ -289,23 +282,6 @@
             .nav-list {
                 line-height: $headerHeight;
                 padding-left: 80px;
-                /*设置站点管理和配置中心的隐藏和展示*/
-                &.is-center-site {
-                    li:last-child {
-                        display: none;
-                    }
-                    li:nth-child(8) { // 原来是7，我改成8了，原因是广告项被隐藏了
-                        display: inline-block;
-                    }
-                }
-                &:not(.is-center-site) { // 原来是7，我改成8了，原因是广告项被隐藏了
-                    li:last-child {
-                        display: inline-block;
-                    }
-                    li:nth-child(8) {
-                        display: none;
-                    }
-                }
                 .nav-item {
                     float: left;
                     min-width: 110px;
@@ -431,6 +407,7 @@
                     .svg-icon {
                         width: 14px;
                         height: 20px;
+                        fill: #6F7480;
                     }
                 }
                 .tv-btn {
@@ -440,6 +417,7 @@
                     .svg-icon {
                         width: 20px;
                         height: 16px;
+                        fill: #6F7480;
                     }
                 }
             }
@@ -459,9 +437,10 @@
             left: 200px;
             right: 0px;
             bottom: 0px;
-            overflow: scroll;
             background: $contentBg;
             .content-wrapper {
+                overflow: scroll;
+                height: 100%;
                 padding: 20px 20px 100px 20px;
             }
         }

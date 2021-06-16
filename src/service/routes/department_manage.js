@@ -21,11 +21,13 @@ export const createDepartment = ({name, remark, adminList}) => {
 /**
  * 获取部门列表
  */
-export const getDepartmentList = ({keyword, pageNum, pageSize}) => {
+export const getDepartmentList = ({keyword, pageNum, pageSize, sortKey, sortDirection}) => {
     const params = {
         pageNum: pageNum - 1,
         pageSize,
-        keyword
+        keyword,
+        sortKey,
+        sortDirection
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

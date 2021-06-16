@@ -271,7 +271,7 @@ let util = {
         });
     },
     toggleFixedBtnContainer() {
-        let content = document.querySelector('.content');
+        let content = document.querySelector('.content-wrapper');
         let fixedBtnContainer = document.querySelector('.fixed-btn-container');
         let isBottom = content.scrollHeight - content.scrollTop === content.clientHeight;
         if (fixedBtnContainer) {

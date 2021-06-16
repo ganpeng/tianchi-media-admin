@@ -325,6 +325,15 @@
                 label="ID">
             </el-table-column>
             <el-table-column
+                prop="programmeName"
+                width="210px"
+                align="center"
+                label="所属节目">
+                <template slot-scope="scope">
+                    {{scope.row.programmeName || '无'}}
+                </template>
+            </el-table-column>
+            <el-table-column
                 prop="originName"
                 width="210px"
                 align="center"
@@ -1171,9 +1180,9 @@
                         this.typeOptions = response.data;
                     }
                 });
-                this.$service.getChannelServerGroupList({type: 'CAROUSEL'}).then(res => {
+                this.$service.getServerGroupList({type: 'CAROUSEL', pageSize: 10000}).then(res => {
                     if (res && res.code === 0) {
-                        this.serverGroupOptions = res.data;
+                        this.serverGroupOptions = res.data.list || [];
                     }
                 });
                 // 获取所属区域的数据

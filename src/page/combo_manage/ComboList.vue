@@ -8,7 +8,9 @@
         </combo-filter-params>
         <div class="content-title">套餐列表</div>
         <div class="table-operator-field">
-            <div></div>
+            <div class="float-left">
+                <sort-item :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+            </div>
             <el-button
                 class="btn-style-two contain-svg-icon"
                 @click="createCombo">
@@ -19,6 +21,7 @@
         <combo-operate-table
             ref="comboOperateTable"
             :comboList="comboList"
+            :setComboList="setComboList"
             v-on:getComboList="getComboList">
         </combo-operate-table>
         <el-pagination
@@ -36,12 +39,13 @@
 <script>
     import ComboFilterParams from '../search_filter_params/ComboFilterParams';
     import ComboOperateTable from './components/ComboOperateTable';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'ComboList',
         components: {
             ComboFilterParams,
-            ComboOperateTable
+            ComboOperateTable,
+            SortItem
         },
         data() {
             return {
@@ -95,6 +99,16 @@
                     return;
                 }
                 this.$router.push({name: 'CreateCombo'});
+            },
+            // dev2.9新增
+            setComboList(list) {
+                this.comboList = list;
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.listQueryParams.sortKey = sortKey;
+                this.listQueryParams.sortDirection = sortDirection;
+                this.getComboList();
             }
         }
     };

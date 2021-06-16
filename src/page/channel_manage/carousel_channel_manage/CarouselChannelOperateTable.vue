@@ -7,6 +7,7 @@
             row-class-name=channel-row
             @row-dblclick="showChannelVideoMessage"
             @selection-change="handleSelectionChange"
+            @sort-change="sortChangeHandler"
             border
             style="width: 100%">
             <el-table-column
@@ -16,7 +17,7 @@
             </el-table-column>
             <el-table-column
                 prop="no"
-                width="80px"
+                width="90px"
                 align="center"
                 label="台号">
                 <template slot-scope="scope">
@@ -169,6 +170,7 @@
 </template>
 
 <script>
+    import _ from 'lodash';
     import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
 
@@ -184,6 +186,10 @@
                 default: function () {
                     return [];
                 }
+            },
+            setChannelList: {
+                type: Function,
+                default: () => {}
             }
         },
         data() {
@@ -350,6 +356,28 @@
                     name: 'EditCarouselChannel',
                     params: {id: item.id}
                 });
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'no') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.channelList).sortBy('no').value();
+                    } else {
+                        sortedList = _.chain(this.channelList).sortBy('no').reverse().value();
+                    }
+                    this.setChannelList(sortedList);
+                }
+                if (prop === 'name') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.channelList).sortBy('name').value();
+                    } else {
+                        sortedList = _.chain(this.channelList).sortBy('name').reverse().value();
+                    }
+                    this.setChannelList(sortedList);
+                }
             }
         }
     };

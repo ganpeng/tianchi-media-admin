@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="26px" viewBox="0 0 30 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title></title>
+    <desc></desc>
+    <g id="Design" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="05-01-频道统计2.9" transform="translate(-30.000000, -193.000000)">
+            <path d="M51,193 C52.1045695,193 53,193.895431 53,195 L53,217 C53,218.104569 52.1045695,219 51,219 L39,219 C37.8954305,219 37,218.104569 37,217 L37,195 C37,193.895431 37.8954305,193 39,193 L51,193 Z M58,196 C59.1045695,196 60,196.895431 60,198 L60,214 C60,215.104569 59.1045695,216 58,216 L54,216 L54,196 L58,196 Z M36,196 L36,216 L32,216 C30.8954305,216 30,215.104569 30,214 L30,198 C30,196.895431 30.8954305,196 32,196 L36,196 Z" id="icon_program"></path>
+        </g>
+    </g>
+</svg>

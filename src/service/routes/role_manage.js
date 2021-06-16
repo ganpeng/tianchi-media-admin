@@ -25,12 +25,14 @@ export const createRole = ({roleName, roleDesc, resourceList, visible}) => {
 /**
  * 获取角色列表
  */
-export const getRoleList = ({keyword, visible, pageNum, pageSize}) => {
+export const getRoleList = ({keyword, visible, pageNum, pageSize, sortKey, sortDirection}) => {
     const params = {
         keyword,
         visible,
         pageNum: pageNum - 1,
-        pageSize
+        pageSize,
+        sortKey,
+        sortDirection
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

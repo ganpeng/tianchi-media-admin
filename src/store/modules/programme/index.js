@@ -206,7 +206,10 @@ const defaultProgrammeSearchFields = {
     refCount: '', //  关联
     paymentType: '', // 支付情况
     //  dev_v2.6 新增
-    applicableClientList: []
+    applicableClientList: [],
+    // dev2.9新增
+    sortKey: '', // UPDATED_AT RELEASED_AT
+    sortDirection: '' // ASC DESC
 };
 
 const defaultGlobal = {

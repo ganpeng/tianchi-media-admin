@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>icon_warning</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" stop-opacity="0.3" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.3" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="03-02-页面布局-看电视编辑-2.9" transform="translate(-668.000000, -361.000000)" fill="url(#linearGradient-1)">
+            <path d="M684,361 C692.836556,361 700,368.163444 700,377 C700,385.836556 692.836556,393 684,393 C675.163444,393 668,385.836556 668,377 C668,368.163444 675.163444,361 684,361 Z M683.536,381.872 C682.264,381.872 681.256,382.88 681.256,384.152 C681.256,385.4 682.264,386.384 683.536,386.384 C684.856,386.384 685.816,385.4 685.816,384.152 C685.816,382.88 684.856,381.872 683.536,381.872 Z M683.536,367.736 C682.12,367.736 681.232,368.552 681.232,370.04 C681.232,371.192 681.616,372.92 682.552,376.472 L683.152,379.736 L683.92,379.736 L684.544,376.472 C685.504,372.92 685.864,371.192 685.864,370.04 C685.864,368.552 684.952,367.736 683.536,367.736 Z" id="icon_warning"></path>
+        </g>
+    </g>
+</svg>

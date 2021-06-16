@@ -8,7 +8,9 @@ const defaultSearchFields = {
     code: '',
     registeredAtStart: '',
     registeredAtEnd: '',
-    registeredAt: []
+    registeredAt: [],
+    sortKey: '',
+    sortDirection: ''
 };
 
 const defaultPagination = {
@@ -106,11 +108,13 @@ const actions = {
     async getDeviceList({commit, state}) {
         try {
             let {pageNum, pageSize} = state.pagination;
-            let {no, hardWareId, status, registeredAtStart, registeredAtEnd} = state.searchFields;
+            let {sortKey, sortDirection} = state.searchFields;
+            let order = '';
+            if (sortKey && sortDirection) {
+                order = `${sortKey}_${sortDirection}`;
+            }
             let params = Object.assign({},
-                {pageNum: pageNum - 1, pageSize}, {
-                    no, hardWareId, status, registeredAtStart, registeredAtEnd
-                });
+                {pageNum: pageNum - 1, pageSize, order}, state.searchFields);
             let res = await service.getDeviceList(params);
             if (res && res.code === 0) {
                 let {list, pageNum, pageSize, total} = res.data;

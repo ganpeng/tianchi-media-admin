@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="38px" viewBox="0 0 40 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>icon_rating</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="17.578125%" y1="21.875%" x2="113.873291%" y2="56.980896%" id="linearGradient-1">
+            <stop stop-color="#00D5FF" offset="0%"></stop>
+            <stop stop-color="#007F98" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="65.4320988%" x2="0%" y2="26.8343154%" id="linearGradient-2">
+            <stop stop-color="#00D5FF" offset="0%"></stop>
+            <stop stop-color="#007F98" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="76.446281%" y1="100%" x2="23.553719%" y2="-25.0568182%" id="linearGradient-3">
+            <stop stop-color="#00D5FF" offset="0%"></stop>
+            <stop stop-color="#007F98" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="05-02-点播统计2.9" transform="translate(-232.000000, -351.000000)">
+            <g id="icon_rating" transform="translate(232.000000, 351.000000)">
+                <path d="M2,26 L16,26 L16,26 L16,38 L2,38 C0.8954305,38 1.3527075e-16,37.1045695 0,36 L0,28 C-1.3527075e-16,26.8954305 0.8954305,26 2,26 Z" id="矩形备份-6" fill="url(#linearGradient-1)"></path>
+                <path d="M22,28 L38,28 C39.1045695,28 40,28.8954305 40,30 L40,36 C40,37.1045695 39.1045695,38 38,38 L22,38 L22,38 L22,28 Z" id="矩形备份-7" fill="url(#linearGradient-2)"></path>
+                <path d="M14,16 L26,16 C27.1045695,16 28,16.8954305 28,18 L28,38 L28,38 L12,38 L12,18 C12,16.8954305 12.8954305,16 14,16 Z" id="矩形" fill="url(#linearGradient-3)"></path>
+                <polygon id="Fill-1" fill="#009FBE" points="24 0 16.4195804 0.787564767 16 2.94300518 18.1818182 2.71502591 16.4195804 12 21.7342657 12"></polygon>
+                <path d="M7.83191927,13 L4.85111425,13 L4.71065747,14.6005263 L1.74545876,14.6005263 L2.12001017,11 L11,11 L10.2508972,18.2005263 L4.02397987,18.2005263 L3.74306631,21 L9.37694386,21 L10.0480152,20.2 L9.75149528,23 L1.93273446,23 C1.63075239,23 1.3915857,22.8631579 1.21484425,22.59 C1.03771264,22.3157895 0.970215356,21.9763158 1.01196223,21.5684211 L1.57378936,16.2 L7.48858047,16.2 L7.83191927,13 Z" id="Fill-1" fill="#009FBE"></path>
+                <path d="M36.3846154,20.7913884 L31.1230769,20.7913884 L31.3230769,18.7873462 L36.5846154,18.7873462 L36.8769231,15.9824253 L31.0307692,15.9824253 L31.2307692,14 L40,14 L38.9076923,24.5659051 C38.8665385,24.9745167 38.7307692,25.314587 38.5,25.5892794 C38.2692308,25.8629174 38.01,26 37.7230769,26 L30,26 L30.2153846,23.9964851 L36.0461538,23.9964851 L36.3846154,20.7913884 Z" id="Fill-1" fill="#009FBE"></path>
+            </g>
+        </g>
+    </g>
+</svg>

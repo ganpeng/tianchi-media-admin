@@ -27,7 +27,10 @@ const defaultPerson = {
 const defaultSearchFields = {
     name: '',
     area: '',
-    refCount: '' // 关联
+    refCount: '', // 关联
+    // dev2.9新增
+    sortKey: '', // UPDATED_AT
+    sortDirection: '' // ASC DESC
 };
 
 const defaultPagination = {
@@ -251,7 +254,7 @@ const actions = {
             let searchName = !name ? state.searchFields.name : name;
             let {pageNum, pageSize} = state.pagination;
             let {area, refCount} = state.searchFields;
-            let res = await service.getPersonList(Object.assign({}, { pageNum: pageNum - 1, pageSize, name: searchName, area, refCount }, params));
+            let res = await service.getPersonList(Object.assign({}, { pageNum: pageNum - 1, pageSize, name: searchName, area, refCount }, state.searchFields, params));
             if (res && res.code === 0) {
                 let {pageNum, pageSize, total, list} = res.data;
                 if (!isProgramme) {

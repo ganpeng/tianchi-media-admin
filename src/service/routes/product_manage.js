@@ -17,7 +17,7 @@ export const createProduct = ({category, name, description, contentIdList}) => {
 /**
  * 获取产品包列表
  */
-export const getProductList = ({productCategory, pageNum, pageSize, keyword, orderList, createdAtStart, createdAtEnd}) => {
+export const getProductList = ({productCategory, pageNum, pageSize, keyword, orderList, createdAtStart, createdAtEnd, sortKey, sortDirection}) => {
     const params = {
         pageNum: pageNum - 1,
         pageSize,
@@ -25,7 +25,9 @@ export const getProductList = ({productCategory, pageNum, pageSize, keyword, ord
         productCategory,
         orderList,
         createdAtStart,
-        createdAtEnd
+        createdAtEnd,
+        sortKey,
+        sortDirection
     };
 
     let paramsStr = qs.stringify(_.pickBy(params, (item) => {

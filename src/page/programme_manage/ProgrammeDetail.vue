@@ -600,10 +600,8 @@
                     }
                 });
 
-            let content = document.querySelector('.content');
+            let content = document.querySelector('.content-wrapper');
             content.scrollTop = 0;
-
-            this.$util.toggleFixedBtnContainer();
         },
         created() {
             let {id} = this.$route.params;

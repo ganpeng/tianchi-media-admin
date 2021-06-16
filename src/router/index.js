@@ -163,6 +163,8 @@ import ActivationCodeList from 'sysPage/activation_code_manage/ActivationCodeLis
 import ActivationCodeSwitch from 'sysPage/activation_code_switch_manage/ActivationCodeSwitch';
 // 导出管理-导出列表
 import DownloadFileList from 'sysPage/download-manage/DownloadFileList';
+import CarouselChannelImport from 'sysPage/channel_manage/CarouselChannelImport';
+import LiveChannelPageImport from 'sysPage/channel_manage/LiveChannelPageImport';
 
 Vue.use(Router);
 
@@ -231,6 +233,21 @@ export const routes = [
         path: '/channel-live/import',
         name: 'LiveChannelImport',
         component: LiveChannelImport
+    },
+    {
+        path: '/channel-carousel/import',
+        name: 'CarouselChannelImport',
+        component: CarouselChannelImport
+    },
+    {
+        path: '/live-channel-page/import',
+        name: 'LiveChannelPageImport',
+        component: LiveChannelPageImport
+    },
+    {
+        path: '/boss/import',
+        name: 'BossImport',
+        component: () => import('@/page/boss/BossImport')
     },
     // 网站内容结构
     {
@@ -953,7 +970,7 @@ export const routes = [
             },
             //  站点管理-配置站点
             {
-                path: '/site-manage/config',
+                path: '/site/config',
                 name: 'ConfigSite',
                 component: ConfigSite
             },
@@ -1105,6 +1122,47 @@ export const routes = [
                 path: '/lookback-thumbnail',
                 name: 'LookbackThumbnail',
                 component: () => import('@/page/site_manage/LookbackThumbnail')
+            },
+            // dev2.9新增路由
+            {
+                path: '/channel-statistics',
+                name: 'ChannelStatistics',
+                component: () => import('@/page/statistics/ChannelStatistics')
+            },
+            {
+                path: '/vod-statistics',
+                name: 'VodStatistics',
+                component: () => import('@/page/statistics/VodStatistics')
+            },
+            {
+                path: '/server-group/list',
+                name: 'ServerGroupList',
+                component: () => import('@/page/site_manage/ServerGroupList')
+            },
+            {
+                path: '/server-group/create',
+                name: 'CreateServerGroup',
+                component: () => import('@/page/site_manage/CreateServerGroup')
+            },
+            {
+                path: '/server-group/edit/:id',
+                name: 'EditServerGroup',
+                component: () => import('@/page/site_manage/EditServerGroup')
+            },
+            {
+                path: '/boss/list',
+                name: 'BossList',
+                component: () => import('@/page/boss/BossList')
+            },
+            {
+                path: '/boss/create',
+                name: 'CreateBoss',
+                component: () => import('@/page/boss/CreateBoss')
+            },
+            {
+                path: '/boss/edit/:id',
+                name: 'EditBoss',
+                component: () => import('@/page/boss/EditBoss')
             }
         ]
     },

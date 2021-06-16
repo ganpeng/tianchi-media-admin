@@ -63,6 +63,7 @@
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
+                        <sort-item :sortKeyList="sortKeyList" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
                     </div>
                     <div class="float-right">
                         <el-button
@@ -97,6 +98,7 @@
                     ref="videoTable"
                     :shareSiteOptions="shareSiteOptions"
                     :videoList="videoList"
+                    :setVideoList="setVideoList"
                     v-on:setBatchDisabledStatus="setBatchDisabledStatus">
                 </video-table>
                 <el-pagination
@@ -215,14 +217,15 @@
     import SelectMultipleMasterVideo from './SelectMultipleMasterVideo';
     import VideoTable from './VideoTable';
     import BatchMessageListDialog from './BatchMessageListDialog';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'VideoList',
         components: {
             VideoFilterParams,
             VideoTable,
             SelectMultipleMasterVideo,
-            BatchMessageListDialog
+            BatchMessageListDialog,
+            SortItem
         },
         data() {
             return {
@@ -240,7 +243,21 @@
                 batchShareDialogVisible: false,
                 // 多个视频进行多个站点共享设置的共享站点Id列表
                 batchShareSiteIdList: [],
-                batchRequestTimer: ''
+                batchRequestTimer: '',
+                sortKeyList: [
+                    {
+                        label: '上传时间',
+                        value: 'CREATED_AT'
+                    },
+                    {
+                        label: '更新时间',
+                        value: 'UPDATED_AT'
+                    },
+                    {
+                        label: '视频时长',
+                        value: 'TAKE_TIME_IN_SEC'
+                    }
+                ]
             };
         },
         mounted() {
@@ -686,6 +703,16 @@
                     return;
                 }
                 this.$router.push({name: 'DiffTimeVideoList'});
+            },
+            // dev2.9
+            setVideoList(list) {
+                this.videoList = list;
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.listQueryParams.sortKey = sortKey;
+                this.listQueryParams.sortDirection = sortDirection;
+                this.getVideoList();
             }
         }
     };

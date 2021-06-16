@@ -66,7 +66,7 @@
                     <el-input
                         placeholder="请输入拉流地址"
                         :value="liveChannel.pullAddress"
-                        maxlength="300"
+                        :maxlength="300"
                         @input="inputHandler($event, 'pullAddress')">
                     </el-input>
                 </el-form-item>
@@ -79,7 +79,7 @@
                         placeholder="请选择所属服务器组"
                         @input="inputHandler($event, 'serverGroup')">
                         <el-option
-                            v-for="(item, index) in serverGroupOptionsLive"
+                            v-for="(item, index) in serverGroupLiveOptions"
                             :key="index"
                             :label="item.name"
                             :value="item.name">
@@ -175,7 +175,7 @@
                     </el-radio>
                 </el-form-item>
                 <!-- 回看选择是的时候，显示 使用直播配置 -->
-                <el-form-item v-if="liveChannel.record" label="使用直播配置" prop="useLiveConfig"
+                <el-form-item label="使用直播配置" prop="useLiveConfig"
                               :required="liveChannel.record">
                     <el-radio @input="inputHandler(true, 'useLiveConfig')" :value="liveChannel.useLiveConfig"
                               :label="true">是
@@ -185,7 +185,7 @@
                         否
                     </el-radio>
                 </el-form-item>
-                <el-form-item v-if="liveChannel.record" label="录制IP" prop="recordIp">
+                <el-form-item v-show="liveChannel.record" label="录制IP" prop="recordIp">
                     <el-input
                         placeholder="请输入录制IP"
                         :value="liveChannel.recordIp"
@@ -193,7 +193,7 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item v-else label="录制IP">
+                <el-form-item v-show="!liveChannel.record"  label="录制IP">
                     <el-input
                         placeholder="请输入录制IP"
                         :value="liveChannel.recordIp"
@@ -201,7 +201,7 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item v-if="liveChannel.record" label="录制端口" prop="recordPort">
+                <el-form-item v-show="liveChannel.record" label="录制端口" prop="recordPort">
                     <el-input
                         type="number"
                         placeholder="请输入录制端口"
@@ -210,7 +210,7 @@
                     >
                     </el-input>
                 </el-form-item>
-                <el-form-item v-else label="录制端口">
+                <el-form-item v-show="!liveChannel.record" label="录制端口">
                     <el-input
                         type="number"
                         placeholder="请输入录制端口"
@@ -228,7 +228,7 @@
                         placeholder="请选择所属服务器组"
                         @input="inputHandler($event, 'recordServerGroup')">
                         <el-option
-                            v-for="(item, index) in serverGroupOptionsRecord"
+                            v-for="(item, index) in serverGroupRecordOptions"
                             :key="index"
                             :label="item.name"
                             :value="item.name">
@@ -332,8 +332,7 @@
                 }
             };
             return {
-                serverGroupOptionsLive: [],
-                serverGroupOptionsRecord: [],
+                serverGroupList: [],
                 inputRules: {
                     name: [
                         {required: true, message: '请输直播频道名称'}
@@ -451,20 +450,25 @@
             withHls() {
                 let hlsIndex = this.liveChannel.protocolList.findIndex((item) => item === 'HLS');
                 return hlsIndex >= 0;
+            },
+            // dev2.9
+            serverGroupLiveOptions() {
+                return this.serverGroupList.filter((item) => _.findIndex(item.typeList, (_item) => _item === 'LIVE') >= 0);
+            },
+            serverGroupRecordOptions() {
+                return this.serverGroupList.filter((item) => _.findIndex(item.typeList, (_item) => _item === 'RECORD') >= 0);
             }
         },
         created() {
             this.getFilialeList();
-            this.$service.getChannelServerGroupList({type: 'LIVE'}).then(res => {
-                if (res && res.code === 0) {
-                    this.serverGroupOptionsLive = res.data;
-                }
-            });
-            this.$service.getChannelServerGroupList({type: 'RECORD'}).then(res => {
-                if (res && res.code === 0) {
-                    this.serverGroupOptionsRecord = res.data;
-                }
-            });
+            this.$service.getServerGroupList({pageSize: 10000})
+                .then((res) => {
+                    if (res && res.code === 0) {
+                        this.serverGroupList = _.get(res.data, 'list') || [];
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
         },
         methods: {
             ...mapMutations({

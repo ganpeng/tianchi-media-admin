@@ -124,7 +124,9 @@
         <div class="tabel-field">
             <h2 class="content-title">广告主列表</h2>
             <div class="table-operator-field clearfix">
-                <div class="float-left"></div>
+                <div class="float-left">
+                    <sort-item :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+                </div>
                 <div class="float-right">
                     <el-button
                         class="btn-style-two contain-svg-icon"
@@ -168,12 +170,12 @@
                 </el-table-column>
                 <el-table-column sortable align="center" min-width="160" label="创建时间" prop="createdAt">
                     <template slot-scope="scope">
-                        {{scope.row.createdAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS') | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column sortable align="center" min-width="160" label="更新时间" prop="updatedAt">
                     <template slot-scope="scope">
-                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD') | padEmpty}}
+                        {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:MM:SS') | padEmpty}}
                     </template>
                 </el-table-column>
                 <el-table-column width="220px" align="center" label="操作">
@@ -201,9 +203,10 @@
     import {mapGetters, mapMutations, mapActions} from 'vuex';
     import _ from 'lodash';
     import role from '../../../util/config/role';
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'AdvertisingOwnerList',
+        components: {SortItem},
         data() {
             return {
                 searchFieldVisible: false,
@@ -346,6 +349,13 @@
                 } catch (err) {
                     console.log(err);
                 }
+            },
+            // dev2.9
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.updateSearchFields({key: 'sortKey', value: sortKey});
+                this.updateSearchFields({key: 'sortDirection', value: sortDirection});
+                this.searchHandler();
             }
         }
     };

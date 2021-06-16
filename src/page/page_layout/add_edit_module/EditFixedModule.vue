@@ -1,6 +1,6 @@
 <template>
     <div class="edit-fixed-module-container">
-        <div class="content-title">编辑固定模块</div>
+        <div class="content-title">{{editTitle}}</div>
         <div class="seperator-line"></div>
         <fixed-layout
             :isEdit="true"
@@ -37,7 +37,10 @@ export default {
     computed: {
         ...mapGetters({
             getLayoutTemplateByNavbarId: 'pageLayout/getLayoutTemplateByNavbarId'
-        })
+        }),
+        editTitle() {
+            return this.layoutTemplate === 'FS_9' ? '编辑我的' : '编辑固定模块';
+        }
     },
     methods: {
         ...mapActions({

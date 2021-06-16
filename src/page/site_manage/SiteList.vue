@@ -24,7 +24,9 @@
             <div class="table-field">
                 <h2 class="content-title">站点列表</h2>
                 <div class="table-operator-field clearfix">
-                    <div class="float-left"></div>
+                    <div class="float-left">
+                        <sort-item :sortKeyList="[{label: '创建时间', value: 'CREATED_AT'}]" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+                    </div>
                     <div class="float-right">
                         <el-button
                             class="btn-style-two contain-svg-icon"
@@ -39,6 +41,7 @@
         <el-table
             header-row-class-name="common-table-header"
             :data="siteList"
+            @sort-change="sortChangeHandler"
             border
             row-class-name=site-row
             style="width: 100%">
@@ -64,6 +67,8 @@
             </el-table-column>
             <el-table-column
                 align="center"
+                sortable
+                prop="createdAt"
                 min-width="140px"
                 label="创建时间">
                 <template slot-scope="scope">
@@ -95,9 +100,11 @@
 </template>
 
 <script>
-
+    import _ from 'lodash';
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'SiteList',
+        components: {SortItem},
         data() {
             return {
                 listQueryParams: {
@@ -178,6 +185,25 @@
                         }
                     });
                 });
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'createdAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.siteList).sortBy('createdAt').value();
+                    } else {
+                        sortedList = _.chain(this.siteList).sortBy('createdAt').reverse().value();
+                    }
+                    this.siteList = sortedList;
+                }
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.listQueryParams.sortKey = sortKey;
+                this.listQueryParams.sortDirection = sortDirection;
+                this.getSiteList();
             }
         }
     };

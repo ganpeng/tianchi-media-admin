@@ -4,6 +4,7 @@
         <el-table
             :data="roleList"
             @selection-change="handleSelectionChange"
+            @sort-change="sortChangeHandler"
             border
             style="width: 100%">
             <el-table-column
@@ -42,18 +43,22 @@
             </el-table-column>
             <el-table-column
                 align="center"
+                sortable
+                prop="updatedAt"
                 min-width="140px"
                 label="更新时间">
                 <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD')}}
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
                 </template>
             </el-table-column>
             <el-table-column
                 align="center"
+                sortable
+                prop="createdAt"
                 min-width="140px"
                 label="创建时间">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD')}}
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm:SS')}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -87,7 +92,7 @@
 </template>
 
 <script>
-
+    import _ from 'lodash';
     export default {
         name: 'RoleOperateTable',
         props: {
@@ -96,6 +101,10 @@
                 default: function () {
                     return [];
                 }
+            },
+            setRoleList: {
+                type: Function,
+                default: () => {}
             }
         },
         data() {
@@ -233,6 +242,28 @@
                         }
                     });
                 });
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'createdAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.roleList).sortBy('createdAt').value();
+                    } else {
+                        sortedList = _.chain(this.roleList).sortBy('createdAt').reverse().value();
+                    }
+                    this.setRoleList(sortedList);
+                }
+                if (prop === 'updatedAt') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.roleList).sortBy('updatedAt').value();
+                    } else {
+                        sortedList = _.chain(this.roleList).sortBy('updatedAt').reverse().value();
+                    }
+                    this.setRoleList(sortedList);
+                }
             }
         }
     };

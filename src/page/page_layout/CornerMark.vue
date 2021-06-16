@@ -6,9 +6,7 @@
             {{rightBottomText}}
         </div>
         <div class="mask"></div>
-        <div class="layout-item-type-title">
-            {{layoutItemType}}
-        </div>
+        <div v-html="layoutItemType" class="layout-item-type-title"></div>
     </div>
 </template>
 <script>
@@ -40,32 +38,49 @@ export default {
         layoutItemType() {
             let layoutItemType = '';
             let params = '';
+            let name = '';
 
             if (this.navbarId && _.isNumber(this.index) && _.isNumber(this.squareIndex)) {
                 layoutItemType = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${this.squareIndex}.layoutItemType`);
                 params = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${this.squareIndex}.params`);
+                name = _.get(this.activeLayout, `${this.index}.layoutItemMultiList.${this.squareIndex}.name`);
             }
 
             if (layoutItemType === 'PROGRAMME_SUBJECT') {
-                return '节目专题';
+                return `<span class"type">节目专题</span>: <span title="${name}" class="name">${name}</span>`;
             } else if (layoutItemType === 'FIGURE_SUBJECT') {
-                return '人物专题';
+                return `<span class"type">人物专题</span>: <span title="${name}" class="name">${name}</span>`;
             } else if ((layoutItemType === 'PROGRAMME') || (layoutItemType === 'PROGRAMME_LIST' && _.isEmpty(params))) {
-                return '节目';
+                return `<span class"type">节目</span>: <span title="${name}" class="name">${name}</span>`;
             } else if ((layoutItemType === 'PROGRAMME_LIST' && !_.isEmpty(params)) || layoutItemType === 'PROGRAMME_VIDEO') {
-                return '节目内视频';
+                let data = JSON.parse(params);
+                let programmeName = _.get(data, 'programmeName') || '';
+                let videoName = _.get(data, 'name') || '';
+                let desc = `${name}--${programmeName}--${videoName}`;
+                return `<span class="type">节目内视频</span>: <span title="${desc}" class="name">${desc}</span>`;
             } else if (layoutItemType === 'LINK') {
-                return '网页';
+                let data = JSON.parse(params);
+                let href = _.get(data, 'href') || '';
+                let desc = name || href;
+                return `<span class"type">网页</span>: <span title="${desc}" class="name">${desc}</span>`;
             } else if (layoutItemType === 'CHANNEL') {
-                return '频道';
+                return `<span class"type">频道</span>: <span title="${name}" class="name">${name}</span>`;
             } else if (layoutItemType === 'FIGURE') {
                 return '人物';
             } else if (layoutItemType === 'ALL') {
                 return '更多';
             } else if (layoutItemType === 'SUBJECT_VIDEO') {
-                return '专题内视频';
+                let data = JSON.parse(params);
+                let programmeName = _.get(data, 'programmeName') || '';
+                let videoName = _.get(data, 'name') || '';
+                let desc = `${name}--${programmeName}--${videoName}`;
+                return `<span class"type">专题内视频</span>: <span title="${desc}" class="name">${desc}</span>`;
             } else if (layoutItemType) {
-                return '筛选';
+                let data = JSON.parse(params);
+                let name = _.get(data, 'name');
+                let typeName = _.get(data, 'typeName');
+                let desc = `${name}--${typeName}`;
+                return `<span class"type">筛选</span>: <span title="${desc}" class="name">${desc}</span>`;
             } else {
                 return '';
             }
@@ -156,10 +171,14 @@ export default {
         width: 100%;
         height: 30px;
         line-height: 30px;
-        text-align: center;
+        // text-align: center;
+        text-align: left;
         font-size: 12px;
         color: #A8ABB3;
         bottom: -30px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 </style>

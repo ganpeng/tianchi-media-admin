@@ -238,6 +238,7 @@
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
+                    <!-- <sort-item :sortKeyList="sortKeyList" :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item> -->
                 </div>
                 <div class="float-right">
                     <el-button
@@ -260,7 +261,7 @@
                     </el-button>
                     <el-button
                         class="btn-style-two contain-svg-icon"
-                        @click="gotoBlankPage('LiveChannelImport')">
+                        @click="gotoBlankPage('LiveChannelPageImport')">
                         <svg-icon icon-class="upload_playbill"></svg-icon>
                         节目单
                     </el-button>
@@ -269,9 +270,10 @@
             <el-table
                 @select="selectHandler"
                 @select-all="selectAllHandler"
+                @sort-change="sortChangeHandler"
                 header-row-class-name="common-table-header" class="my-table-style" :data="list" border>
                 <el-table-column type="selection" align="center"></el-table-column>
-                <el-table-column prop="no" align="center" width="80px" label="台号">
+                <el-table-column prop="no" align="center" width="90px" label="台号">
                     <template slot-scope="scope">
                         <span>{{scope.row.no}}</span>
                         <span @click="displayVideoPlayer(scope.row)" v-if="scope.row.visible" class="display-btn"><svg-icon
@@ -326,7 +328,7 @@
                 </el-table-column>
                 <el-table-column align="center" width="150px" label="回看地址">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.record">{{scope.row.recordIp}}:{{scope.row.recordPort}}</span>
+                        <span v-if="(scope.row.recordIp && scope.row.recordPort)">{{scope.row.recordIp}}:{{scope.row.recordPort}}</span>
                         <span v-else>无</span>
                     </template>
                 </el-table-column>
@@ -438,10 +440,7 @@
     import DisplayVideoDialog from 'sysComponents/custom_components/custom/DisplayVideoDialog';
     import DisplayRelatedDialog from 'sysComponents/custom_components/custom/DisplayRelatedDialog';
     import role from '@/util/config/role';
-
     const ClipboardJS = require('clipboard');
-    // const X2JS = require('../../assets/js/xml2json.min'); // eslint-disable-line
-    // const x2js = new X2JS();
     export default {
         name: 'LiveChannelList',
         components: {
@@ -493,7 +492,13 @@
                 status: 0,
                 searchFieldVisible: false,
                 selectedChannelList: [],
-                currentItem: {}
+                currentItem: {},
+                sortKeyList: [
+                    {
+                        label: '展示名',
+                        value: 'NAME'
+                    }
+                ]
             };
         },
         mounted() {
@@ -547,7 +552,8 @@
                 setLiveChannel: 'channel/setLiveChannel',
                 updatePagination: 'channel/updatePagination',
                 updateSearchFields: 'channel/updateSearchFields',
-                resetSearchFields: 'channel/resetSearchFields'
+                resetSearchFields: 'channel/resetSearchFields',
+                setList: 'channel/setList'
             }),
             ...mapActions({
                 getChannelType: 'channel/getChannelType',
@@ -710,10 +716,10 @@
             },
             // 批量创建直播频道
             createChannelByImportExcel() {
-                if (!this.$authority.isHasAuthority('content:channel:add')) {
+                if (!this.$authority.isHasAuthority('content:channel:liveImport')) {
                     return;
                 }
-                let routeData = this.$router.resolve({name: 'CreateChannelByImportExcel', params: {category: 'LIVE'}});
+                let routeData = this.$router.resolve({name: 'LiveChannelImport'});
                 window.open(routeData.href, '_blank');
             },
             searchHandler() {
@@ -843,6 +849,34 @@
                 clipboard.on('error', (e) => {
                     this.$message.error('链接复制失败');
                 });
+            },
+            // dev2.9
+            sortChangeHandler(obj) {
+                let {prop, order} = obj;
+                if (prop === 'no') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.list).sortBy('no').value();
+                    } else {
+                        sortedList = _.chain(this.list).sortBy('no').reverse().value();
+                    }
+                    this.setList({list: sortedList});
+                }
+                if (prop === 'name') {
+                    let sortedList = [];
+                    if (order === 'ascending') {
+                        sortedList = _.chain(this.list).sortBy('name').value();
+                    } else {
+                        sortedList = _.chain(this.list).sortBy('name').reverse().value();
+                    }
+                    this.setList({list: sortedList});
+                }
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.updateSearchFields({key: 'sortKey', value: sortKey});
+                this.updateSearchFields({key: 'sortDirection', value: sortDirection});
+                this.searchHandler();
             }
         }
     };

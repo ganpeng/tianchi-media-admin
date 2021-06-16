@@ -62,7 +62,9 @@
             <div class="table-field">
                 <h2 class="content-title">产品包列表</h2>
                 <div class="table-operator-field clearfix">
-                    <div class="float-left"></div>
+                    <div class="float-left">
+                        <sort-item :sortQueryChangeHandler="sortQueryChangeHandler"></sort-item>
+                    </div>
                     <div class="float-right">
                         <el-dropdown @command="createProduct($event)" placement="bottom">
                             <el-button class="btn-style-two contain-svg-icon">
@@ -119,7 +121,7 @@
                 sortable="custom"
                 label="更新时间">
                 <template slot-scope="scope">
-                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:mm')}}
+                    {{scope.row.updatedAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -128,7 +130,7 @@
                 sortable="custom"
                 label="创建时间">
                 <template slot-scope="scope">
-                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:mm')}}
+                    {{scope.row.createdAt | formatDate('yyyy-MM-DD HH:MM:SS')}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -171,9 +173,10 @@
 </template>
 
 <script>
-
+    import SortItem from 'sysComponents/custom_components/custom/SortItem';
     export default {
         name: 'ProductList',
+        components: {SortItem},
         data() {
             return {
                 listQueryParams: {
@@ -365,6 +368,12 @@
                     default:
                         break;
                 }
+            },
+            sortQueryChangeHandler(obj) {
+                let {sortKey, sortDirection} = obj;
+                this.listQueryParams.sortKey = sortKey;
+                this.listQueryParams.sortDirection = sortDirection;
+                this.getProductList();
             }
         }
     };

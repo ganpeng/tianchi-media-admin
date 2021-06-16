@@ -80,6 +80,7 @@
 <script>
     import {mapGetters} from 'vuex';
     import _ from 'lodash';
+    import store from 'store';
 
     export default {
         name: 'DisplayRelateDialog',
@@ -102,7 +103,8 @@
         },
         computed: {
             ...mapGetters({
-                layout: 'pageLayout/layout'
+                layout: 'pageLayout/layout',
+                appPageLayout: 'appPageLayout/layout'
             }),
             getRelatedType() {
                 return (refItem) => {
@@ -187,18 +189,12 @@
             layoutRouter(refItem) {
                 if (refItem.refType === 'LAYOUT' && refItem.params) {
                     let params = JSON.parse(refItem.params);
-                    let {renderType, navBarId, layoutBlockId} = params;
+                    let {renderType, navBarId, layoutBlockId, navBarName} = params;
                     if (refItem.refId && navBarId && _.get(this.layout, `${navBarId}.data`)) {
                         let sort = _.get(this.layout, `${navBarId}.data`).findIndex((item) => {
                             return item.id === refItem.refId;
                         });
-                        // console.log('++++++++++++++++++++++++++');
-                        // console.log(`refItem: ${refItem}`);
-                        // console.log(`refId: ${refItem.refId}`);
-                        // console.log(`navBarId: ${navBarId}`);
-                        // console.log(`layout: ${this.layout}`);
-                        // console.log(`sort: ${sort}`);
-                        // console.log('++++++++++++++++++++++++++');
+
                         if (sort < 0) {
                             this.$message.error('该布局模块不存在');
                             return false;
@@ -249,8 +245,40 @@
                                     break;
                             }
                         }
+                    } else if (refItem.refId && navBarId && _.get(this.appPageLayout, `${navBarId}.data`)) {
+                        let sort = _.get(this.appPageLayout, `${navBarId}.data`).findIndex((item) => {
+                            return item.id === refItem.refId;
+                        });
+                        if (parseInt(sort) < 0) {
+                            this.$message.error('该布局模块不存在');
+                            return false;
+                        }
+                        if (parseInt(sort) === 0) {
+                            this.$router.push({
+                                name: 'EditAppFixedModule',
+                                params: {navbarId: navBarId, index: sort},
+                                query: {id: refItem.refId, isRecommend: navBarName === '推荐' ? 'yes' : 'no'}
+                            });
+                            this.pageReload();
+                        } else {
+                            this.$router.push({
+                                name: 'AppShuffleModule',
+                                params: {navbarId: navBarId, index: sort, operator: 'edit'},
+                                query: {id: layoutBlockId}
+                            });
+                            this.pageReload();
+                        }
+                    } else {
+                        this.$message.error('页面布局数据不存在');
+                        return false;
                     }
                 }
+            },
+            pageReload() {
+                store.set('isApp', true);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             },
             getLayoutTitle(refItem) {
                 if (refItem.refType === 'LAYOUT' && refItem.params) {

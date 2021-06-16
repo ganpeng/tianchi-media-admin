@@ -34,7 +34,7 @@
             prop="caNoExpireAt"
             label="CA到期日">
             <template slot-scope="scope">
-                <div v-if="scope.row.caNoExpireAt">{{scope.row.caNoExpireAt | formatDate('yyyy-MM-DD')}}</div>
+                <div v-if="scope.row.caNoExpireAt">{{scope.row.caNoExpireAt | formatDate('yyyy-MM-DD HH:MM:SS')}}</div>
                 <div v-else>/</div>
             </template>
         </el-table-column>
@@ -51,7 +51,7 @@
             prop="vipExpireAt"
             label="会员到期日">
             <template slot-scope="scope">
-                <div v-if="scope.row.vipExpireAt">{{scope.row.vipExpireAt | formatDate('yyyy-MM-DD')}}</div>
+                <div v-if="scope.row.vipExpireAt">{{scope.row.vipExpireAt | formatDate('yyyy-MM-DD HH:MM:SS')}}</div>
                 <div v-else>/</div>
             </template>
         </el-table-column>
@@ -67,7 +67,7 @@
             prop="registeredAt"
             label="注册时间">
             <template slot-scope="scope">
-                <div>{{scope.row.registeredAt | formatDate('yyyy-MM-DD')}}</div>
+                <div>{{scope.row.registeredAt | formatDate('yyyy-MM-DD HH:MM:SS')}}</div>
             </template>
         </el-table-column>
     </el-table>

@@ -28,16 +28,42 @@
                         @click="toEditNavBar(item.id)">
                         编辑
                     </label>
-                    <input v-if="item.type === 'CUSTOM'"
+                    <input v-if="item.type === 'CUSTOM' || item.type === 'VISIBLE_ONLY'"
+                           class="my-switch switch-anim"
+                           type="checkbox"
+                           @click.prevent="toggleVisible(item)"
+                           :checked="item.visible"/>
+                    <!--
+                    <input v-if="item.type === 'CUSTOM' || item.type === 'VISIBLE_ONLY'"
                            class="my-switch switch-anim"
                            type="checkbox"
                            v-model="item.visible"/>
+                    -->
                 </p>
             </li>
             <li class="upload-box" @click="createNavBar">
                 <i class="el-icon-plus"></i>
             </li>
         </ul>
+        <div class="content-title">默认栏目</div>
+        <div class="default-nav-bar">
+            <div class="label">开机默认栏目</div>
+            <el-select
+                clearable
+                filterable
+                class="my-select"
+                placeholder="请选择栏目"
+                :value="defaultNavbarId"
+                @change="defaultNavbarSelectChangeHandler($event)"
+            >
+                <el-option
+                    v-for="(item, index) in defaultNavBarList"
+                    :key="index"
+                    :label="navbarLabel(item)"
+                    :value="item.id">
+                </el-option>
+            </el-select>
+        </div>
         <div class="operate-block text-center">
             <el-button type="primary" @click="updateNavBarSetting" class="btn-style-two">保存</el-button>
         </div>
@@ -55,6 +81,20 @@
         },
         mounted() {
             this.init();
+        },
+        computed: {
+            defaultNavbarId() {
+                let navbar = this.navBarList.find((navbar) => navbar.isDefault);
+                return navbar ? navbar.id : '';
+            },
+            defaultNavBarList() {
+                return this.navBarList.filter((navbar) => navbar.visible);
+            },
+            navbarLabel() {
+                return (navbar) => {
+                    return navbar.name || navbar.picRemark;
+                };
+            }
         },
         methods: {
             init() {
@@ -125,6 +165,40 @@
                     return;
                 }
                 this.$router.push({name: 'EditNavBar', params: {id: id}});
+            },
+            // dev2.9
+            defaultNavbarSelectChangeHandler(id) {
+                this.navBarList = this.navBarList.map((navbar) => {
+                    if (navbar.id === id) {
+                        navbar.isDefault = true;
+                    } else {
+                        navbar.isDefault = null;
+                    }
+                    return navbar;
+                });
+            },
+            toggleVisible(navbar) {
+                if (navbar.visible) {
+                    let len = this.navBarList.filter((_navbar) => _navbar.name !== '我的' && _navbar.id !== navbar.id && _navbar.visible).length;
+                    if (len <= 1) {
+                        this.$message.error(`无法隐藏该栏目，至少需展示两个栏目`);
+                        return false;
+                    } else {
+                        this.navBarList = this.navBarList.map((_navbar) => {
+                            if (_navbar.id === navbar.id) {
+                                _navbar.visible = !_navbar.visible;
+                            }
+                            return _navbar;
+                        });
+                    }
+                } else {
+                    this.navBarList = this.navBarList.map((_navbar) => {
+                        if (_navbar.id === navbar.id) {
+                            _navbar.visible = !_navbar.visible;
+                        }
+                        return _navbar;
+                    });
+                }
             }
         }
     };
@@ -353,4 +427,28 @@
         cursor: -webkit-grab;
     }
 
+</style>
+<style lang="scss">
+    .default-nav-bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        .label {
+            margin-right: 20px;
+            font-size: 14px;
+            color: #A8ABB3;
+        }
+        .my-select {
+            height: 34px;
+            line-height: 34px;
+            .el-input {
+                height: 34px;
+                .el-input__inner {
+                    height: 34px;
+                    line-height: 34px;
+                    color: #6F7480;
+                }
+            }
+        }
+    }
 </style>
